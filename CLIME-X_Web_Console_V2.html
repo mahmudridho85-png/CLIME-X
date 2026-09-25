@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLIME-X — Web Console</title>
+
+<style>
+/* =========================================================
+   CLIME-X WEB CONSOLE
+   Versi: V2
+   Catatan:
+   - Header tetap di atas
+   - Sidebar/menu tetap di kiri
+   - Hanya area .content-scroll yang bisa scroll
+   - Warna utama: cokelat muda
+   ========================================================= */
+
+:root{
+    --brown:#b68b62;
+    --brown-dark:#5b3d29;
+    --brown-soft:#eadbc9;
+    --cream:#f7f2eb;
+    --white:#ffffff;
+    --text:#34291f;
+    --muted:#8b8177;
+    --line:#e8ded3;
+    --green:#4f8065;
+    --red:#b85c55;
+    --shadow:0 8px 24px rgba(75,52,34,.08);
+    --header-h:72px;
+    --sidebar-w:245px;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    margin:0;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    overflow:hidden;
+}
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
+
+.app{
+    width:100%;
+    height:100vh;
+    display:grid;
+    grid-template-columns:var(--sidebar-w) 1fr;
+    grid-template-rows:var(--header-h) 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar content";
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header{
+    grid-area:header;
+    height:var(--header-h);
+    background:var(--brown);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    z-index:100;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.company-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+}
+
+.company-logo{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background:#fff;
+    color:var(--brown-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+    overflow:hidden;
+    flex:none;
+}
+
+/* Ganti div di atas dengan <img> jika perusahaan sudah punya logo */
+
+.company-info{
+    min-width:0;
+}
+
+.company-name{
+    font-size:17px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.product-name{
+    font-size:11px;
+    opacity:.82;
+    margin-top:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.language{
+    border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.10);
+    color:#fff;
+    border-radius:8px;
+    padding:8px 10px;
+}
+
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.admin-avatar{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#fff;
+    color:var(--brown-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:13px;
+}
+
+.admin-name{
+    font-size:13px;
+    font-weight:700;
+}
+
+.admin-role{
+    font-size:11px;
+    opacity:.78;
+    margin-top:2px;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar{
+    grid-area:sidebar;
+    background:var(--brown-dark);
+    color:#fff;
+    height:calc(100vh - var(--header-h));
+    overflow-y:auto;
+    padding:18px 13px;
+}
+
+.menu-title{
+    font-size:10px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    opacity:.55;
+    padding:12px 12px 8px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.menu button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:rgba(255,255,255,.78);
+    text-align:left;
+    padding:12px 13px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.menu button:hover{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+}
+
+.menu button.active{
+    background:var(--brown);
+    color:#fff;
+    font-weight:700;
+}
+
+.sidebar-footer{
+    margin-top:24px;
+    padding:14px 12px;
+    border-top:1px solid rgba(255,255,255,.12);
+    font-size:11px;
+    line-height:1.5;
+    opacity:.55;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content-scroll{
+    grid-area:content;
+    min-width:0;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:28px;
+    scroll-behavior:smooth;
+}
+
+.content{
+    max-width:1500px;
+    margin:0 auto;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-heading{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:24px;
+}
+
+.page-heading h1{
+    margin:0;
+    font-size:27px;
+    line-height:1.2;
+}
+
+.page-heading p{
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.date-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:10px 13px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.grid-4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.grid-2{
+    display:grid;
+    grid-template-columns:1.25fr 1fr;
+    gap:18px;
+    margin-top:18px;
+}
+
+.card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:13px;
+    padding:19px;
+    box-shadow:var(--shadow);
+}
+
+.metric-label{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.metric-value{
+    font-size:27px;
+    font-weight:800;
+    margin-top:9px;
+}
+
+.metric-note{
+    margin-top:7px;
+    font-size:11px;
+}
+
+.up{
+    color:var(--green);
+}
+
+.down{
+    color:var(--red);
+}
+
+.card-title{
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:16px;
+}
+
+/* =========================================================
+   SIMPLE CHART
+   ========================================================= */
+
+.chart{
+    height:230px;
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    padding:15px 4px 4px;
+}
+
+.bar-wrap{
+    flex:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    gap:7px;
+}
+
+.bar{
+    width:100%;
+    max-width:48px;
+    background:var(--brown);
+    border-radius:7px 7px 3px 3px;
+    min-height:8px;
+}
+
+.bar-label{
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+}
+
+th{
+    text-align:left;
+    color:var(--muted);
+    font-weight:700;
+    border-bottom:1px solid var(--line);
+    padding:11px 9px;
+    white-space:nowrap;
+}
+
+td{
+    border-bottom:1px solid #f0e9e2;
+    padding:13px 9px;
+    white-space:nowrap;
+}
+
+.status{
+    display:inline-flex;
+    padding:5px 8px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.status.pending{
+    background:#f5e9d8;
+    color:#9a6a32;
+}
+
+.status.approved{
+    background:#e4f0e8;
+    color:#4f8065;
+}
+
+.status.paid{
+    background:#e2edf2;
+    color:#466c7c;
+}
+
+/* =========================================================
+   ANNOUNCEMENT
+   ========================================================= */
+
+.announcement{
+    padding:13px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.announcement:last-child{
+    border-bottom:0;
+}
+
+.announcement strong{
+    font-size:13px;
+}
+
+.announcement p{
+    margin:6px 0 0;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1050px){
+    :root{
+        --sidebar-w:210px;
+    }
+
+    .grid-4{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:760px){
+    body{
+        overflow:auto;
+    }
+
+    .app{
+        height:auto;
+        min-height:100vh;
+        display:block;
+    }
+
+    .header{
+        position:sticky;
+        top:0;
+        height:64px;
+        padding:0 14px;
+    }
+
+    .sidebar{
+        height:auto;
+        overflow:visible;
+        position:sticky;
+        top:64px;
+        z-index:90;
+        padding:8px;
+    }
+
+    .menu{
+        flex-direction:row;
+        overflow-x:auto;
+    }
+
+    .menu-title,
+    .sidebar-footer{
+        display:none;
+    }
+
+    .menu button{
+        width:auto;
+        white-space:nowrap;
+        flex:none;
+    }
+
+    .content-scroll{
+        overflow:visible;
+        padding:18px 14px;
+    }
+
+    .grid-4{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .admin-name,
+    .admin-role{
+        display:none;
+    }
+
+    .page-heading{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         HEADER
+         Logo + Nama Perusahaan + Admin
+         ===================================================== -->
+    <header class="header">
+
+        <div class="company-brand">
+
+            <!--
+              TEMPAT LOGO PERUSAHAAN.
+              Nanti bisa diganti menjadi:
+              <img src="logo-perusahaan.png" class="company-logo" alt="Logo">
+            -->
+            <div class="company-logo">LOGO</div>
+
+            <div class="company-info">
+                <div class="company-name">PT. ABC INDONESIA</div>
+                <div class="product-name">CLIME-X · Company Expense Management</div>
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <select class="language" aria-label="Language">
+                <option>🇮🇩 ID</option>
+                <option>🇬🇧 EN</option>
+                <option>🇨🇳 中文</option>
+            </select>
+
+            <div class="admin-user">
+                <div class="admin-avatar">BS</div>
+                <div>
+                    <div class="admin-name">Budi Santoso</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         SIDEBAR / MENU
+         ===================================================== -->
+    <aside class="sidebar">
+
+        <div class="menu-title">MENU UTAMA</div>
+
+        <nav class="menu">
+
+            <button class="active" onclick="showPage('dashboard', this)">
+                Dashboard
+            </button>
+
+            <button onclick="showPage('claims', this)">
+                Claims
+            </button>
+
+            <button onclick="showPage('employees', this)">
+                Employees
+            </button>
+
+            <button onclick="showPage('announcements', this)">
+                Announcements
+            </button>
+
+            <button onclick="showPage('events', this)">
+                Events
+            </button>
+
+            <button onclick="showPage('reports', this)">
+                Reports
+            </button>
+
+            <button onclick="showPage('company', this)">
+                Company
+            </button>
+
+            <button onclick="showPage('settings', this)">
+                Settings
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            CLIME-X<br>
+            Company Expense Management
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         SATU-SATUNYA AREA YANG SCROLL
+         ===================================================== -->
+    <main class="content-scroll">
+
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="page">
+
+                <div class="page-heading">
+                    <div>
+                        <h1>Dashboard Perusahaan</h1>
+                        <p>Ringkasan aktivitas klaim dan pengeluaran perusahaan.</p>
+                    </div>
+
+                    <div class="date-box">
+                        24 September 2026
+                    </div>
+                </div>
+
+
+                <div class="grid-4">
+
+                    <div class="card">
+                        <div class="metric-label">Total Klaim</div>
+                        <div class="metric-value">248</div>
+                        <div class="metric-note up">+12 bulan ini</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="metric-label">Menunggu Review</div>
+                        <div class="metric-value">18</div>
+                        <div class="metric-note">Perlu tindakan admin</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="metric-label">Disetujui</div>
+                        <div class="metric-value">196</div>
+                        <div class="metric-note up">79% dari total klaim</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="metric-label">Belum Dibayar</div>
+                        <div class="metric-value">34</div>
+                        <div class="metric-note down">Perlu proses pembayaran</div>
+                    </div>
+
+                </div>
+
+
+                <div class="grid-2">
+
+                    <div class="card">
+                        <div class="card-title">Pengeluaran Klaim</div>
+
+                        <div class="chart">
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:38%"></div>
+                                <div class="bar-label">Apr</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:52%"></div>
+                                <div class="bar-label">Mei</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:44%"></div>
+                                <div class="bar-label">Jun</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:68%"></div>
+                                <div class="bar-label">Jul</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:58%"></div>
+                                <div class="bar-label">Agu</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:82%"></div>
+                                <div class="bar-label">Sep</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-title">Pengumuman Terbaru</div>
+
+                        <div class="announcement">
+                            <strong>Kebijakan perjalanan dinas</strong>
+                            <p>Peraturan perjalanan dinas terbaru telah diterbitkan.</p>
+                        </div>
+
+                        <div class="announcement">
+                            <strong>Batas pengajuan klaim</strong>
+                            <p>Klaim bulan September dapat diajukan sampai tanggal 30.</p>
+                        </div>
+
+                        <div class="announcement">
+                            <strong>Sistem CLIME-X</strong>
+                            <p>Pemeliharaan sistem dijadwalkan pada akhir pekan.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="card" style="margin-top:18px;">
+
+                    <div class="card-title">Klaim Terbaru</div>
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Claim ID</th>
+                                    <th>Karyawan</th>
+                                    <th>Kategori</th>
+                                    <th>Total</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>CLM-2026-0248</td>
+                                    <td>Sarah Lee</td>
+                                    <td>Travel</td>
+                                    <td>Rp 2.450.000</td>
+                                    <td>24 Sep 2026</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>CLM-2026-0247</td>
+                                    <td>Mike Tan</td>
+                                    <td>Hotel</td>
+                                    <td>Rp 3.200.000</td>
+                                    <td>23 Sep 2026</td>
+                                    <td><span class="status approved">Approved</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>CLM-2026-0246</td>
+                                    <td>Emily Wong</td>
+                                    <td>Meals</td>
+                                    <td>Rp 680.000</td>
+                                    <td>23 Sep 2026</td>
+                                    <td><span class="status paid">Paid</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>CLM-2026-0245</td>
+                                    <td>Daniel Lim</td>
+                                    <td>Transport</td>
+                                    <td>Rp 920.000</td>
+                                    <td>22 Sep 2026</td>
+                                    <td><span class="status approved">Approved</span></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- HALAMAN LAIN: SENGAJA SEDERHANA UNTUK PROTOTYPE -->
+            <section id="claims" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Claims</h1>
+                        <p>Kelola seluruh pengajuan klaim karyawan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Daftar Claims</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Area ini akan berisi tabel klaim, filter, pencarian, detail receipt,
+                        approval, rejection, dan pembayaran.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="employees" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Employees</h1>
+                        <p>Kelola karyawan perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Employee Management</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Data karyawan, department, status akun, dan akses akan berada di sini.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="announcements" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Announcements</h1>
+                        <p>Komunikasi resmi perusahaan kepada karyawan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Company Announcements</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Buat pengumuman untuk seluruh karyawan, grup, atau karyawan tertentu.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="events" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Events</h1>
+                        <p>Kelola kegiatan dan acara perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Company Events</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Jadwal, lokasi, deskripsi, dan informasi event perusahaan.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="reports" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Reports</h1>
+                        <p>Laporan pengeluaran dan klaim perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Reports</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Daily · Weekly · Monthly · Employee · Department · Category
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="company" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Company</h1>
+                        <p>Informasi dan identitas perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Company Profile</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Logo, nama perusahaan, alamat, kontak, dan informasi lainnya.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="settings" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Settings</h1>
+                        <p>Pengaturan CLIME-X perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Print Template</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Template dokumen A4, header, footer, logo, dan informasi perusahaan.
+                    </p>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+/* =========================================================
+   NAVIGASI SEDERHANA
+   ========================================================= */
+
+function showPage(pageId, button){
+
+    document.querySelectorAll(".page").forEach(function(page){
+        page.style.display = "none";
+    });
+
+    const target = document.getElementById(pageId);
+
+    if(target){
+        target.style.display = "block";
+    }
+
+    document.querySelectorAll(".menu button").forEach(function(btn){
+        btn.classList.remove("active");
+    });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    const content = document.querySelector(".content-scroll");
+
+    if(content){
+        content.scrollTop = 0;
+    }
+}
+</script>
+
+</body>
+</html>
