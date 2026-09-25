@@ -1,0 +1,4030 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLIME-X — Web Console</title>
+
+<style>
+/* =========================================================
+   CLIME-X WEB CONSOLE
+   Versi: V2
+   Catatan:
+   - Header tetap di atas
+   - Sidebar/menu tetap di kiri
+   - Hanya area .content-scroll yang bisa scroll
+   - Warna utama: cokelat muda
+   ========================================================= */
+
+:root{
+    --brown:#b68b62;
+    --brown-dark:#5b3d29;
+    --brown-soft:#eadbc9;
+    --cream:#f7f2eb;
+    --white:#ffffff;
+    --text:#34291f;
+    --muted:#8b8177;
+    --line:#e8ded3;
+    --green:#4f8065;
+    --red:#b85c55;
+    --shadow:0 8px 24px rgba(75,52,34,.08);
+    --header-h:85px;
+    --sidebar-w:245px;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    margin:0;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    overflow:hidden;
+}
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
+
+.app{
+    width:100%;
+    height:100vh;
+    display:grid;
+    grid-template-columns:var(--sidebar-w) 1fr;
+    grid-template-rows:var(--header-h) 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar content";
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header{
+    grid-area:header;
+    height:var(--header-h);
+    background:var(--brown);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    z-index:100;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.company-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+}
+
+.company-logo{
+    width:70px;
+    height:70px;
+    border-radius:10px;
+    background:#fff;
+    color:var(--brown-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+    overflow:hidden;
+    flex:none;
+}
+
+/* Ganti div di atas dengan <img> jika perusahaan sudah punya logo */
+
+.company-info{
+    min-width:0;
+}
+
+.company-name{
+    font-size:17px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.header-company-detail{
+    font-size:11px;
+    line-height:16px;
+    opacity:.9;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.language{
+    border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.10);
+    color:#fff;
+    border-radius:8px;
+    padding:8px 10px;
+}
+
+/* APP LANGUAGE SELECTOR - SAMA DENGAN HALAMAN LOGIN */
+.app-language-selector{
+    position:relative;
+    width:145px;
+}
+
+.app-language-button{
+    width:145px;
+    height:42px;
+    padding:0 14px;
+    border:1px solid #d8c8b8;
+    border-radius:12px;
+    background:#b68b62;
+    color:#5b3d29;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:700;
+}
+
+.app-language-menu{
+    display:none;
+    position:absolute;
+    top:48px;
+    right:0;
+    width:145px;
+    background:#fff;
+    border:1px solid #e3d8ce;
+    border-radius:12px;
+    padding:6px;
+    box-shadow:0 10px 25px rgba(75,52,34,.15);
+    z-index:10000;
+}
+
+.app-language-menu button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#34291f;
+    padding:10px 8px;
+    text-align:left;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.app-language-menu button:hover{
+    background:#f1e3d4;
+    color:#5b3d29;
+    font-weight:700;
+}
+
+
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.admin-avatar{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#fff;
+    color:var(--brown-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:13px;
+}
+
+.admin-name{
+    font-size:13px;
+    font-weight:700;
+}
+
+.admin-role{
+    font-size:11px;
+    opacity:.78;
+    margin-top:2px;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar{
+    grid-area:sidebar;
+    background:var(--brown-dark);
+    color:#fff;
+    height:calc(100vh - var(--header-h));
+    overflow-y:auto;
+    padding:18px 13px;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.menu-title{
+    font-size:10px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    opacity:.55;
+    padding:12px 12px 8px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.menu button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:rgba(255,255,255,.78);
+    text-align:left;
+    padding:12px 13px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.menu button:hover{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+}
+
+.menu button.active{
+    background:var(--brown);
+    color:#fff;
+    font-weight:700;
+}
+
+.sidebar-footer{
+    margin-top:auto;
+    padding:14px 12px;
+    border-top:1px solid rgba(255,255,255,.12);
+    font-size:11px;
+    line-height:1.5;
+    opacity:.55;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content-scroll{
+    grid-area:content;
+    min-width:0;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:28px;
+    scroll-behavior:smooth;
+}
+
+.content{
+    max-width:1500px;
+    margin:0 auto;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-heading{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:24px;
+}
+
+.page-heading h1{
+    margin:0;
+    font-size:27px;
+    line-height:1.2;
+}
+
+.page-heading p{
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.date-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:10px 13px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.grid-4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.grid-2{
+    display:grid;
+    grid-template-columns:1.25fr 1fr;
+    gap:18px;
+    margin-top:18px;
+}
+
+.card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:13px;
+    padding:19px;
+    box-shadow:var(--shadow);
+}
+
+.metric-label{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.metric-value{
+    font-size:27px;
+    font-weight:800;
+    margin-top:9px;
+}
+
+.metric-note{
+    margin-top:7px;
+    font-size:11px;
+}
+
+.up{
+    color:var(--green);
+}
+
+.down{
+    color:var(--red);
+}
+
+.settings-tabs{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--line);
+}
+
+.settings-tab{
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    padding:11px 16px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+}
+
+.settings-tab:hover{
+    color:var(--text);
+}
+
+.settings-tab.active{
+    color:var(--brown-dark);
+    border-bottom-color:var(--brown);
+}
+
+/* =====================================================
+   SETTINGS - EMPLOYEE TABLE
+   ===================================================== */
+
+.employee-table-wrap{
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    background:#fff;
+}
+
+.employee-table-scroll{
+    max-height:380px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+.employee-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+.employee-table thead{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:#fff;
+}
+
+.employee-table th{
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    padding:12px 10px;
+    color:var(--muted);
+    font-weight:700;
+    text-align:left;
+}
+
+.employee-table td{
+    border-bottom:1px solid #f0e9e2;
+    padding:10px;
+    white-space:nowrap;
+}
+
+.employee-table tbody tr{
+    cursor:pointer;
+}
+
+.employee-table tbody tr:hover{
+    background:#faf7f3;
+}
+
+.employee-table tbody tr.selected{
+    background:#f3e8dc;
+}
+
+.employee-table input,
+.employee-table select{
+    width:100%;
+    height:36px;
+    padding:0 9px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:#fff;
+    color:var(--text);
+    font-size:13px;
+    box-sizing:border-box;
+}
+
+.employee-table .employee-no{
+    width:55px;
+    text-align:center;
+    color:var(--muted);
+    font-weight:700;
+}
+
+.employee-actions{
+    display:flex !important;
+    justify-content:flex-start !important;
+    align-items:center !important;
+    padding:12px 0 0 !important;
+    background:#fff;
+}
+
+.employee-actions > .btn{
+    margin-right:18px !important;
+}
+
+.employee-actions > .btn:last-child{
+    margin-right:0 !important;
+}
+
+#settingsEmployee button.btn{
+    height:38px;
+    padding:0 18px;
+    border:1px solid #d8c8b8;
+    border-radius:8px;
+    background:#b68b62;
+color:#ffffff;
+border-color:#b68b62;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:all .15s ease;
+    box-shadow:none;
+}
+
+#settingsEmployee button.btn:hover{
+    background:#f5eee7;
+    border-color:#b68b62;
+}
+
+#settingsEmployee button.btn.primary{
+    background:var(--brown);
+    border-color:var(--brown);
+    color:#fff;
+}
+
+#settingsEmployee button.btn.primary:hover{
+    background:var(--brown-dark);
+    border-color:var(--brown-dark);
+}
+
+/* =====================================================
+   SETTINGS - FIXED LAYOUT
+   ===================================================== */
+
+.content-scroll.settings-locked{
+    overflow:hidden !important;
+}
+
+.content-scroll.settings-locked .content{
+    height:100%;
+    min-height:0;
+}
+
+#settings{
+    height:100%;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+#settings .page-heading{
+    flex:none;
+}
+
+#settings .settings-tabs{
+    flex:none;
+}
+
+#settings .settings-panel{
+    min-height:0;
+}
+
+#settings #settingsEmployee{
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+#settings #settingsEmployee .employee-table-scroll{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+#settings #settingsEmployee .employee-actions{
+    flex:none;
+}
+
+.employee-actions button.btn{
+    appearance:none !important;
+    -webkit-appearance:none !important;
+    border:1px solid #d8c8b8 !important;
+    border-radius:9px !important;
+    height:38px !important;
+    min-width:88px !important;
+    padding:0 17px !important;
+    background:#ffffff !important;
+    color:#5b3d29 !important;
+    font-family:inherit !important;
+    font-size:12px !important;
+    font-weight:700 !important;
+    cursor:pointer !important;
+    box-sizing:border-box !important;
+    box-shadow:0 2px 5px rgba(75,52,34,.08) !important;
+}
+
+.employee-actions button.btn:hover{
+    background:#f7f0e9 !important;
+    border-color:#b68b62 !important;
+}
+
+.employee-actions button.btn.primary{
+    background:#b68b62 !important;
+    border-color:#b68b62 !important;
+    color:#ffffff !important;
+}
+
+.employee-actions button.btn.primary:hover{
+    background:#9f754f !important;
+    border-color:#9f754f !important;
+}
+
+#settingsEmployee button.btn{
+    min-width:88px;
+    height:38px;
+    padding:0 16px;
+    border:1px solid #d8c8b8;
+    border-radius:9px;
+    background:#b68b62;
+color:#ffffff;
+border-color:#b68b62;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    line-height:38px;
+    cursor:pointer;
+    box-sizing:border-box;
+    box-shadow:0 1px 2px rgba(75,52,34,.06);
+    transition:all .15s ease;
+    appearance:none;
+    -webkit-appearance:none;
+}
+
+#settingsEmployee button.btn:hover{
+    background:#f7f0e9;
+    border-color:#b68b62;
+    transform:translateY(-1px);
+}
+
+#settingsEmployee button.btn:active{
+    transform:translateY(0);
+}
+
+#settingsEmployee button.btn.primary{
+    background:#b68b62;
+    border-color:#b68b62;
+    color:#fff;
+}
+
+#settingsEmployee button.btn.primary:hover{
+    background:#9f754f;
+    border-color:#9f754f;
+}
+
+.card-title{
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:16px;
+}
+
+/* =========================================================
+   SIMPLE CHART
+   ========================================================= */
+
+.chart{
+    height:230px;
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    padding:15px 4px 4px;
+}
+
+.bar-wrap{
+    flex:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    gap:7px;
+}
+
+.bar{
+    width:100%;
+    max-width:48px;
+    background:var(--brown);
+    border-radius:7px 7px 3px 3px;
+    min-height:8px;
+}
+
+.bar-label{
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+}
+
+th{
+    text-align:left;
+    color:var(--muted);
+    font-weight:700;
+    border-bottom:1px solid var(--line);
+    padding:11px 9px;
+    white-space:nowrap;
+}
+
+td{
+    border-bottom:1px solid #f0e9e2;
+    padding:13px 9px;
+    white-space:nowrap;
+}
+
+.status{
+    display:inline-flex;
+    padding:5px 8px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.status.pending{
+    background:#f5e9d8;
+    color:#9a6a32;
+}
+
+.status.approved{
+    background:#e4f0e8;
+    color:#4f8065;
+}
+
+.status.paid{
+    background:#e2edf2;
+    color:#466c7c;
+}
+
+/* =========================================================
+   ANNOUNCEMENT
+   ========================================================= */
+
+.announcement{
+    padding:13px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.announcement:last-child{
+    border-bottom:0;
+}
+
+.announcement strong{
+    font-size:13px;
+}
+
+.announcement p{
+    margin:6px 0 0;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1050px){
+    :root{
+        --sidebar-w:210px;
+    }
+
+    .grid-4{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:760px){
+    body{
+        overflow:auto;
+    }
+
+    .app{
+        height:auto;
+        min-height:100vh;
+        display:block;
+    }
+
+    .header{
+        position:sticky;
+        top:0;
+        height:64px;
+        padding:0 14px;
+    }
+
+    .sidebar{
+        height:auto;
+        overflow:visible;
+        position:sticky;
+        top:64px;
+        z-index:90;
+        padding:8px;
+    }
+
+    .menu{
+        flex-direction:row;
+        overflow-x:auto;
+    }
+
+    .menu-title,
+    .sidebar-footer{
+        display:none;
+    }
+
+    .menu button{
+        width:auto;
+        white-space:nowrap;
+        flex:none;
+    }
+
+    .content-scroll{
+        overflow:visible;
+        padding:18px 14px;
+    }
+
+    .grid-4{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .admin-name,
+    .admin-role{
+        display:none;
+    }
+
+    .page-heading{
+        flex-direction:column;
+    }
+}
+
+/* =====================================================
+   CLIME-X LANGUAGE FLAGS
+   ===================================================== */
+
+.flag-circle{
+    width:22px;
+    height:22px;
+    min-width:22px;
+    border-radius:50%;
+    display:inline-block;
+    overflow:hidden;
+    box-shadow:0 0 0 1px rgba(0,0,0,.08);
+}
+
+
+/* INDONESIA */
+.flag-id{
+    background:
+        linear-gradient(
+            to bottom,
+            #e00000 0%,
+            #e00000 50%,
+            #ffffff 50%,
+            #ffffff 100%
+        );
+}
+
+
+/* ENGLAND / UK */
+.flag-en{
+    background:
+        linear-gradient(
+            90deg,
+            transparent 42%,
+            #ffffff 42%,
+            #ffffff 58%,
+            transparent 58%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 42%,
+            #ffffff 42%,
+            #ffffff 58%,
+            transparent 58%
+        ),
+        linear-gradient(
+            90deg,
+            transparent 46%,
+            #c8102e 46%,
+            #c8102e 54%,
+            transparent 54%
+        ),
+        linear-gradient(
+            0deg,
+            transparent 46%,
+            #c8102e 46%,
+            #c8102e 54%,
+            transparent 54%
+        ),
+        #012169;
+}
+
+
+/* CHINA */
+.flag-zh{
+    background:#de2910;
+    position:relative;
+}
+
+
+
+#languageMenu button:hover{
+    background:#f1e3d4 !important;
+    color:#5b3d29 !important;
+}
+
+#settings #settingsEmployee{
+    flex:1 1 auto;
+    min-height:0;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+/* SETTINGS - NORMAL PAGE SCROLL */
+
+#settings{
+    height:auto !important;
+    min-height:0 !important;
+    overflow:visible !important;
+}
+
+#settingsEmployee{
+    height:auto !important;
+    min-height:0 !important;
+    overflow:visible !important;
+}
+
+.content-scroll{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+}
+
+
+
+</style>
+
+<!-- FIREBASE CLIME-X -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCXzfGE9hri8f1uh6aRozW7uaft4ZlHohI",
+    authDomain: "kasir-cuan-pos.firebaseapp.com",
+    projectId: "kasir-cuan-pos",
+    storageBucket: "kasir-cuan-pos.firebasestorage.app",
+    messagingSenderId: "525682379931",
+    appId: "1:525682379931:web:77b36c3dd62e9cd7134a3e"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+window.climexDB = firebase.firestore();
+window.climexAuth = firebase.auth();
+climexAuth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+).catch(function(error){
+
+    console.error(
+        "CLIME-X AUTH PERSISTENCE ERROR:",
+        error
+    );
+
+});
+
+climexAuth.onAuthStateChanged(async function(user){
+
+    if(!user){
+
+    console.log("CLIME-X: belum ada sesi login.");
+
+    const loginGate =
+        document.getElementById("loginGate");
+
+    if(loginGate){
+        loginGate.style.visibility = "visible";
+    }
+
+    return;
+}
+
+    console.log(
+        "CLIME-X: sesi login ditemukan:",
+        user.email
+    );
+
+    try{
+
+        const profileSnap =
+            await climexDB
+                .collection("users")
+                .doc(user.uid)
+                .collection("climex")
+                .doc("profile")
+                .get();
+
+        if(!profileSnap.exists){
+
+            console.log(
+                "CLIME-X: profile tidak ditemukan."
+            );
+
+            return;
+        }
+
+        const profile =
+            profileSnap.data();
+
+        window.climexCurrentUser = {
+            uid: user.uid,
+            email: user.email || "",
+            companyId: profile.companyId || "",
+            role: profile.role || "Administrator"
+        };
+
+        const savedLanguage =
+            localStorage.getItem("climexLanguage")
+            || "id";
+
+        currentLoginLang = savedLanguage;
+
+        const loginGate =
+            document.getElementById("loginGate");
+
+        if(loginGate){
+            loginGate.style.display = "none";
+        }
+
+        const app =
+            document.querySelector(".app");
+
+        if(app){
+            app.style.display = "grid";
+        }
+
+        setAppLanguage(savedLanguage);
+
+        if(typeof loadClimexClaims === "function"){
+    loadClimexClaims();
+}
+
+if(typeof loadCompanyProfile === "function"){
+    loadCompanyProfile();
+}
+
+if(typeof loadCompanyLogo === "function"){
+    loadCompanyLogo();
+}
+        console.log(
+            "CLIME-X AUTO LOGIN OK:",
+            window.climexCurrentUser
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X AUTO LOGIN ERROR:",
+            error
+        );
+
+    }
+
+});
+
+console.log("CLIME-X FIREBASE:", firebase.app().options.projectId);
+</script>
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     HALAMAN AWAL / LOGIN CLIME-X
+     3 BAHASA: INDONESIA / ENGLISH / CHINESE
+     ===================================================== -->
+<div id="loginGate" style="
+    visibility:hidden;
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:#f7f2eb;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+">
+
+    <!-- PILIHAN BAHASA -->
+    <div id="languageSelector" style="
+        position:absolute;
+        top:22px;
+        right:28px;
+    ">
+
+        <button
+            id="languageButton"
+            onclick="toggleLanguageMenu()"
+            style="
+                width:145px;
+                height:42px;
+                padding:0 14px;
+                border:1px solid #d8c8b8;
+                border-radius:12px;
+                background:#f7f2eb;
+                color:#5b3d29;
+                display:flex;
+                align-items:center;
+                justify-content:flex-start;
+                gap:8px;
+                cursor:pointer;
+            "
+        >
+            <span id="currentFlag" class="flag-circle flag-id"></span>
+            <span id="currentLang" style="font-size:13px;font-weight:700;">Indonesia</span>
+        </button>
+
+        <div id="languageMenu" style="
+            display:none;
+            position:absolute;
+            top:48px;
+            right:0;
+            width:145px;
+            background:#ffffff;
+            border:1px solid #e3d8ce;
+            border-radius:12px;
+            padding:6px;
+            box-shadow:0 10px 25px rgba(75,52,34,.15);
+            z-index:100000;
+        ">
+            <button data-lang="id" onclick="selectLoginLanguage('id','Indonesia','flag-id')" style="width:100%;border:0;background:transparent;padding:10px 8px;text-align:left;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;">
+                <span class="flag-circle flag-id"></span>Indonesia
+            </button>
+            <button data-lang="en" onclick="selectLoginLanguage('en','English','flag-en')" style="width:100%;border:0;background:transparent;padding:10px 8px;text-align:left;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;">
+                <span class="flag-circle flag-en"></span>English
+            </button>
+            <button data-lang="zh" onclick="selectLoginLanguage('zh','中文','flag-zh')" style="width:100%;border:0;background:transparent;padding:10px 8px;text-align:left;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;">
+                <span class="flag-circle flag-zh"></span>中文
+            </button>
+        </div>
+    </div>
+
+    <!-- WELCOME / DI LUAR CARD -->
+    <div style="text-align:center;max-width:620px;margin-bottom:22px;">
+        <div style="
+            font-size:30px;
+            font-weight:800;
+            color:#5b3d29;
+            letter-spacing:.5px;
+            margin-bottom:10px;
+        ">CLIME-X</div>
+
+        <h1 id="loginWelcomeTitle" style="
+            margin:0 0 10px;
+            color:#34291f;
+            font-size:30px;
+            line-height:1.25;
+        ">Selamat datang di CLIME-X</h1>
+
+        <p id="loginWelcomeText" style="
+            margin:0 auto;
+            max-width:520px;
+            color:#7a6a5c;
+            font-size:15px;
+            line-height:1.6;
+        ">Platform profesional untuk aktifitas klaim antara karyawan dan perusahaan</p>
+    </div>
+
+    <!-- LOGIN CARD -->
+    <div style="
+        width:100%;
+        max-width:520px;
+        background:#ffffff;
+        border-radius:18px;
+        padding:36px 40px;
+        box-sizing:border-box;
+        box-shadow:0 15px 45px rgba(75,52,34,.12);
+        text-align:center;
+    ">
+
+        <!-- USERNAME -->
+        <div style="text-align:left;margin-bottom:16px;">
+            <label id="loginUsernameLabel" style="
+                display:block;
+                margin-bottom:7px;
+                font-size:13px;
+                font-weight:700;
+                color:#5b3d29;
+            ">Username / Email</label>
+
+            <input id="loginUsername" type="text" placeholder="Masukkan username atau email" style="
+                width:100%;
+                height:48px;
+                box-sizing:border-box;
+                border:1px solid #e0d4c8;
+                border-radius:10px;
+                padding:0 14px;
+                font-size:14px;
+                outline:none;
+            ">
+        </div>
+
+        <!-- PASSWORD -->
+        <div style="text-align:left;margin-bottom:22px;">
+            <label id="loginPasswordLabel" style="
+                display:block;
+                margin-bottom:7px;
+                font-size:13px;
+                font-weight:700;
+                color:#5b3d29;
+            ">Password</label>
+
+            <input id="loginPassword" type="password" placeholder="Masukkan password" style="
+                width:100%;
+                height:48px;
+                box-sizing:border-box;
+                border:1px solid #e0d4c8;
+                border-radius:10px;
+                padding:0 14px;
+                font-size:14px;
+                outline:none;
+            ">
+        </div>
+
+        <button id="loginButton" onclick="enterConsole()" style="
+            width:100%;
+            height:50px;
+            border:0;
+            border-radius:10px;
+            background:#5b3d29;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:700;
+            cursor:pointer;
+        ">LOGIN</button>
+
+<!-- DEVELOPMENT NOTICE -->
+<div style="
+    margin-top:18px;
+    padding:12px 16px;
+    border:1px solid #e2c9a8;
+    border-radius:10px;
+    background:#fff8ed;
+    color:#6b4a32;
+    text-align:center;
+    font-size:12px;
+    line-height:1.5;
+">
+    <strong style="display:block; margin-bottom:3px;">
+        🚧 SITUS DALAM PENGEMBANGAN
+    </strong>
+    Situs ini masih dalam tahap pengembangan dan belum tersedia untuk penggunaan umum.
+    Mohon jangan memasukkan data apa pun.
+</div>
+
+        <div id="loginDownloadText" style="
+            margin-top:28px;
+            padding-top:22px;
+            border-top:1px solid #eee5dc;
+            color:#7a6a5c;
+            font-size:13px;
+            line-height:1.6;
+        ">
+            Jika belum memiliki akun, silahkan download
+            <strong style="color:#5b3d29;">CLIME-X Console</strong>
+            melalui
+            <a href="#" id="loginPlayStore" style="color:#8b6243;font-weight:700;text-decoration:none;">Google Play Store</a>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- =====================================================
+     TRANSLATION LOGIN PAGE
+     ===================================================== -->
+<script>
+
+const CLIMEX_LOGIN_LANG = {
+
+    id: {
+        welcomeTitle: "Selamat datang di CLIME-X",
+
+        welcomeText:
+            "Platform profesional untuk aktifitas klaim antara karyawan dan perusahaan",
+
+        usernameLabel:
+            "Username / Email",
+
+        usernamePlaceholder:
+            "Masukkan username atau email",
+
+        passwordLabel:
+            "Password",
+
+        passwordPlaceholder:
+            "Masukkan password",
+
+        loginButton:
+            "LOGIN",
+
+        downloadText:
+            "Jika belum memiliki akun, silahkan download",
+
+        consoleName:
+            "CLIME-X Console",
+
+        through:
+            "melalui",
+
+        playStore:
+            "Google Play Store"
+    },
+
+    en: {
+        welcomeTitle:
+            "Welcome to CLIME-X",
+
+        welcomeText:
+            "A professional platform for expense claims between employees and companies",
+
+        usernameLabel:
+            "Username / Email",
+
+        usernamePlaceholder:
+            "Enter username or email",
+
+        passwordLabel:
+            "Password",
+
+        passwordPlaceholder:
+            "Enter password",
+
+        loginButton:
+            "LOGIN",
+
+        downloadText:
+            "If you don't have an account, please download",
+
+        consoleName:
+            "CLIME-X Console",
+
+        through:
+            "through",
+
+        playStore:
+            "Google Play Store"
+    },
+
+    zh: {
+        welcomeTitle:
+            "欢迎来到 CLIME-X",
+
+        welcomeText:
+            "为员工与企业提供专业的费用报销管理平台",
+
+        usernameLabel:
+            "用户名 / 邮箱",
+
+        usernamePlaceholder:
+            "请输入用户名或邮箱",
+
+        passwordLabel:
+            "密码",
+
+        passwordPlaceholder:
+            "请输入密码",
+
+        loginButton:
+            "登录",
+
+        downloadText:
+            "如果您还没有账户，请下载",
+
+        consoleName:
+            "CLIME-X Console",
+
+        through:
+            "通过",
+
+        playStore:
+            "Google Play 商店"
+    }
+
+};
+
+
+function changeLoginLanguage(lang){
+
+    const t = CLIMEX_LOGIN_LANG[lang];
+
+    document.getElementById("loginWelcomeTitle").textContent =
+        t.welcomeTitle;
+
+    document.getElementById("loginWelcomeText").textContent =
+        t.welcomeText;
+
+    document.getElementById("loginUsernameLabel").textContent =
+        t.usernameLabel;
+
+    document.getElementById("loginUsername").placeholder =
+        t.usernamePlaceholder;
+
+    document.getElementById("loginPasswordLabel").textContent =
+        t.passwordLabel;
+
+    document.getElementById("loginPassword").placeholder =
+        t.passwordPlaceholder;
+
+    document.getElementById("loginButton").textContent =
+        t.loginButton;
+
+    document.getElementById("loginDownloadText").innerHTML =
+        t.downloadText +
+        ' <strong style="color:#5b3d29;">' +
+        t.consoleName +
+        '</strong> ' +
+        t.through +
+        ' <a href="#" id="loginPlayStore" style="color:#8b6243;font-weight:700;text-decoration:none;">' +
+        t.playStore +
+        '</a>';
+
+}
+
+
+
+let currentLoginLang = "id";
+
+function toggleLanguageMenu(){
+
+    const menu = document.getElementById("languageMenu");
+
+    if(menu.style.display === "block"){
+        menu.style.display = "none";
+        return;
+    }
+
+    // Tampilkan dropdown
+    menu.style.display = "block";
+
+    // Pastikan bahasa yang sedang aktif selalu disorot
+    document.querySelectorAll("#languageMenu button").forEach(function(btn){
+        btn.classList.remove("selected");
+    });
+
+    const selectedButton = document.querySelector(
+        '#languageMenu button[data-lang="' + currentLoginLang + '"]'
+    );
+
+    if(selectedButton){
+        selectedButton.classList.add("selected");
+    }
+}
+
+
+function selectLoginLanguage(lang, languageName, flagClass){
+
+    // Simpan bahasa aktif — dipakai juga setelah LOGIN
+    currentLoginLang = lang;
+    localStorage.setItem("climexLanguage", lang);
+
+    // Ubah bendera
+    const currentFlag = document.getElementById("currentFlag");
+    currentFlag.className = "flag-circle " + flagClass;
+
+    // Ubah nama bahasa di tombol atas
+    document.getElementById("currentLang").textContent = languageName;
+
+    // Highlight bahasa yang dipilih
+    document.querySelectorAll("#languageMenu button").forEach(function(btn){
+        btn.classList.remove("selected");
+    });
+
+    const selectedButton = document.querySelector(
+        '#languageMenu button[data-lang="' + lang + '"]'
+    );
+
+    if(selectedButton){
+        selectedButton.classList.add("selected");
+    }
+
+    // Terjemahkan halaman
+    changeLoginLanguage(lang);
+
+    // Tutup dropdown
+    document.getElementById("languageMenu").style.display = "none";
+}
+
+document.addEventListener("click", function(event){
+
+    const selector = document.getElementById("languageSelector");
+    const menu = document.getElementById("languageMenu");
+
+    if(
+        selector &&
+        menu &&
+        !selector.contains(event.target)
+    ){
+        menu.style.display = "none";
+    }
+
+});
+
+</script>
+
+
+<script>
+/* =========================================================
+   CLIME-X LANGUAGE — HALAMAN SETELAH LOGIN
+   Bahasa: Indonesia / English / Chinese
+   ========================================================= */
+
+const APP_TRANSLATIONS = {
+    "MENU UTAMA": {
+        id:"MENU UTAMA", en:"MAIN MENU", zh:"主菜单"
+    },
+    "Dashboard": {
+        id:"Dashboard", en:"Dashboard", zh:"仪表板"
+    },
+    "Claims": {
+        id:"Claims", en:"Claims", zh:"报销"
+    },
+    "Employees": {
+        id:"Employees", en:"Employees", zh:"员工"
+    },
+    "Announcements": {
+        id:"Announcements", en:"Announcements", zh:"公告"
+    },
+    "Events": {
+        id:"Events", en:"Events", zh:"活动"
+    },
+    "Reports": {
+        id:"Reports", en:"Reports", zh:"报告"
+    },
+    "Company": {
+        id:"Company", en:"Company", zh:"公司"
+    },
+    "Settings": {
+        id:"Settings", en:"Settings", zh:"设置"
+    },
+    "Company Expense Management": {
+        id:"Company Expense Management",
+        en:"Company Expense Management",
+        zh:"企业费用管理"
+    },
+    "Administrator": {
+        id:"Administrator", en:"Administrator", zh:"管理员"
+    },
+    "Dashboard Perusahaan": {
+        id:"Dashboard Perusahaan",
+        en:"Company Dashboard",
+        zh:"公司仪表板"
+    },
+    "Ringkasan aktivitas klaim dan pengeluaran perusahaan.": {
+        id:"Ringkasan aktivitas klaim dan pengeluaran perusahaan.",
+        en:"Summary of company claims and expenses.",
+        zh:"公司报销与费用活动摘要。"
+    },
+    "Total Klaim": {
+        id:"Total Klaim", en:"Total Claims", zh:"报销总数"
+    },
+    "Menunggu Review": {
+        id:"Menunggu Review", en:"Pending Review", zh:"待审核"
+    },
+    "Disetujui": {
+        id:"Disetujui", en:"Approved", zh:"已批准"
+    },
+    "Belum Dibayar": {
+        id:"Belum Dibayar", en:"Unpaid", zh:"未支付"
+    },
+    "+12 bulan ini": {
+        id:"+12 bulan ini", en:"+12 this month", zh:"本月 +12"
+    },
+    "Perlu tindakan admin": {
+        id:"Perlu tindakan admin", en:"Admin action required", zh:"需要管理员处理"
+    },
+    "79% dari total klaim": {
+        id:"79% dari total klaim", en:"79% of total claims", zh:"占报销总数的79%"
+    },
+    "Perlu proses pembayaran": {
+        id:"Perlu proses pembayaran", en:"Payment processing required", zh:"需要处理付款"
+    },
+    "Pengeluaran Klaim": {
+        id:"Pengeluaran Klaim", en:"Claim Expenses", zh:"报销费用"
+    },
+    "Pengumuman Terbaru": {
+        id:"Pengumuman Terbaru", en:"Latest Announcements", zh:"最新公告"
+    },
+    "Kebijakan perjalanan dinas": {
+        id:"Kebijakan perjalanan dinas",
+        en:"Business Travel Policy",
+        zh:"出差政策"
+    },
+    "Peraturan perjalanan dinas terbaru telah diterbitkan.": {
+        id:"Peraturan perjalanan dinas terbaru telah diterbitkan.",
+        en:"The latest business travel policy has been published.",
+        zh:"最新出差政策已发布。"
+    },
+    "Batas pengajuan klaim": {
+        id:"Batas pengajuan klaim",
+        en:"Claim Submission Deadline",
+        zh:"报销提交截止日期"
+    },
+    "Klaim bulan September dapat diajukan sampai tanggal 30.": {
+        id:"Klaim bulan September dapat diajukan sampai tanggal 30.",
+        en:"September claims can be submitted until the 30th.",
+        zh:"九月份报销可提交至30日。"
+    },
+    "Sistem CLIME-X": {
+        id:"Sistem CLIME-X", en:"CLIME-X System", zh:"CLIME-X 系统"
+    },
+    "Pemeliharaan sistem dijadwalkan pada akhir pekan.": {
+        id:"Pemeliharaan sistem dijadwalkan pada akhir pekan.",
+        en:"System maintenance is scheduled for the weekend.",
+        zh:"系统维护安排在周末进行。"
+    },
+    "Klaim Terbaru": {
+        id:"Klaim Terbaru", en:"Recent Claims", zh:"最新报销"
+    },
+    "Claim ID": {
+        id:"Claim ID", en:"Claim ID", zh:"报销编号"
+    },
+    "Karyawan": {
+        id:"Karyawan", en:"Employee", zh:"员工"
+    },
+    "Kategori": {
+        id:"Kategori", en:"Category", zh:"类别"
+    },
+    "Total": {
+        id:"Total", en:"Total", zh:"总额"
+    },
+    "Tanggal": {
+        id:"Tanggal", en:"Date", zh:"日期"
+    },
+    "Status": {
+        id:"Status", en:"Status", zh:"状态"
+    },
+    "Pending": {
+        id:"Pending", en:"Pending", zh:"待处理"
+    },
+    "Approved": {
+        id:"Approved", en:"Approved", zh:"已批准"
+    },
+    "Paid": {
+        id:"Paid", en:"Paid", zh:"已支付"
+    },
+    "Kelola seluruh pengajuan klaim karyawan.": {
+        id:"Kelola seluruh pengajuan klaim karyawan.",
+        en:"Manage all employee claim submissions.",
+        zh:"管理所有员工报销申请。"
+    },
+    "Daftar Claims": {
+        id:"Daftar Claims", en:"Claims List", zh:"报销列表"
+    },
+    "Area ini akan berisi tabel klaim, filter, pencarian, detail receipt, approval, rejection, dan pembayaran.": {
+        id:"Area ini akan berisi tabel klaim, filter, pencarian, detail receipt, approval, rejection, dan pembayaran.",
+        en:"This area will contain claim tables, filters, search, receipt details, approval, rejection, and payment.",
+        zh:"此区域将包含报销表格、筛选、搜索、收据详情、审批、拒绝和付款。"
+    },
+    "Kelola karyawan perusahaan.": {
+        id:"Kelola karyawan perusahaan.",
+        en:"Manage company employees.",
+        zh:"管理员工信息。"
+    },
+    "Employee Management": {
+        id:"Employee Management", en:"Employee Management", zh:"员工管理"
+    },
+    "Data karyawan, department, status akun, dan akses akan berada di sini.": {
+        id:"Data karyawan, department, status akun, dan akses akan berada di sini.",
+        en:"Employee data, departments, account status, and access will be managed here.",
+        zh:"员工资料、部门、账户状态和权限将在此管理。"
+    },
+    "Komunikasi resmi perusahaan kepada karyawan.": {
+        id:"Komunikasi resmi perusahaan kepada karyawan.",
+        en:"Official company communication to employees.",
+        zh:"公司向员工发布的正式通知。"
+    },
+    "Company Announcements": {
+        id:"Company Announcements", en:"Company Announcements", zh:"公司公告"
+    },
+    "Buat pengumuman untuk seluruh karyawan, grup, atau karyawan tertentu.": {
+        id:"Buat pengumuman untuk seluruh karyawan, grup, atau karyawan tertentu.",
+        en:"Create announcements for all employees, groups, or specific employees.",
+        zh:"向全体员工、群组或指定员工发布公告。"
+    },
+    "Kelola kegiatan dan acara perusahaan.": {
+        id:"Kelola kegiatan dan acara perusahaan.",
+        en:"Manage company activities and events.",
+        zh:"管理公司活动与事件。"
+    },
+    "Company Events": {
+        id:"Company Events", en:"Company Events", zh:"公司活动"
+    },
+    "Jadwal, lokasi, deskripsi, dan informasi event perusahaan.": {
+        id:"Jadwal, lokasi, deskripsi, dan informasi event perusahaan.",
+        en:"Schedules, locations, descriptions, and company event information.",
+        zh:"公司活动的时间、地点、描述及相关信息。"
+    },
+    "Laporan pengeluaran dan klaim perusahaan.": {
+        id:"Laporan pengeluaran dan klaim perusahaan.",
+        en:"Company expense and claim reports.",
+        zh:"公司费用与报销报告。"
+    },
+    "Daily · Weekly · Monthly · Employee · Department · Category": {
+        id:"Daily · Weekly · Monthly · Employee · Department · Category",
+        en:"Daily · Weekly · Monthly · Employee · Department · Category",
+        zh:"每日 · 每周 · 每月 · 员工 · 部门 · 类别"
+    },
+    "Informasi dan identitas perusahaan.": {
+        id:"Informasi dan identitas perusahaan.",
+        en:"Company information and identity.",
+        zh:"公司信息与身份资料。"
+    },
+    "Company Profile": {
+        id:"Company Profile", en:"Company Profile", zh:"公司资料"
+    },
+    "Logo, nama perusahaan, alamat, kontak, dan informasi lainnya.": {
+        id:"Logo, nama perusahaan, alamat, kontak, dan informasi lainnya.",
+        en:"Company logo, name, address, contact details, and other information.",
+        zh:"公司标志、名称、地址、联系方式及其他信息。"
+    },
+    "Pengaturan CLIME-X perusahaan.": {
+        id:"Pengaturan CLIME-X perusahaan.",
+        en:"CLIME-X company settings.",
+        zh:"CLIME-X 公司设置。"
+    },
+    "Print Template": {
+        id:"Print Template", en:"Print Template", zh:"打印模板"
+    },
+    "Template dokumen A4, header, footer, logo, dan informasi perusahaan.": {
+        id:"Template dokumen A4, header, footer, logo, dan informasi perusahaan.",
+        en:"A4 document template, header, footer, logo, and company information.",
+        zh:"A4 文档模板、页眉、页脚、标志及公司信息。"
+    },
+    "CLIME-X · Company Expense Management": {
+        id:"CLIME-X · Company Expense Management",
+        en:"CLIME-X · Company Expense Management",
+        zh:"CLIME-X · 企业费用管理"
+    }
+};
+
+function prepareAppTranslations(){
+    document.querySelectorAll(".app *").forEach(function(el){
+        if(el.children.length !== 0) return;
+
+        const original = el.textContent.trim();
+        if(APP_TRANSLATIONS[original]){
+            el.setAttribute("data-climex-lang-key", original);
+        }
+    });
+}
+
+function setAppLanguage(lang){
+
+    const tLang = lang || "id";
+
+    prepareAppTranslations();
+
+    document.querySelectorAll("[data-climex-lang-key]").forEach(function(el){
+        const key = el.getAttribute("data-climex-lang-key");
+        const item = APP_TRANSLATIONS[key];
+
+        if(item && item[tLang] !== undefined){
+            el.textContent = item[tLang];
+        }
+    });
+
+    const appNames = {id:"Indonesia", en:"English", zh:"中文"};
+    const appFlags = {id:"flag-id", en:"flag-en", zh:"flag-zh"};
+
+    const appCurrentLang = document.getElementById("appCurrentLang");
+    const appCurrentFlag = document.getElementById("appCurrentFlag");
+
+    if(appCurrentLang){
+        appCurrentLang.textContent = appNames[tLang];
+    }
+
+    if(appCurrentFlag){
+        appCurrentFlag.className = "flag-circle " + appFlags[tLang];
+    }
+
+    document.querySelectorAll("#appLanguageMenu button").forEach(function(btn){
+        btn.classList.toggle("selected", btn.dataset.lang === tLang);
+    });
+
+    document.documentElement.lang = tLang === "zh" ? "zh-CN" : tLang;
+
+    currentLoginLang = tLang;
+}
+
+function toggleAppLanguageMenu(){
+
+    const menu = document.getElementById("appLanguageMenu");
+    if(!menu) return;
+
+    if(menu.style.display === "block"){
+        menu.style.display = "none";
+        return;
+    }
+
+    menu.style.display = "block";
+
+    const activeLang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+
+    document.querySelectorAll("#appLanguageMenu button").forEach(function(btn){
+        btn.classList.toggle("selected", btn.dataset.lang === activeLang);
+    });
+}
+
+function selectAppLanguage(lang, languageName, flagClass){
+
+    localStorage.setItem("climexLanguage", lang);
+    currentLoginLang = lang;
+
+    setAppLanguage(lang);
+
+    const menu = document.getElementById("appLanguageMenu");
+    if(menu){
+        menu.style.display = "none";
+    }
+}
+
+/* Klik di luar dropdown app -> tutup */
+document.addEventListener("click", function(event){
+
+    const selector = document.getElementById("appLanguageSelector");
+    const menu = document.getElementById("appLanguageMenu");
+
+    if(selector && menu && !selector.contains(event.target)){
+        menu.style.display = "none";
+    }
+});
+
+/* Masuk ke console setelah tombol LOGIN */
+async function enterConsole(){
+
+    const email =
+        document.getElementById("loginUsername").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    if(!email || !password){
+
+        alert(
+            "Email / Username dan Password wajib diisi."
+        );
+
+        return;
+    }
+
+    try{
+
+        console.log(
+            "CLIME-X LOGIN: mencoba Firebase Auth..."
+        );
+
+        // ==============================
+        // LOGIN FIREBASE AUTH
+        // ==============================
+
+        const result =
+            await climexAuth.signInWithEmailAndPassword(
+                email,
+                password
+            );
+
+        const uid = result.user.uid;
+
+        console.log(
+            "CLIME-X LOGIN AUTH OK:",
+            uid
+        );
+
+        // ==============================
+        // AMBIL PROFILE CLIME-X
+        // ==============================
+
+        const profileSnap =
+            await climexDB
+                .collection("users")
+                .doc(uid)
+                .collection("climex")
+                .doc("profile")
+                .get();
+
+        if(!profileSnap.exists){
+
+            await climexAuth.signOut();
+
+            alert(
+                "Akun ini belum memiliki profile CLIME-X."
+            );
+
+            return;
+        }
+
+        const profile =
+            profileSnap.data();
+
+        console.log(
+            "CLIME-X PROFILE:",
+            profile
+        );
+
+        // ==============================
+        // SIMPAN DATA AKUN AKTIF
+        // ==============================
+
+        window.climexCurrentUser = {
+            uid: uid,
+            email: result.user.email || "",
+            companyId: profile.companyId || "",
+            role: profile.role || "Administrator"
+        };
+
+        // ==============================
+        // BAHASA
+        // ==============================
+
+        const savedLanguage =
+            localStorage.getItem("climexLanguage")
+            || currentLoginLang
+            || "id";
+
+        currentLoginLang = savedLanguage;
+
+        // ==============================
+        // MASUK DASHBOARD
+        // ==============================
+
+        document.getElementById("loginGate").style.display =
+            "none";
+
+        const app =
+            document.querySelector(".app");
+
+        if(app){
+
+            app.style.display = "grid";
+
+        }
+
+        setAppLanguage(savedLanguage);
+
+        // ==============================
+        // LOAD DATA FIRESTORE
+        // ==============================
+if(typeof loadCompanyProfile === "function"){
+
+    loadCompanyProfile();
+
+}
+        if(typeof loadClimexClaims === "function"){
+
+            loadClimexClaims();
+
+        }
+
+if(document.readyState === "loading"){
+
+    document.addEventListener("DOMContentLoaded", function(){
+
+        if(typeof loadCompanyProfile === "function"){
+            loadCompanyProfile();
+        }
+
+        if(typeof loadCompanyLogo === "function"){
+            loadCompanyLogo();
+        }
+
+    }, { once:true });
+
+}else{
+
+    if(typeof loadCompanyProfile === "function"){
+        loadCompanyProfile();
+    }
+
+    if(typeof loadCompanyLogo === "function"){
+        loadCompanyLogo();
+    }
+
+}
+        
+        console.log(
+            "CLIME-X LOGIN BERHASIL:",
+            window.climexCurrentUser
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X LOGIN ERROR:",
+            error
+        );
+
+        alert(
+            "Login gagal. Email/Username atau Password salah."
+        );
+
+    }
+
+}
+
+async function saveClimexClaim(claim){
+
+    try{
+
+        if(!climexAuth.currentUser){
+            throw new Error("User CLIME-X belum login.");
+        }
+
+        const uid = climexAuth.currentUser.uid;
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .doc(claim.claimId)
+            .set({
+                claimId: claim.claimId,
+                employee: claim.employee || "",
+                category: claim.category || "",
+                amount: Number(claim.amount) || 0,
+                date: claim.date || "",
+                status: claim.status || "Pending",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, {
+                merge: true
+            });
+
+        console.log(
+            "CLIME-X CLAIM FIRESTORE OK:",
+            claim.claimId
+        );
+
+        return true;
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CLAIM FIRESTORE ERROR:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+
+</script>
+
+<div class="app">
+
+    <!-- =====================================================
+         HEADER
+         Logo + Nama Perusahaan + Admin
+         ===================================================== -->
+    <header class="header">
+
+        <div class="company-brand">
+
+            <!--
+              TEMPAT LOGO PERUSAHAAN.
+              Nanti bisa diganti menjadi:
+              <img src="logo-perusahaan.png" class="company-logo" alt="Logo">
+            -->
+            <img
+    id="headerCompanyLogo"
+    class="company-logo"
+    src=""
+    alt="Company Logo"
+    style="display:none;"
+>
+
+<div
+    id="headerCompanyLogoText"
+    class="company-logo"
+>
+    LOGO
+</div>
+
+            <div class="company-info">
+                <div id="headerCompanyName" class="company-name">
+    PT. ABC INDONESIA
+</div>
+
+<div id="headerCompanyAddress" class="header-company-detail">
+</div>
+
+<div id="headerCompanyPhone" class="header-company-detail">
+</div>
+
+<div id="headerCompanyEmail" class="header-company-detail">
+</div>
+                
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <!-- PILIHAN BAHASA APP -->
+            <div id="appLanguageSelector" class="app-language-selector">
+
+                <button
+                    id="appLanguageButton"
+                    class="app-language-button"
+                    onclick="toggleAppLanguageMenu()"
+                    type="button"
+                >
+                    <span id="appCurrentFlag" class="flag-circle flag-id"></span>
+                    <span id="appCurrentLang">Indonesia</span>
+                </button>
+
+                <div id="appLanguageMenu" class="app-language-menu">
+                    <button type="button" data-lang="id" onclick="selectAppLanguage('id','Indonesia','flag-id')">
+                        <span class="flag-circle flag-id"></span>
+                        <span>Indonesia</span>
+                    </button>
+                    <button type="button" data-lang="en" onclick="selectAppLanguage('en','English','flag-en')">
+                        <span class="flag-circle flag-en"></span>
+                        <span>English</span>
+                    </button>
+                    <button type="button" data-lang="zh" onclick="selectAppLanguage('zh','中文','flag-zh')">
+                        <span class="flag-circle flag-zh"></span>
+                        <span>中文</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="admin-user">
+                <div class="admin-avatar">BS</div>
+                <div>
+                    <div class="admin-name">Budi Santoso</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         SIDEBAR / MENU
+         ===================================================== -->
+    <aside class="sidebar">
+
+        <div class="menu-title">MENU UTAMA</div>
+
+        <nav class="menu">
+
+            <button class="active" onclick="showPage('dashboard', this)">
+                Dashboard
+            </button>
+
+            <button onclick="showPage('claims', this)">
+                Claims
+            </button>
+
+            <button onclick="showPage('employees', this)">
+                Employees
+            </button>
+
+            <button onclick="showPage('announcements', this)">
+                Announcements
+            </button>
+
+            <button onclick="showPage('events', this)">
+                Events
+            </button>
+
+            <button onclick="showPage('reports', this)">
+                Reports
+            </button>
+
+            <button onclick="showPage('company', this)">
+                Company
+            </button>
+
+            <button onclick="showPage('settings', this)">
+                Settings
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            CLIME-X<br>
+            Company Expense Management
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         SATU-SATUNYA AREA YANG SCROLL
+         ===================================================== -->
+    <main class="content-scroll">
+
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="page">
+
+                <div class="page-heading">
+                    <div>
+                        <h1>Dashboard Perusahaan</h1>
+                        <p>Ringkasan aktivitas klaim dan pengeluaran perusahaan.</p>
+                    </div>
+
+                    <div class="date-box">
+                        24 September 2026
+                    </div>
+                </div>
+
+
+                <div class="grid-4">
+
+                    <div class="card">
+                        <div class="metric-label">Total Klaim</div>
+                        <div class="metric-value">248</div>
+                        <div class="metric-note up">+12 bulan ini</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="metric-label">Menunggu Review</div>
+                        <div class="metric-value">18</div>
+                        <div class="metric-note">Perlu tindakan admin</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="metric-label">Disetujui</div>
+                        <div class="metric-value">196</div>
+                        <div class="metric-note up">79% dari total klaim</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="metric-label">Belum Dibayar</div>
+                        <div class="metric-value">34</div>
+                        <div class="metric-note down">Perlu proses pembayaran</div>
+                    </div>
+
+                </div>
+
+
+                <div class="grid-2">
+
+                    <div class="card">
+                        <div class="card-title">Pengeluaran Klaim</div>
+
+                        <div class="chart">
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:38%"></div>
+                                <div class="bar-label">Apr</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:52%"></div>
+                                <div class="bar-label">Mei</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:44%"></div>
+                                <div class="bar-label">Jun</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:68%"></div>
+                                <div class="bar-label">Jul</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:58%"></div>
+                                <div class="bar-label">Agu</div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar" style="height:82%"></div>
+                                <div class="bar-label">Sep</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-title">Pengumuman Terbaru</div>
+
+                        <div class="announcement">
+                            <strong>Kebijakan perjalanan dinas</strong>
+                            <p>Peraturan perjalanan dinas terbaru telah diterbitkan.</p>
+                        </div>
+
+                        <div class="announcement">
+                            <strong>Batas pengajuan klaim</strong>
+                            <p>Klaim bulan September dapat diajukan sampai tanggal 30.</p>
+                        </div>
+
+                        <div class="announcement">
+                            <strong>Sistem CLIME-X</strong>
+                            <p>Pemeliharaan sistem dijadwalkan pada akhir pekan.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="card" style="margin-top:18px;">
+
+                    <div class="card-title">Klaim Terbaru</div>
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Claim ID</th>
+                                    <th>Karyawan</th>
+                                    <th>Kategori</th>
+                                    <th>Total</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="recentClaimsBody">
+
+                                <tr>
+                                    <td>CLM-2026-0248</td>
+                                    <td>Sarah Lee</td>
+                                    <td>Travel</td>
+                                    <td>Rp 2.450.000</td>
+                                    <td>24 Sep 2026</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>CLM-2026-0247</td>
+                                    <td>Mike Tan</td>
+                                    <td>Hotel</td>
+                                    <td>Rp 3.200.000</td>
+                                    <td>23 Sep 2026</td>
+                                    <td><span class="status approved">Approved</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>CLM-2026-0246</td>
+                                    <td>Emily Wong</td>
+                                    <td>Meals</td>
+                                    <td>Rp 680.000</td>
+                                    <td>23 Sep 2026</td>
+                                    <td><span class="status paid">Paid</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>CLM-2026-0245</td>
+                                    <td>Daniel Lim</td>
+                                    <td>Transport</td>
+                                    <td>Rp 920.000</td>
+                                    <td>22 Sep 2026</td>
+                                    <td><span class="status approved">Approved</span></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- HALAMAN LAIN: SENGAJA SEDERHANA UNTUK PROTOTYPE -->
+            <section id="claims" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Claims</h1>
+                        <p>Kelola seluruh pengajuan klaim karyawan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Daftar Claims</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Area ini akan berisi tabel klaim, filter, pencarian, detail receipt,
+                        approval, rejection, dan pembayaran.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="employees" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Employees</h1>
+                        <p>Kelola karyawan perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Employee Management</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Data karyawan, department, status akun, dan akses akan berada di sini.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="announcements" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Announcements</h1>
+                        <p>Komunikasi resmi perusahaan kepada karyawan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Company Announcements</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Buat pengumuman untuk seluruh karyawan, grup, atau karyawan tertentu.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="events" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Events</h1>
+                        <p>Kelola kegiatan dan acara perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Company Events</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Jadwal, lokasi, deskripsi, dan informasi event perusahaan.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="reports" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Reports</h1>
+                        <p>Laporan pengeluaran dan klaim perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Reports</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Daily · Weekly · Monthly · Employee · Department · Category
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="company" class="page" style="display:none;">
+                <div class="page-heading">
+                    <div>
+                        <h1>Company</h1>
+                        <p>Informasi dan identitas perusahaan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Company Profile</div>
+                    <p style="color:var(--muted);font-size:13px;">
+                        Logo, nama perusahaan, alamat, kontak, dan informasi lainnya.
+                    </p>
+                </div>
+            </section>
+
+
+            <section id="settings" class="page" style="display:none;">
+
+    <div class="page-heading">
+        <div>
+            <h1>Settings</h1>
+            <p>Pengaturan CLIME-X perusahaan.</p>
+        </div>
+    </div>
+
+
+    <!-- SETTINGS TABS -->
+
+    <div class="settings-tabs">
+
+        <button
+            class="settings-tab active"
+            onclick="showSettingsTab('general', this)"
+        >
+            General
+        </button>
+
+        <button
+            class="settings-tab"
+            onclick="showSettingsTab('company', this)"
+        >
+            Company
+        </button>
+
+        <button
+            class="settings-tab"
+            onclick="showSettingsTab('employee', this)"
+        >
+            Employee
+        </button>
+
+        <button
+            class="settings-tab"
+            onclick="showSettingsTab('print', this)"
+        >
+            Print Template
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         GENERAL
+         ===================================================== -->
+
+    <div id="settingsGeneral" class="settings-panel">
+
+        <div class="card">
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(3,1fr);
+                gap:28px;
+            ">
+
+                <div>
+
+                    <div style="
+                        font-size:13px;
+                        font-weight:700;
+                        margin-bottom:8px;
+                    ">
+                        Currency
+                    </div>
+
+                    <select style="
+                        width:100%;
+                        padding:10px 12px;
+                        border:1px solid var(--line);
+                        border-radius:8px;
+                        background:#fff;
+                        color:var(--text);
+                        font-size:13px;
+                    ">
+                        <option>IDR — Indonesian Rupiah</option>
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <div style="
+                        font-size:13px;
+                        font-weight:700;
+                        margin-bottom:8px;
+                    ">
+                        Date Format
+                    </div>
+
+                    <select style="
+                        width:100%;
+                        padding:10px 12px;
+                        border:1px solid var(--line);
+                        border-radius:8px;
+                        background:#fff;
+                        color:var(--text);
+                        font-size:13px;
+                    ">
+                        <option>DD/MM/YYYY</option>
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <div style="
+                        font-size:13px;
+                        font-weight:700;
+                        margin-bottom:8px;
+                    ">
+                        Time Zone
+                    </div>
+
+                    <select style="
+                        width:100%;
+                        padding:10px 12px;
+                        border:1px solid var(--line);
+                        border-radius:8px;
+                        background:#fff;
+                        color:var(--text);
+                        font-size:13px;
+                    ">
+                        <option>Asia/Jakarta (GMT+7)</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         COMPANY
+         ===================================================== -->
+
+    <div id="settingsCompany" class="settings-panel" style="display:none;">
+
+    <div class="card">
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:20px 28px;
+        ">
+
+            <div>
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Company Name
+                </div>
+
+                <input
+                    id="companyName"
+                    type="text"
+                    placeholder="Nama perusahaan"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div>
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Company ID
+                </div>
+
+                <input
+                    id="companyId"
+                    type="text"
+                    value=""
+                    readonly
+                    placeholder="Company ID"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#f8f6f3;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div style="grid-column:1 / -1;">
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Company Address
+                </div>
+
+                <input
+                    id="companyAddress"
+                    type="text"
+                    placeholder="Alamat perusahaan"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div>
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    City
+                </div>
+
+                <input
+                    id="companyCity"
+                    type="text"
+                    placeholder="Kota"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div>
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Country
+                </div>
+
+                <input
+                    id="companyCountry"
+                    type="text"
+                    value="Indonesia"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div>
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Phone
+                </div>
+
+                <input
+                    id="companyPhone"
+                    type="text"
+                    placeholder="Nomor telepon"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div>
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Email
+                </div>
+
+                <input
+                    id="companyEmail"
+                    type="email"
+                    placeholder="Email perusahaan"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div style="grid-column:1 / -1;">
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Website
+                </div>
+
+                <input
+                    id="companyWebsite"
+                    type="text"
+                    placeholder="https://www.example.com"
+                    style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
+                >
+            </div>
+
+
+            <div style="grid-column:1 / -1;">
+
+                <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
+                    Company Logo
+                </div>
+
+                <div style="display:flex;align-items:center;gap:12px;">
+
+                    <img
+                        id="companyLogoImage"
+                        src=""
+                        alt=""
+                        style="display:none;width:48px;height:48px;object-fit:contain;border-radius:8px;"
+                    >
+
+                    <button
+                        class="btn"
+                        type="button"
+                        id="companyLogoBtn"
+                        onclick="handleCompanyLogo()"
+                    >
+                        UPLOAD LOGO
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div style="
+                grid-column:1 / -1;
+                display:flex;
+                justify-content:flex-end;
+                margin-top:4px;
+            ">
+
+                <button
+                    class="btn primary"
+                    type="button"
+                    onclick="saveCompanyProfile()"
+                >
+                    SIMPAN
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    <!-- =====================================================
+         EMPLOYEE
+         ===================================================== -->
+
+    <div id="settingsEmployee" class="settings-panel" style="display:none;">
+
+        <div class="card">
+
+            <!-- DOMAIN -->
+
+            <div style="margin-bottom:24px;">
+
+    <div style="
+        font-size:13px;
+        font-weight:700;
+        margin-bottom:8px;
+    ">
+        Employee Domain
+    </div>
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+        max-width:560px;
+    ">
+
+        <input
+            id="employeeDomain"
+            type="text"
+            value="favorich"
+            readonly
+            style="
+                flex:1;
+                height:40px;
+                padding:0 12px;
+                border:1px solid var(--line);
+                border-radius:8px;
+                background:#f8f6f3;
+                color:var(--text);
+                font-size:13px;
+                box-sizing:border-box;
+            "
+        >
+
+        <span style="
+            font-size:13px;
+            color:var(--muted);
+        ">
+            .com
+        </span>
+
+        <button
+            id="employeeDomainBtn"
+            class="btn"
+            type="button"
+            onclick="editEmployeeDomain()"
+        >
+            EDIT DOMAIN
+        </button>
+
+    </div>
+
+    <div style="
+        margin-top:7px;
+        color:var(--muted);
+        font-size:12px;
+    ">
+        Employee ID akan menggunakan format nama@domain.com
+    </div>
+
+</div>
+
+
+            <!-- EMPLOYEE TABLE -->
+
+            <div style="
+                font-size:15px;
+                font-weight:800;
+                margin-bottom:12px;
+            ">
+                Employees
+            </div>
+
+
+            <div class="employee-table-wrap">
+
+                <div class="employee-table-scroll">
+
+                    <table class="employee-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th style="width:55px;text-align:center;">
+                                    No.
+                                </th>
+
+                                <th style="width:24%;">
+                                    Nama Employee
+                                </th>
+
+                                <th style="width:28%;">
+                                    Employee ID
+                                </th>
+
+                                <th style="width:18%;">
+                                    Role
+                                </th>
+
+                                <th style="width:20%;">
+                                    Password
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="employeeTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- STICKY BUTTONS -->
+
+            <button
+    class="btn primary"
+    type="button"
+    onclick="addEmployeeRow()"
+>
+    TAMBAH
+</button>
+
+                <button
+                    class="btn"
+                    type="button"
+                    onclick="cancelEmployeeEdit()"
+                >
+                    BATAL
+                </button>
+
+                <button
+                    class="btn"
+                    type="button"
+                    onclick="deleteSelectedEmployee()"
+                >
+                    HAPUS
+                </button>
+
+                <button
+                    class="btn primary"
+                    type="button"
+                    onclick="saveEmployees()"
+                >
+                    SIMPAN
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PRINT TEMPLATE
+         ===================================================== -->
+
+    <div id="settingsPrint" class="settings-panel" style="display:none;">
+
+        <div class="card">
+
+            <div class="card-title">
+                Print Template
+            </div>
+
+            <p style="
+                color:var(--muted);
+                font-size:13px;
+            ">
+                Template dokumen A4, header, footer, logo,
+                dan informasi perusahaan.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+function showSettingsTab(tabId, button){
+
+    document.querySelectorAll(".settings-tab").forEach(function(tab){
+        tab.classList.remove("active");
+    });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+
+    document.querySelectorAll(".settings-panel").forEach(function(panel){
+        panel.style.display = "none";
+    });
+
+
+    const panelMap = {
+        general: "settingsGeneral",
+        company: "settingsCompany",
+        employee: "settingsEmployee",
+        print: "settingsPrint"
+    };
+
+
+    const target = document.getElementById(panelMap[tabId]);
+
+if(target){
+
+    if(tabId === "employee"){
+        target.style.display = "flex";
+    }else{
+        target.style.display = "block";
+    }
+
+}
+
+
+    if(tabId === "employee"){
+
+    renderEmployeeTable();
+
+    loadEmployeeDomain();
+
+}
+
+}
+
+let settingsEmployees = [];
+let selectedEmployeeIndex = -1;
+
+let employeeDomainEditing = false;
+
+
+function editEmployeeDomain(){
+
+    const input = document.getElementById("employeeDomain");
+    const button = document.getElementById("employeeDomainBtn");
+
+    if(!input || !button){
+        return;
+    }
+
+
+    if(!employeeDomainEditing){
+
+        employeeDomainEditing = true;
+
+        input.readOnly = false;
+
+        input.style.background = "#fff";
+
+        button.textContent = "SIMPAN";
+
+        input.focus();
+
+        input.select();
+
+        return;
+    }
+
+
+    saveEmployeeDomain();
+
+}
+
+async function saveEmployeeDomain(){
+
+    const input = document.getElementById("employeeDomain");
+    const button = document.getElementById("employeeDomainBtn");
+
+    if(!input || !button){
+        return;
+    }
+
+
+    let domain = input.value
+        .trim()
+        .toLowerCase();
+
+
+    domain = domain
+        .replace(/^https?:\/\//, "")
+        .replace(/^www\./, "")
+        .replace(/@/g, "")
+        .replace(/\.com$/i, "")
+        .replace(/\s+/g, "");
+
+
+    if(!domain){
+
+        alert("Employee Domain wajib diisi.");
+
+        input.focus();
+
+        return;
+    }
+
+
+    if(!/^[a-z0-9-]+$/.test(domain)){
+
+        alert(
+            "Domain hanya boleh menggunakan huruf, angka, dan tanda -."
+        );
+
+        input.focus();
+
+        return;
+    }
+
+
+    if(!climexAuth.currentUser){
+
+        alert("User CLIME-X belum login.");
+
+        return;
+    }
+
+
+    try{
+
+        const uid = climexAuth.currentUser.uid;
+
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("profile")
+            .set({
+
+                employeeDomain: domain,
+
+                updatedAt:
+                    firebase.firestore.FieldValue.serverTimestamp()
+
+            }, {
+                merge:true
+            });
+
+
+        input.value = domain;
+
+        input.readOnly = true;
+
+        input.style.background = "#f8f6f3";
+
+        button.textContent = "EDIT DOMAIN";
+
+        employeeDomainEditing = false;
+
+
+        console.log(
+            "CLIME-X EMPLOYEE DOMAIN SAVED:",
+            domain
+        );
+
+
+        alert("Employee Domain berhasil disimpan.");
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X EMPLOYEE DOMAIN ERROR:",
+            error
+        );
+
+        alert(
+            "Employee Domain gagal disimpan."
+        );
+
+    }
+
+}
+
+async function handleCompanyLogo(){
+
+    const input = document.createElement("input");
+
+    input.type = "file";
+    input.accept = "image/*";
+    input.style.display = "none";
+
+    document.body.appendChild(input);
+
+    input.onchange = async function(){
+
+        const file = input.files && input.files[0];
+
+        if(!file){
+            input.remove();
+            return;
+        }
+
+        if(!climexAuth.currentUser){
+            alert("User CLIME-X belum login.");
+            input.remove();
+            return;
+        }
+
+        try{
+
+            const reader = new FileReader();
+
+            reader.onload = async function(event){
+
+                const image = new Image();
+
+                image.onload = async function(){
+
+                    const canvas =
+                        document.createElement("canvas");
+
+                    const maxSize = 300;
+
+                    let width = image.width;
+                    let height = image.height;
+
+                    if(width > height){
+
+                        if(width > maxSize){
+                            height =
+                                height * maxSize / width;
+                            width = maxSize;
+                        }
+
+                    }else{
+
+                        if(height > maxSize){
+                            width =
+                                width * maxSize / height;
+                            height = maxSize;
+                        }
+
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx =
+                        canvas.getContext("2d");
+
+                    ctx.drawImage(
+                        image,
+                        0,
+                        0,
+                        width,
+                        height
+                    );
+
+                    const logoData =
+                        canvas.toDataURL(
+                            "image/jpeg",
+                            0.8
+                        );
+
+                    const uid =
+                        climexAuth.currentUser.uid;
+
+                    await climexDB
+                        .collection("users")
+                        .doc(uid)
+                        .collection("climex")
+                        .doc("profile")
+                        .set({
+                            companyLogoData: logoData,
+                            updatedAt:
+                                firebase.firestore.FieldValue.serverTimestamp()
+                        },{
+                            merge:true
+                        });
+
+                    applyCompanyLogo(logoData);
+
+                    const button =
+                        document.getElementById(
+                            "companyLogoBtn"
+                        );
+
+                    if(button){
+                        button.textContent =
+                            "EDIT LOGO";
+                    }
+
+                    console.log(
+                        "CLIME-X COMPANY LOGO SAVED"
+                    );
+
+                };
+
+                image.src = event.target.result;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        }catch(error){
+
+            console.error(
+                "CLIME-X COMPANY LOGO ERROR:",
+                error
+            );
+
+            alert(
+                "Logo gagal disimpan."
+            );
+
+        }
+
+        input.remove();
+
+    };
+
+    input.click();
+}
+
+function applyCompanyLogo(logoUrl){
+
+    const image =
+        document.getElementById("headerCompanyLogo");
+
+    const text =
+        document.getElementById("headerCompanyLogoText");
+
+    if(!image || !text || !logoUrl){
+        return;
+    }
+
+    image.src = logoUrl;
+    image.style.display = "block";
+    text.style.display = "none";
+}
+
+function applyCompanyProfile(data){
+
+    const name =
+        document.getElementById("headerCompanyName");
+
+    const address =
+        document.getElementById("headerCompanyAddress");
+
+    const phone =
+        document.getElementById("headerCompanyPhone");
+
+    const email =
+        document.getElementById("headerCompanyEmail");
+
+
+    if(name){
+        name.textContent =
+            data.companyName || "";
+    }
+
+
+    if(address){
+
+        const parts = [];
+
+        if(data.companyAddress){
+            parts.push(data.companyAddress);
+        }
+
+        if(data.companyCity){
+            parts.push(data.companyCity);
+        }
+
+        address.textContent =
+            parts.join(" · ");
+
+    }
+
+
+    if(phone){
+        phone.textContent =
+            data.companyPhone || "";
+    }
+
+
+    if(email){
+        email.textContent =
+            data.companyEmail || "";
+    }
+
+}
+
+async function loadCompanyProfile(){
+
+    if(!climexAuth.currentUser){
+        return;
+    }
+
+    try{
+
+        const uid =
+            climexAuth.currentUser.uid;
+
+        const doc =
+            await climexDB
+                .collection("users")
+                .doc(uid)
+                .collection("climex")
+                .doc("profile")
+                .get();
+
+        if(!doc.exists){
+            return;
+        }
+
+        const data = doc.data();
+
+
+        const fields = [
+            "companyName",
+            "companyAddress",
+            "companyCity",
+            "companyCountry",
+            "companyPhone",
+            "companyEmail",
+            "companyWebsite"
+        ];
+
+
+        fields.forEach(function(id){
+
+            const input =
+                document.getElementById(id);
+
+            if(input){
+                input.value =
+                    data[id] || "";
+            }
+
+        });
+
+
+        const companyId =
+            document.getElementById("companyId");
+
+        if(companyId){
+
+            companyId.value =
+                data.companyId ||
+                "";
+
+        }
+
+
+        applyCompanyProfile(data);
+
+
+        console.log(
+            "CLIME-X COMPANY PROFILE LOAD OK:",
+            data
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY PROFILE LOAD ERROR:",
+            error
+        );
+
+    }
+
+}
+
+async function saveCompanyProfile(){
+
+    if(!climexAuth.currentUser){
+        alert("User CLIME-X belum login.");
+        return;
+    }
+
+    try{
+
+        const uid =
+            climexAuth.currentUser.uid;
+
+        const companyName =
+            document.getElementById("companyName").value.trim();
+
+        if(!companyName){
+            alert("Company Name wajib diisi.");
+            return;
+        }
+
+        const companyData = {
+
+            companyName:
+                companyName,
+
+            companyAddress:
+                document.getElementById("companyAddress").value.trim(),
+
+            companyCity:
+                document.getElementById("companyCity").value.trim(),
+
+            companyCountry:
+                document.getElementById("companyCountry").value.trim(),
+
+            companyPhone:
+                document.getElementById("companyPhone").value.trim(),
+
+            companyEmail:
+                document.getElementById("companyEmail").value.trim(),
+
+            companyWebsite:
+                document.getElementById("companyWebsite").value.trim(),
+
+            updatedAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+
+        };
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("profile")
+            .set(
+                companyData,
+                { merge:true }
+            );
+
+        applyCompanyProfile(companyData);
+
+        alert("Company Profile berhasil disimpan.");
+
+        console.log(
+            "CLIME-X COMPANY PROFILE SAVED:",
+            companyData
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY PROFILE ERROR:",
+            error
+        );
+
+        alert(
+            "Company Profile gagal disimpan."
+        );
+
+    }
+
+}
+
+async function loadCompanyLogo(){
+
+    if(!climexAuth.currentUser){
+        return;
+    }
+
+    try{
+
+        const uid =
+            climexAuth.currentUser.uid;
+
+        const doc =
+            await climexDB
+                .collection("users")
+                .doc(uid)
+                .collection("climex")
+                .doc("profile")
+                .get();
+
+        if(!doc.exists){
+            return;
+        }
+
+        const data = doc.data();
+
+        const companyIdInput =
+    document.getElementById("companyId");
+
+if(companyIdInput){
+
+    companyIdInput.value =
+        data.companyId ||
+        window.climexCurrentUser.companyId ||
+        "";
+
+}
+
+        if(data.companyLogoData){
+
+            applyCompanyLogo(
+                data.companyLogoData
+            );
+
+            const button =
+                document.getElementById(
+                    "companyLogoBtn"
+                );
+
+            if(button){
+                button.textContent =
+                    "EDIT LOGO";
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY LOGO LOAD ERROR:",
+            error
+        );
+
+    }
+}
+
+
+async function loadEmployeeDomain(){
+
+    const input = document.getElementById("employeeDomain");
+
+    if(!input){
+        return;
+    }
+
+
+    if(!climexAuth.currentUser){
+        return;
+    }
+
+
+    try{
+
+        const uid = climexAuth.currentUser.uid;
+
+
+        const doc = await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("profile")
+            .get();
+
+
+        if(doc.exists){
+
+            const data = doc.data();
+
+
+            if(data.employeeDomain){
+
+                input.value =
+                    data.employeeDomain;
+
+            }
+
+        }
+
+
+        input.readOnly = true;
+
+        input.style.background = "#f8f6f3";
+
+        employeeDomainEditing = false;
+
+
+        const button =
+            document.getElementById("employeeDomainBtn");
+
+        if(button){
+            button.textContent = "EDIT DOMAIN";
+        }
+
+
+        console.log(
+            "CLIME-X EMPLOYEE DOMAIN LOAD OK:",
+            input.value
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X EMPLOYEE DOMAIN LOAD ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+function renderEmployeeTable(){
+
+    const tbody = document.getElementById("employeeTableBody");
+
+    if(!tbody){
+        return;
+    }
+
+
+    tbody.innerHTML = "";
+
+
+    settingsEmployees.forEach(function(employee, index){
+
+        const tr = document.createElement("tr");
+
+        if(index === selectedEmployeeIndex){
+            tr.classList.add("selected");
+        }
+
+
+        tr.onclick = function(){
+
+            selectedEmployeeIndex = index;
+
+            renderEmployeeTable();
+
+        };
+
+
+        tr.innerHTML = `
+
+            <td class="employee-no">
+                ${index + 1}
+            </td>
+
+            <td>
+                <input
+                    type="text"
+                    value="${employee.name || ""}"
+                    placeholder="Nama"
+                    onclick="event.stopPropagation()"
+                    onchange="updateEmployeeField(${index}, 'name', this.value)"
+                >
+            </td>
+
+            <td>
+                <input
+                    type="text"
+                    value="${employee.id || ""}"
+                    placeholder="nama@domain.com"
+                    onclick="event.stopPropagation()"
+                    onchange="updateEmployeeField(${index}, 'id', this.value)"
+                >
+            </td>
+
+            <td>
+                <select
+                    onclick="event.stopPropagation()"
+                    onchange="updateEmployeeField(${index}, 'role', this.value)"
+                >
+                    <option value="Admin" ${employee.role === "Admin" ? "selected" : ""}>
+                        Admin
+                    </option>
+
+                    <option value="Read Only" ${employee.role === "Read Only" ? "selected" : ""}>
+                        Read Only
+                    </option>
+                </select>
+            </td>
+
+            <td>
+                <input
+                    type="password"
+                    value="${employee.password || ""}"
+                    placeholder="Password"
+                    onclick="event.stopPropagation()"
+                    onchange="updateEmployeeField(${index}, 'password', this.value)"
+                >
+            </td>
+
+        `;
+
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+function updateEmployeeField(index, field, value){
+
+    if(!settingsEmployees[index]){
+        return;
+    }
+
+    settingsEmployees[index][field] = value;
+
+}
+
+
+function addEmployeeRow(){
+
+    settingsEmployees.push({
+
+        name:"",
+        id:"",
+        role:"Read Only",
+        password:""
+
+    });
+
+
+    selectedEmployeeIndex = settingsEmployees.length - 1;
+
+    renderEmployeeTable();
+
+}
+
+
+function cancelEmployeeEdit(){
+
+    if(selectedEmployeeIndex < 0){
+        return;
+    }
+
+    settingsEmployees.splice(selectedEmployeeIndex, 1);
+
+    selectedEmployeeIndex = -1;
+
+    renderEmployeeTable();
+
+}
+
+
+function deleteSelectedEmployee(){
+
+    if(selectedEmployeeIndex < 0){
+        alert("Pilih employee yang ingin dihapus.");
+
+        return;
+    }
+
+
+    settingsEmployees.splice(selectedEmployeeIndex, 1);
+
+    selectedEmployeeIndex = -1;
+
+    renderEmployeeTable();
+
+}
+
+
+function saveEmployees(){
+
+    console.log(
+        "CLIME-X EMPLOYEES:",
+        settingsEmployees
+    );
+
+    alert("Data employee siap disimpan.");
+
+}
+
+/* =========================================================
+   NAVIGASI SEDERHANA
+   ========================================================= */
+
+function showPage(pageId, button){
+
+    document.querySelectorAll(".page").forEach(function(page){
+        page.style.display = "none";
+    });
+
+    const target = document.getElementById(pageId);
+
+    if(target){
+        target.style.display = "block";
+    }
+
+    document.querySelectorAll(".menu button").forEach(function(btn){
+        btn.classList.remove("active");
+    });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    const content = document.querySelector(".content-scroll");
+
+if(content){
+    content.scrollTop = 0;
+}
+
+    if(content){
+        content.scrollTop = 0;
+    }
+}
+
+async function loadClimexClaims(){
+
+    try{
+
+        if(!climexAuth.currentUser){
+            console.log("CLIME-X CLAIMS: user belum login");
+            return;
+        }
+
+        const uid = climexAuth.currentUser.uid;
+
+        const snapshot = await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .orderBy("createdAt", "desc")
+            .limit(20)
+            .get();
+
+        const tbody = document.getElementById("recentClaimsBody");
+
+        if(!tbody){
+            console.log("CLIME-X CLAIMS: tabel tidak ditemukan");
+            return;
+        }
+
+        tbody.innerHTML = "";
+
+        snapshot.forEach(function(doc){
+
+            const claim = doc.data();
+
+            const amount = Number(claim.amount) || 0;
+
+            const statusClass =
+                String(claim.status || "Pending").toLowerCase();
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${claim.claimId || doc.id}</td>
+                <td>${claim.employee || "-"}</td>
+                <td>${claim.category || "-"}</td>
+                <td>Rp ${amount.toLocaleString("id-ID")}</td>
+                <td>${claim.date || "-"}</td>
+                <td>
+                    <span class="status ${statusClass}">
+                        ${claim.status || "Pending"}
+                    </span>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+
+        });
+
+        console.log(
+            "CLIME-X CLAIMS LOAD OK:",
+            snapshot.size
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CLAIMS LOAD ERROR:",
+            error
+        );
+
+    }
+}
+
+</script>
+
+</body>
+</html>
