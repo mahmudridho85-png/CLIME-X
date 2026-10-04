@@ -8,14 +8,14 @@
 :root{--brown:#b68b62;--dark:#5b3d29;--cream:#f7f2eb;--text:#34291f;--muted:#74695f;--line:#e8ded3}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.7}
 header{background:#379d6a;color:#fff;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.brand{font-size:22px;font-weight:800}.lang{border:1px solid rgba(255,255,255,.4);border-radius:9px;background:transparent;color:#fff;padding:9px 12px;font-weight:700}
+.brand{font-size:22px;font-weight:800}.brand img{height:42px;width:auto;display:block;filter:brightness(0) invert(1)}.lang{border:1px solid rgba(255,255,255,.4);border-radius:9px;background:transparent;color:#fff;padding:9px 12px;font-weight:700}
 main{max-width:900px;margin:35px auto;padding:0 20px 50px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:32px;box-shadow:0 8px 24px rgba(75,52,34,.08)}
 h1{margin:0 0 7px;color:var(--dark);font-size:29px}h2{margin:28px 0 8px;color:var(--dark);font-size:18px}p,li{font-size:14px}.updated{color:var(--muted);font-size:12px;margin-bottom:25px}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
 @media(max-width:600px){main{margin:18px auto;padding:0 12px}.card{padding:22px}h1{font-size:24px}}
 </style>
 </head>
 <body>
-<header><div class="brand">Clime-X</div><select id="lang" class="lang" onchange="setLang(this.value)"><option value="id">🇮🇩 Indonesia</option><option value="en">🇬🇧 English</option><option value="zh">🇨🇳 中文</option></select></header>
+<header><div class="brand"><img src="welcome.png" alt="Clime-X"></div><select id="lang" class="lang" onchange="setLang(this.value)"><option value="id">🇮🇩 Indonesia</option><option value="en">🇬🇧 English</option><option value="zh">🇨🇳 中文</option></select></header>
 <main><div class="card" id="content"></div><div class="footer">© Clime-X</div></main>
 <script>
 const T={
