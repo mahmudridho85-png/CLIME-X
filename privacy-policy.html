@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Privacy Policy | Clime-X</title>
+
+<style>
+:root{
+    --brown:#b68b62;
+    --dark:#5b3d29;
+    --cream:#f7f2eb;
+    --text:#34291f;
+    --muted:#74695f;
+    --line:#e8ded3
+}
+
+*{
+    box-sizing:border-box
+}
+
+body{
+    margin:0;
+    background:var(--cream);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    line-height:1.7
+}
+
+header{
+    background:#379d6a;
+    color:#fff;
+    padding:22px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px
+}
+
+.brand{
+    font-size:22px;
+    font-weight:800
+}
+
+.brand img{
+    height:60px !important;
+    width:auto !important;
+    display:block;
+    filter:brightness(0) invert(1)
+}
+
+.lang{
+    border:1px solid rgba(255,255,255,.4);
+    border-radius:9px;
+    background:transparent;
+    color:#fff;
+    padding:9px 12px;
+    font-weight:700;
+    cursor:pointer
+}
+
+.lang option{
+    color:#34291f;
+    background:#fff;
+    font-weight:700
+}
+
+main{
+    max-width:900px;
+    margin:35px auto;
+    padding:0 20px 50px
+}
+
+.card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:32px;
+    box-shadow:0 8px 24px rgba(75,52,34,.08)
+}
+
+h1{
+    margin:0 0 7px;
+    color:var(--dark);
+    font-size:29px
+}
+
+h2{
+    margin:28px 0 8px;
+    color:var(--dark);
+    font-size:18px
+}
+
+p,li{
+    font-size:14px
+}
+
+.updated{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:25px
+}
+
+.footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:20px
+}
+
+@media(max-width:600px){
+    main{
+        margin:18px auto;
+        padding:0 12px
+    }
+
+    .card{
+        padding:22px
+    }
+
+    h1{
+        font-size:24px
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">
+        <img src="/welcome.png" alt="Clime-X">
+    </div>
+
+    <select id="lang" class="lang" onchange="setLang(this.value)">
+    <option value="id" style="color:#34291f;background:#fff;">🇮🇩 Indonesia</option>
+    <option value="en" style="color:#34291f;background:#fff;">🇬🇧 English</option>
+    <option value="zh" style="color:#34291f;background:#fff;">🇨🇳 中文</option>
+</select>
+</header>
+
+<main>
+    <div class="card" id="content"></div>
+    <div class="footer">© Clime-X</div>
+</main>
+
+<script>
+
+const T={
+
+id:{
+title:"Kebijakan Privasi",
+date:"Terakhir diperbarui: 4 Oktober 2026",
+sections:[
+["1. Pendahuluan","Clime-X menghargai privasi pengguna. Kebijakan Privasi ini menjelaskan bagaimana Clime-X mengumpulkan, menggunakan, menyimpan, dan melindungi informasi ketika Anda menggunakan Clime-X Employee, Clime-X Web Console, dan layanan terkait."],
+
+["2. Informasi yang Kami Kelola","Informasi yang dapat diproses melalui Clime-X meliputi informasi akun seperti nama, alamat email, dan informasi autentikasi; informasi perusahaan seperti nama, alamat, kontak, logo, dan informasi perusahaan lain yang dimasukkan Administrator; data karyawan seperti nama, ID karyawan, departemen, jabatan, tanggal masuk, kontrak, dan informasi terkait yang dimasukkan perusahaan; serta data operasional seperti pengajuan cuti, klaim/pengeluaran, pengumuman, event, komentar, notifikasi, dan foto yang diunggah melalui fitur yang tersedia."],
+
+["3. Login dan Autentikasi","Clime-X mendukung pendaftaran dan login menggunakan email dan password serta login dengan Google. Informasi autentikasi diproses melalui Firebase Authentication. Clime-X tidak meminta atau menyimpan password Google Anda."],
+
+["4. Penggunaan Informasi","Informasi digunakan untuk membuat dan mengelola akun, menghubungkan Administrator dengan data perusahaan, menyediakan fitur Employee dan Web Console, memproses pengajuan cuti dan klaim/pengeluaran, menampilkan pengumuman dan event, mengirim notifikasi yang diperlukan, menjaga keamanan layanan, serta melakukan perbaikan dan pemeliharaan layanan."],
+
+["5. Foto dan Konten yang Diunggah","Jika Anda menggunakan fitur yang memungkinkan pengunggahan foto, foto tersebut diproses untuk tujuan fitur terkait, misalnya sebagai bukti pada klaim atau sebagai bagian dari konten perusahaan. Jangan mengunggah informasi yang tidak diperlukan atau informasi milik pihak lain tanpa hak yang sesuai."],
+
+["6. Penyimpanan Data","Data Clime-X disimpan dan diproses menggunakan layanan Firebase, termasuk Firebase Authentication dan Cloud Firestore. Data dapat tetap tersimpan selama diperlukan untuk menyediakan layanan, memenuhi kewajiban perusahaan, menyelesaikan sengketa, menjaga keamanan, atau untuk tujuan bisnis yang sah."],
+
+["7. Akses dan Pengelolaan Data","Administrator perusahaan bertanggung jawab atas data perusahaan dan data karyawan yang dimasukkan ke dalam Clime-X. Akses terhadap data dibatasi berdasarkan akun dan fungsi yang tersedia di dalam sistem. Pengguna harus menjaga keamanan akun dan tidak membagikan kredensial kepada pihak lain."],
+
+["8. Keamanan","Clime-X menerapkan langkah-langkah yang wajar untuk membantu melindungi informasi dari akses, perubahan, pengungkapan, atau penghancuran yang tidak sah. Namun, tidak ada sistem elektronik yang dapat dijamin 100% aman."],
+
+["9. Layanan Pihak Ketiga","Clime-X menggunakan layanan pihak ketiga yang diperlukan untuk menjalankan layanan, termasuk Firebase Authentication dan Cloud Firestore. Penggunaan layanan tersebut juga tunduk pada kebijakan penyedia layanan masing-masing."],
+
+["10. Hak Pengguna","Pengguna dapat meminta informasi mengenai data yang terkait dengan akun atau perusahaan mereka dan dapat meminta koreksi atau penghapusan data sejauh dapat dilakukan dan tidak bertentangan dengan kebutuhan operasional, kewajiban hukum, atau kepentingan keamanan."],
+
+["11. Penghapusan Akun dan Data","Permintaan penghapusan akun atau data dapat diajukan kepada pihak Clime-X. Penghapusan dapat memerlukan verifikasi kepemilikan akun. Sebagian data dapat tetap dipertahankan apabila diperlukan untuk keamanan, pencatatan, penyelesaian sengketa, atau kewajiban hukum."],
+
+["12. Perubahan Kebijakan","Kebijakan Privasi ini dapat diperbarui dari waktu ke waktu. Versi terbaru akan dipublikasikan pada halaman ini dengan tanggal pembaruan yang sesuai."],
+
+["13. Hubungi Kami","Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi atau pengelolaan data di Clime-X, silakan hubungi pihak Clime-X melalui kontak resmi yang tersedia di situs Clime-X."]
+]
+},
+
+en:{
+title:"Privacy Policy",
+date:"Last updated: October 4, 2026",
+sections:[
+["1. Introduction","Clime-X respects user privacy. This Privacy Policy explains how Clime-X collects, uses, stores, and protects information when you use Clime-X Employee, Clime-X Web Console, and related services."],
+
+["2. Information We Process","Information processed through Clime-X may include account information such as name, email address, and authentication information; company information such as company name, address, contact details, logo, and other information entered by an Administrator; employee data such as name, employee ID, department, position, joining date, contract information, and related information entered by the company; and operational data such as leave requests, claims/expenses, announcements, events, comments, notifications, and photos uploaded through available features."],
+
+["3. Login and Authentication","Clime-X supports registration and login using email and password as well as Google sign-in. Authentication information is processed through Firebase Authentication. Clime-X does not request or store your Google password."],
+
+["4. How Information Is Used","Information is used to create and manage accounts, connect Administrators with company data, provide Employee and Web Console features, process leave requests and claims/expenses, display announcements and events, deliver necessary notifications, maintain service security, and improve and maintain the service."],
+
+["5. Photos and Uploaded Content","When you use features that allow photo uploads, photos are processed for the relevant feature, such as supporting a claim or as part of company content. Do not upload unnecessary information or another person's information without appropriate rights."],
+
+["6. Data Storage","Clime-X stores and processes data using Firebase services, including Firebase Authentication and Cloud Firestore. Data may remain stored as long as necessary to provide the service, meet company obligations, resolve disputes, maintain security, or for other legitimate business purposes."],
+
+["7. Access and Data Management","Company Administrators are responsible for company and employee data entered into Clime-X. Access to data is limited according to accounts and functions available in the system. Users are responsible for keeping their accounts secure and must not share credentials with others."],
+
+["8. Security","Clime-X uses reasonable measures to help protect information from unauthorized access, alteration, disclosure, or destruction. However, no electronic system can be guaranteed to be completely secure."],
+
+["9. Third-Party Services","Clime-X uses third-party services required to operate the service, including Firebase Authentication and Cloud Firestore. Use of those services is also subject to the respective providers' policies."],
+
+["10. User Rights","Users may request information regarding data associated with their account or company and may request correction or deletion where reasonably possible and where this does not conflict with operational needs, legal obligations, or security interests."],
+
+["11. Account and Data Deletion","Requests to delete an account or data may be submitted to Clime-X. Verification of account ownership may be required. Certain data may be retained when necessary for security, records, dispute resolution, or legal obligations."],
+
+["12. Changes to This Policy","This Privacy Policy may be updated from time to time. The latest version will be published on this page together with the applicable update date."],
+
+["13. Contact Us","If you have questions about this Privacy Policy or data handling in Clime-X, please contact Clime-X through the official contact information available on the Clime-X website."]
+]
+},
+
+zh:{
+title:"隐私政策",
+date:"最后更新：2026年10月4日",
+sections:[
+["1. 简介","Clime-X 重视用户隐私。本隐私政策说明您使用 Clime-X Employee、Clime-X Web Console 及相关服务时，Clime-X 如何收集、使用、存储和保护信息。"],
+
+["2. 我们处理的信息","Clime-X 可能处理账户信息，例如姓名、电子邮箱和身份验证信息；企业信息，例如企业名称、地址、联系方式、标志及管理员输入的其他企业信息；员工资料，例如姓名、员工编号、部门、职位、入职日期、合同信息及企业输入的相关资料；以及请假申请、报销/费用、公告、活动、评论、通知和通过相关功能上传的照片等业务数据。"],
+
+["3. 登录与身份验证","Clime-X 支持使用电子邮箱和密码注册及登录，也支持使用 Google 登录。身份验证信息通过 Firebase Authentication 处理。Clime-X 不会要求或保存您的 Google 密码。"],
+
+["4. 信息的使用","信息用于创建和管理账户、将管理员与企业数据关联、提供 Employee 和 Web Console 功能、处理请假及报销/费用申请、显示公告和活动、发送必要通知、维护服务安全以及改进和维护服务。"],
+
+["5. 照片及上传内容","当您使用允许上传照片的功能时，照片将用于相关功能，例如作为报销凭证或企业内容的一部分。请勿上传不必要的信息，也不要在没有适当权利的情况下上传他人的信息。"],
+
+["6. 数据存储","Clime-X 使用 Firebase 服务存储和处理数据，包括 Firebase Authentication 和 Cloud Firestore。数据可能在提供服务、履行企业义务、解决争议、维护安全或其他合法业务目的所需期间继续保存。"],
+
+["7. 数据访问与管理","企业管理员负责通过 Clime-X 输入的企业及员工数据。数据访问根据系统中的账户和可用功能进行限制。用户应妥善保护账户安全，不得向他人分享账户凭据。"],
+
+["8. 安全","Clime-X 采取合理措施帮助保护信息，防止未经授权的访问、修改、披露或破坏。但是，任何电子系统都无法保证绝对安全。"],
+
+["9. 第三方服务","Clime-X 使用运行服务所需的第三方服务，包括 Firebase Authentication 和 Cloud Firestore。使用这些服务也受相应服务提供商政策的约束。"],
+
+["10. 用户权利","用户可以请求了解与其账户或企业相关的数据，并可在合理可行且不影响运营需求、法律义务或安全利益的情况下请求更正或删除数据。"],
+
+["11. 账户和数据删除","您可以向 Clime-X 提交账户或数据删除请求。删除请求可能需要验证账户所有权。出于安全、记录保存、争议解决或法律义务的需要，部分数据可能需要继续保留。"],
+
+["12. 政策变更","本隐私政策可能不时更新。最新版本及相应更新日期将在本页面公布。"],
+
+["13. 联系我们","如果您对本隐私政策或 Clime-X 的数据处理有任何疑问，请通过 Clime-X 官方网站提供的联系方式与我们联系。"]
+]
+}
+};
+
+function setLang(l){
+    localStorage.setItem("climexLegalLanguage",l);
+    render(l)
+}
+
+function render(l){
+    const t=T[l]||T.id;
+    document.getElementById("lang").value=l;
+    document.getElementById("content").innerHTML=
+        `<h1>${t.title}</h1>
+        <div class="updated">${t.date}</div>
+        ${t.sections.map(s=>
+            `<section>
+                <h2>${s[0]}</h2>
+                <p>${s[1]}</p>
+            </section>`
+        ).join("")}`
+}
+
+render(localStorage.getItem("climexLegalLanguage")||"id");
+
+</script>
+
+</body>
+</html>
