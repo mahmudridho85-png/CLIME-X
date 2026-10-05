@@ -2309,7 +2309,7 @@ climexAuth.onAuthStateChanged(async function(user){
 
             await climexAuth.signOut();
 
-            alert(
+            climexAlert(
                 "Akun Employee tidak dapat masuk ke CLIME-X Web Console."
             );
 
@@ -2323,6 +2323,8 @@ climexAuth.onAuthStateChanged(async function(user){
 
             return;
         }
+
+        updateAccountPasswordVisibility(user);
 
         window.climexCurrentUser = {
             uid: user.uid,
@@ -2359,6 +2361,7 @@ climexAuth.onAuthStateChanged(async function(user){
         }
 
         setAppLanguage(savedLanguage);
+        startClimexTranslationObserver();
 
         if(typeof loadClimexClaims === "function"){
     loadClimexClaims();
@@ -4023,7 +4026,247 @@ const APP_TRANSLATIONS = {
     "Pembayaran E-Wallet": {
         id:"Pembayaran E-Wallet", en:"E-Wallet Payment", zh:"电子钱包付款"
     },
+    "Cuti": {id:"Cuti", en:"Leave", zh:"请假"},
+    "Klaim": {id:"Klaim", en:"Claims", zh:"报销"},
+    "Notifikasi": {id:"Notifikasi", en:"Notifications", zh:"通知"},
+    "Tandai semua dibaca": {id:"Tandai semua dibaca", en:"Mark all as read", zh:"全部标为已读"},
+    "Belum ada notifikasi.": {id:"Belum ada notifikasi.", en:"No notifications yet.", zh:"暂无通知。"},
+    "Dasbord": {id:"Dashboard", en:"Dashboard", zh:"仪表板"},
+    "Beranda": {id:"Beranda", en:"Home", zh:"首页"},
+    "Perusahaan": {id:"Perusahaan", en:"Company", zh:"公司"},
+    "Pengaturan": {id:"Pengaturan", en:"Settings", zh:"设置"},
+    "Clime-X": {id:"Clime-X", en:"Clime-X", zh:"Clime-X"},
+    "DASHBOARD": {id:"DASHBOARD", en:"DASHBOARD", zh:"仪表板"},
+    "Memuat...": {id:"Memuat...", en:"Loading...", zh:"加载中..."},
+    "Detail Klaim": {id:"Detail Klaim", en:"Claim Details", zh:"报销详情"},
+    "Detail Cuti": {id:"Detail Cuti", en:"Leave Details", zh:"请假详情"},
+    "PILIHAN BAHASA": {id:"PILIHAN BAHASA", en:"LANGUAGE", zh:"语言"},
+    "Platform profesional untuk aktifitas klaim antara karyawan dan perusahaan": {id:"Platform profesional untuk aktifitas klaim antara karyawan dan perusahaan", en:"A professional platform for expense claims between employees and companies", zh:"为员工与企业提供专业的费用报销管理平台"},
+    "USERNAME": {id:"USERNAME", en:"USERNAME", zh:"用户名"},
+    "Username / Email": {id:"Username / Email", en:"Username / Email", zh:"用户名 / 邮箱"},
+    "PASSWORD": {id:"PASSWORD", en:"PASSWORD", zh:"密码"},
+    "LOGIN": {id:"LOGIN", en:"LOGIN", zh:"登录"},
+    "Masuk dengan Google": {id:"Masuk dengan Google", en:"Sign in with Google", zh:"使用 Google 登录"},
+    "Belum punya akun?": {id:"Belum punya akun?", en:"Don't have an account?", zh:"还没有账户？"},
+    "Daftar disini": {id:"Daftar disini", en:"Register here", zh:"在这里注册"},
+    "Buat akun perusahaan untuk menggunakan Clime-X Web Console.": {id:"Buat akun perusahaan untuk menggunakan Clime-X Web Console.", en:"Create a company account to use Clime-X Web Console.", zh:"创建企业账户以使用 Clime-X Web Console。"},
+    "Nama Anda": {id:"Nama Anda", en:"Your Name", zh:"您的姓名"},
+    "Ulangi Password": {id:"Ulangi Password", en:"Confirm Password", zh:"确认密码"},
+    "Dengan ini anda telah membaca dan memahami": {id:"Dengan ini anda telah membaca dan memahami", en:"By continuing, you confirm that you have read and understood", zh:"继续即表示您已阅读并理解"},
+    "Privacy Policy": {id:"Privacy Policy", en:"Privacy Policy", zh:"隐私政策"},
+    "dan": {id:"dan", en:"and", zh:"和"},
+    "Syarat & Ketentuan": {id:"Syarat & Ketentuan", en:"Terms & Conditions", zh:"条款与条件"},
+    "berlaku.": {id:"berlaku.", en:".", zh:"。"},
+    "DAFTAR": {id:"DAFTAR", en:"REGISTER", zh:"注册"},
+    "Daftar dengan Google": {id:"Daftar dengan Google", en:"Sign up with Google", zh:"使用 Google 注册"},
+    "Sudah punya akun?": {id:"Sudah punya akun?", en:"Already have an account?", zh:"已有账户？"},
+    "Login disini": {id:"Login disini", en:"Login here", zh:"在这里登录"},
+    "LOADING": {id:"LOADING", en:"LOADING", zh:"加载中"},
+    "Preparing your Clime-X account...": {id:"Menyiapkan akun Clime-X...", en:"Preparing your Clime-X account...", zh:"正在准备您的 Clime-X 账户..."},
+    "Budi Santoso": {id:"Budi Santoso", en:"Budi Santoso", zh:"Budi Santoso"},
+    "Klaim Masuk": {id:"Klaim Masuk", en:"Incoming Claims", zh:"待处理报销"},
+    "Menunggu Pembayaran": {id:"Menunggu Pembayaran", en:"Pending Payment", zh:"待付款"},
+    "Riwayat Klaim": {id:"Riwayat Klaim", en:"Claim History", zh:"报销历史"},
+    "Memuat klaim...": {id:"Memuat klaim...", en:"Loading claims...", zh:"正在加载报销..."},
+    "ID Clime-X": {id:"ID Clime-X", en:"Clime-X ID", zh:"Clime-X ID"},
+    "Riwayat Acara": {id:"Riwayat Acara", en:"Event History", zh:"活动历史"},
+    "Acara": {id:"Acara", en:"Event", zh:"活动"},
+    "Buat Acara": {id:"Buat Acara", en:"Create Event", zh:"创建活动"},
+    "Judul Acara": {id:"Judul Acara", en:"Event Title", zh:"活动标题"},
+    "Unggah foto (opsional)": {id:"Unggah foto (opsional)", en:"Upload photo (optional)", zh:"上传照片（可选）"},
+    "Semua": {id:"Semua", en:"All", zh:"全部"},
+    "Pembukaan": {id:"Pembukaan", en:"Opening", zh:"开场"},
+    "Hari / Tgl": {id:"Hari / Tgl", en:"Day / Date", zh:"日期"},
+    "Jam": {id:"Jam", en:"Time", zh:"时间"},
+    "Lokasi": {id:"Lokasi", en:"Location", zh:"地点"},
+    "Isi acara": {id:"Isi acara", en:"Event content", zh:"活动内容"},
+    "KIRIM ACARA": {id:"KIRIM ACARA", en:"SUBMIT EVENT", zh:"提交活动"},
+    "Klik tab Riwayat Acara untuk memuat.": {id:"Klik tab Riwayat Acara untuk memuat.", en:"Click Event History to load.", zh:"点击“活动历史”以加载。"},
+    "Cuti Masuk": {id:"Cuti Masuk", en:"Incoming Leave Requests", zh:"待处理请假"},
+    "Cuti ID": {id:"Cuti ID", en:"Leave ID", zh:"请假编号"},
+    "Periode": {id:"Periode", en:"Period", zh:"期间"},
+    "Hari": {id:"Hari", en:"Days", zh:"天数"},
+    "Alasan": {id:"Alasan", en:"Reason", zh:"原因"},
+    "Tanggal Pengajuan": {id:"Tanggal Pengajuan", en:"Submission Date", zh:"申请日期"},
+    "Memuat pengajuan cuti...": {id:"Memuat pengajuan cuti...", en:"Loading leave requests...", zh:"正在加载请假申请..."},
+    "RIWAYAT EMPLOYEE": {id:"RIWAYAT EMPLOYEE", en:"EMPLOYEE HISTORY", zh:"员工历史"},
+    "KATEGORI": {id:"KATEGORI", en:"CATEGORY", zh:"类别"},
+    "📷 Foto": {id:"📷 Foto", en:"📷 Photo", zh:"📷 照片"},
+    "POST": {id:"POST", en:"POST", zh:"发布"},
+    "Akhiri pada": {id:"Akhiri pada", en:"Ends on", zh:"结束于"},
+    "Izinkan feedback": {id:"Izinkan feedback", en:"Allow feedback", zh:"允许反馈"},
+    "Hapus Foto": {id:"Hapus Foto", en:"Remove Photo", zh:"删除照片"},
+    "Company Name": {id:"Nama Perusahaan", en:"Company Name", zh:"公司名称"},
+    "Company Address": {id:"Alamat Perusahaan", en:"Company Address", zh:"公司地址"},
+    "City": {id:"Kota", en:"City", zh:"城市"},
+    "Country": {id:"Negara", en:"Country", zh:"国家"},
+    "Phone": {id:"Telepon", en:"Phone", zh:"电话"},
+    "Website": {id:"Situs Web", en:"Website", zh:"网站"},
+    "Company Logo": {id:"Logo Perusahaan", en:"Company Logo", zh:"公司标志"},
+    "UPLOAD LOGO": {id:"UNGGAH LOGO", en:"UPLOAD LOGO", zh:"上传标志"},
+    "SETTINGS TABS": {id:"TAB PENGATURAN", en:"SETTINGS TABS", zh:"设置选项卡"},
+    "General": {id:"Umum", en:"General", zh:"常规"},
+    "Clime-X ID User": {id:"ID Pengguna Clime-X", en:"Clime-X User ID", zh:"Clime-X 用户 ID"},
+    "Currency": {id:"Mata Uang", en:"Currency", zh:"货币"},
+    "IDR — Indonesian Rupiah": {id:"IDR — Rupiah Indonesia", en:"IDR — Indonesian Rupiah", zh:"IDR — 印度尼西亚卢比"},
+    "Date Format": {id:"Format Tanggal", en:"Date Format", zh:"日期格式"},
+    "DD/MM/YYYY": {id:"DD/MM/YYYY", en:"DD/MM/YYYY", zh:"日/月/年"},
+    "Time Zone": {id:"Zona Waktu", en:"Time Zone", zh:"时区"},
+    "Asia/Jakarta (GMT+7)": {id:"Asia/Jakarta (GMT+7)", en:"Asia/Jakarta (GMT+7)", zh:"雅加达（GMT+7）"},
+    "Membuat ID dan Password untuk masuk ke aplikasi Clime-X Employee": {id:"Membuat ID dan Password untuk masuk ke aplikasi Clime-X Employee", en:"Create an ID and password to sign in to the Clime-X Employee app", zh:"创建用于登录 Clime-X Employee 应用的 ID 和密码"},
+    "Nama Employee": {id:"Nama Karyawan", en:"Employee Name", zh:"员工姓名"},
+    "Employee ID": {id:"ID Karyawan", en:"Employee ID", zh:"员工 ID"},
+    "DOMAIN :": {id:"DOMAIN :", en:"DOMAIN:", zh:"域名："},
+    "UBAH DOMAIN": {id:"UBAH DOMAIN", en:"CHANGE DOMAIN", zh:"修改域名"},
+    "PWD GLOBAL :": {id:"PWD GLOBAL :", en:"GLOBAL PASSWORD:", zh:"全局密码："},
+    "TAMBAH ID": {id:"TAMBAH ID", en:"ADD ID", zh:"添加 ID"},
+    "HAPUS ID": {id:"HAPUS ID", en:"DELETE ID", zh:"删除 ID"},
+    "SIMPAN PERUBAHAN": {id:"SIMPAN PERUBAHAN", en:"SAVE CHANGES", zh:"保存更改"},
+    "Akun Administrator": {id:"Akun Administrator", en:"Administrator Account", zh:"管理员账户"},
+    "KELUAR": {id:"KELUAR", en:"LOG OUT", zh:"退出登录"},
+    "Template dokumen klaim akan diatur di bagian ini.": {id:"Template dokumen klaim akan diatur di bagian ini.", en:"Claim document templates are managed here.", zh:"报销文件模板将在此处管理。"},
+    "HEADER: LOCKED": {id:"HEADER: TERKUNCI", en:"HEADER: LOCKED", zh:"页眉：锁定"},
+    "KOP / SUBJECT: EDITABLE": {id:"KOP / SUBJEK: DAPAT DIEDIT", en:"KOP / SUBJECT: EDITABLE", zh:"抬头 / 主题：可编辑"},
+    "Hal : Perpanjangan Kontrak Kerja": {id:"Hal : Perpanjangan Kontrak Kerja", en:"Subject: Employment Contract Renewal", zh:"主题：劳动合同续签"},
+    "TITLE: EDITABLE": {id:"JUDUL: DAPAT DIEDIT", en:"TITLE: EDITABLE", zh:"标题：可编辑"},
+    "OPENING: EDITABLE": {id:"PEMBUKAAN: DAPAT DIEDIT", en:"OPENING: EDITABLE", zh:"开头：可编辑"},
+    "Yang bertanda tangan di bawah ini menerangkan bahwa:": {id:"Yang bertanda tangan di bawah ini menerangkan bahwa:", en:"The undersigned hereby confirms that:", zh:"以下签署人兹证明："},
+    "EMPLOYEE DETAILS: LOCKED": {id:"DETAIL KARYAWAN: TERKUNCI", en:"EMPLOYEE DETAILS: LOCKED", zh:"员工详情：锁定"},
+    "AGREEMENT: EDITABLE": {id:"PERJANJIAN: DAPAT DIEDIT", en:"AGREEMENT: EDITABLE", zh:"协议：可编辑"},
+    "Dengan ini perusahaan menyatakan bahwa kontrak kerja karyawan tersebut diperbarui sesuai dengan periode kontrak yang telah disepakati.": {id:"Dengan ini perusahaan menyatakan bahwa kontrak kerja karyawan tersebut diperbarui sesuai dengan periode kontrak yang telah disepakati.", en:"The company confirms that the employee's employment contract is renewed according to the agreed contract period.", zh:"公司确认该员工的劳动合同将按照约定的合同期限续签。"},
+    "Ketentuan lain yang telah disepakati sebelumnya tetap berlaku sesuai dengan kebijakan perusahaan.": {id:"Ketentuan lain yang telah disepakati sebelumnya tetap berlaku sesuai dengan kebijakan perusahaan.", en:"Other previously agreed terms remain in effect according to company policy.", zh:"此前约定的其他条款仍按照公司政策有效。"},
+    "Demikian surat pembaruan kontrak ini dibuat untuk dipergunakan sebagaimana mestinya.": {id:"Demikian surat pembaruan kontrak ini dibuat untuk dipergunakan sebagaimana mestinya.", en:"This contract renewal letter is issued for its proper use.", zh:"本合同续签函特此出具，以供适当使用。"},
+    "Perusahaan Karyawan Nama / Jabatan {{nama_karyawan}}": {id:"Perusahaan Karyawan Nama / Jabatan {{nama_karyawan}}", en:"Company Employee Name / Position {{nama_karyawan}}", zh:"公司 员工 姓名 / 职务 {{nama_karyawan}}"},
+    "KATEGORI DEPARTEMEN & JABATAN": {id:"KATEGORI DEPARTEMEN & JABATAN", en:"DEPARTMENT & POSITION CATEGORIES", zh:"部门与职位类别"},
+    "BUAT ID CLIME-X EMPLOYEE": {id:"BUAT ID CLIME-X EMPLOYEE", en:"CREATE CLIME-X EMPLOYEE ID", zh:"创建 CLIME-X Employee ID"},
+    "Klaim yang telah disetujui dan menunggu pembayaran.": {id:"Klaim yang telah disetujui dan menunggu pembayaran.", en:"Approved claims awaiting payment.", zh:"已批准且等待付款的报销。"},
+    "Riwayat seluruh klaim yang telah diproses.": {id:"Riwayat seluruh klaim yang telah diproses.", en:"History of all processed claims.", zh:"所有已处理报销的历史记录。"},
+    "Kelola seluruh pengajuan cuti karyawan.": {id:"Kelola seluruh pengajuan cuti karyawan.", en:"Manage all employee leave requests.", zh:"管理员工的所有请假申请。"},
+    "Data pembayaran kartu siap diproses oleh payment gateway.": {id:"Data pembayaran kartu siap diproses oleh payment gateway.", en:"Card payment details are ready to be processed by the payment gateway.", zh:"银行卡付款信息已准备好，可由支付网关处理。"},
+    "Memuat data...": {id:"Memuat data...", en:"Loading data...", zh:"正在加载数据..."},
+    "Memuat pengumuman...": {id:"Memuat pengumuman...", en:"Loading announcements...", zh:"正在加载公告..."},
+    "Memuat karyawan...": {id:"Memuat karyawan...", en:"Loading employees...", zh:"正在加载员工..."},
+    "Memuat acara...": {id:"Memuat acara...", en:"Loading events...", zh:"正在加载活动..."},
+    "Memuat laporan...": {id:"Memuat laporan...", en:"Loading reports...", zh:"正在加载报告..."},
+    "QRIS": {id:"QRIS", en:"QRIS", zh:"QRIS"},
+    "CVV": {id:"CVV", en:"CVV", zh:"CVV"},
+    "OVO": {id:"OVO", en:"OVO", zh:"OVO"},
+    "GoPay": {id:"GoPay", en:"GoPay", zh:"GoPay"},
+    "DANA": {id:"DANA", en:"DANA", zh:"DANA"},
+    "ShopeePay": {id:"ShopeePay", en:"ShopeePay", zh:"ShopeePay"},
+    "LANJUT": {id:"LANJUT", en:"CONTINUE", zh:"继续"},
+    "USERNAME / EMAIL": {id:"USERNAME / EMAIL", en:"USERNAME / EMAIL", zh:"用户名 / 邮箱"},
+    "Masukkan username atau email": {id:"Masukkan username atau email", en:"Enter username or email", zh:"请输入用户名或邮箱"},
+    "Masukkan password": {id:"Masukkan password", en:"Enter password", zh:"请输入密码"},
+    "Masukkan nama perusahaan": {id:"Masukkan nama perusahaan", en:"Enter company name", zh:"请输入公司名称"},
+    "Masukkan nama Anda": {id:"Masukkan nama Anda", en:"Enter your name", zh:"请输入您的姓名"},
+    "Masukkan email": {id:"Masukkan email", en:"Enter email", zh:"请输入邮箱"},
+    "Minimal 6 karakter": {id:"Minimal 6 karakter", en:"Minimum 6 characters", zh:"至少 6 个字符"},
+    "Ulangi password": {id:"Ulangi password", en:"Re-enter password", zh:"再次输入密码"},
+    "Judul pengumuman": {id:"Judul pengumuman", en:"Announcement title", zh:"公告标题"},
+    "Isi pengumuman": {id:"Isi pengumuman", en:"Announcement content", zh:"公告内容"},
+    "Contoh: Meeting Departemen Production": {id:"Contoh: Meeting Departemen Production", en:"Example: Production Department Meeting", zh:"例如：生产部门会议"},
+    "Tulis pembukaan acara...": {id:"Tulis pembukaan acara...", en:"Write the event opening...", zh:"填写活动开场白..."},
+    "Contoh: Meeting Room 1": {id:"Contoh: Meeting Room 1", en:"Example: Meeting Room 1", zh:"例如：会议室 1"},
+    "Tulis isi acara...": {id:"Tulis isi acara...", en:"Write event content...", zh:"填写活动内容..."},
+    "Nama perusahaan": {id:"Nama perusahaan", en:"Company name", zh:"公司名称"},
+    "Kota": {id:"Kota", en:"City", zh:"城市"},
+    "Nomor telepon": {id:"Nomor telepon", en:"Phone number", zh:"电话号码"},
+    "Email perusahaan": {id:"Email perusahaan", en:"Company email", zh:"公司邮箱"},
+    "Password": {id:"Password", en:"Password", zh:"密码"},
+    "Hal : ...": {id:"Hal : ...", en:"Subject: ...", zh:"主题：..."},
+    "Judul surat": {id:"Judul surat", en:"Letter title", zh:"信函标题"},
+    "Tambah departemen": {id:"Tambah departemen", en:"Add department", zh:"添加部门"},
+    "Tambah jabatan": {id:"Tambah jabatan", en:"Add position", zh:"添加职位"},
+    "Masukkan ID Clime-X": {id:"Masukkan ID Clime-X", en:"Enter Clime-X ID", zh:"请输入 Clime-X ID"},
+    "Pilih sampai 5 foto sekaligus": {id:"Pilih sampai 5 foto sekaligus", en:"Select up to 5 photos at once", zh:"一次最多选择 5 张照片"},
+    "Pengumuman": {id:"Pengumuman", en:"Announcements", zh:"公告"},
+    "Laporan": {id:"Laporan", en:"Reports", zh:"报告"},
+    "NOTIFIKASI": {id:"NOTIFIKASI", en:"NOTIFICATIONS", zh:"通知"},
+    "CUTI": {id:"CUTI", en:"LEAVE", zh:"请假"},
+
+
+
     };
+
+function climexTranslateRuntimeText(message){
+    const raw = String(message ?? "");
+    const lang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+
+    if(APP_TRANSLATIONS[raw] && APP_TRANSLATIONS[raw][lang] !== undefined){
+        return APP_TRANSLATIONS[raw][lang];
+    }
+
+    const rules = [
+        ["Akun Employee tidak dapat masuk ke CLIME-X Web Console.", {id:"Akun Employee tidak dapat masuk ke CLIME-X Web Console.", en:"Employee accounts cannot access the CLIME-X Web Console.", zh:"员工账户无法访问 CLIME-X Web Console。"}],
+        ["Email / Username dan Password wajib diisi.", {id:"Email / Username dan Password wajib diisi.", en:"Email / Username and password are required.", zh:"必须填写邮箱 / 用户名和密码。"}],
+        ["Akun ini belum memiliki profile CLIME-X.", {id:"Akun ini belum memiliki profile CLIME-X.", en:"This account does not have a CLIME-X profile yet.", zh:"此账户尚未拥有 CLIME-X 资料。"}],
+        ["Login gagal. Email/Username atau Password salah.", {id:"Login gagal. Email/Username atau Password salah.", en:"Login failed. The email/username or password is incorrect.", zh:"登录失败。邮箱/用户名或密码不正确。"}],
+        ["Akun Google ini belum terdaftar di Clime-X. Silakan pilih Daftar disini terlebih dahulu.", {id:"Akun Google ini belum terdaftar di Clime-X. Silakan pilih Daftar disini terlebih dahulu.", en:"This Google account is not registered with CLIME-X. Please choose Register here first.", zh:"此 Google 账户尚未注册 CLIME-X。请先选择“在这里注册”。"}],
+        ["Popup Google diblokir browser. Izinkan popup untuk CLIME-X.", {id:"Popup Google diblokir browser. Izinkan popup untuk CLIME-X.", en:"The Google popup was blocked by the browser. Please allow popups for CLIME-X.", zh:"浏览器阻止了 Google 弹窗。请允许 CLIME-X 使用弹窗。"}],
+        ["Domain website ini belum diizinkan di Firebase Authentication.", {id:"Domain website ini belum diizinkan di Firebase Authentication.", en:"This website domain is not authorized in Firebase Authentication.", zh:"此网站域名尚未获 Firebase Authentication 授权。"}],
+        ["Login Google gagal. Silakan coba lagi.", {id:"Login Google gagal. Silakan coba lagi.", en:"Google sign-in failed. Please try again.", zh:"Google 登录失败。请再试一次。"}],
+        ["Registrasi berhasil. Silakan login.", {id:"Registrasi berhasil. Silakan login.", en:"Registration successful. Please log in.", zh:"注册成功。请登录。"}],
+        ["Semua field wajib diisi.", {id:"Semua field wajib diisi.", en:"All fields are required.", zh:"所有字段均为必填项。"}],
+        ["Password minimal 6 karakter.", {id:"Password minimal 6 karakter.", en:"Password must be at least 6 characters.", zh:"密码至少需要 6 个字符。"}],
+        ["Password dan ulangi password tidak sama.", {id:"Password dan ulangi password tidak sama.", en:"Passwords do not match.", zh:"两次输入的密码不一致。"}],
+        ["Email tersebut sudah terdaftar. Silakan login.", {id:"Email tersebut sudah terdaftar. Silakan login.", en:"That email is already registered. Please log in.", zh:"该邮箱已注册。请登录。"}],
+        ["Format email tidak valid.", {id:"Format email tidak valid.", en:"Invalid email format.", zh:"邮箱格式无效。"}],
+        ["Password terlalu lemah. Gunakan minimal 6 karakter.", {id:"Password terlalu lemah. Gunakan minimal 6 karakter.", en:"Password is too weak. Use at least 6 characters.", zh:"密码强度太弱。请至少使用 6 个字符。"}],
+        ["Registrasi gagal. Silakan coba lagi.", {id:"Registrasi gagal. Silakan coba lagi.", en:"Registration failed. Please try again.", zh:"注册失败。请再试一次。"}],
+        ["Nama Perusahaan wajib diisi.", {id:"Nama Perusahaan wajib diisi.", en:"Company Name is required.", zh:"公司名称为必填项。"}],
+        ["Akun Google ini sudah terdaftar. Silakan login.", {id:"Akun Google ini sudah terdaftar. Silakan login.", en:"This Google account is already registered. Please log in.", zh:"此 Google 账户已注册。请登录。"}],
+        ["Registrasi Google gagal. Silakan coba lagi.", {id:"Registrasi Google gagal. Silakan coba lagi.", en:"Google registration failed. Please try again.", zh:"Google 注册失败。请再试一次。"}],
+        ["Sesi login tidak ditemukan.", {id:"Sesi login tidak ditemukan.", en:"No active login session was found.", zh:"未找到登录会话。"}],
+        ["Silakan login terlebih dahulu.", {id:"Silakan login terlebih dahulu.", en:"Please log in first.", zh:"请先登录。"}],
+        ["Logout gagal. Silakan coba lagi.", {id:"Logout gagal. Silakan coba lagi.", en:"Logout failed. Please try again.", zh:"退出登录失败。请再试一次。"}],
+        ["Password baru minimal 6 karakter.", {id:"Password baru minimal 6 karakter.", en:"The new password must be at least 6 characters.", zh:"新密码至少需要 6 个字符。"}],
+        ["Konfirmasi password tidak sama.", {id:"Konfirmasi password tidak sama.", en:"Password confirmation does not match.", zh:"确认密码不一致。"}],
+        ["Password berhasil diubah.", {id:"Password berhasil diubah.", en:"Password changed successfully.", zh:"密码修改成功。"}],
+        ["Password saat ini salah.", {id:"Password saat ini salah.", en:"Current password is incorrect.", zh:"当前密码不正确。"}],
+        ["Password gagal diubah.", {id:"Password gagal diubah.", en:"Password could not be changed.", zh:"密码修改失败。"}],
+        ["Data CLIME-X berhasil dihapus.", {id:"Data CLIME-X berhasil dihapus.", en:"CLIME-X data was deleted successfully.", zh:"CLIME-X 数据已成功删除。"}],
+        ["Akun CLIME-X berhasil dihapus.", {id:"Akun CLIME-X berhasil dihapus.", en:"CLIME-X account was deleted successfully.", zh:"CLIME-X 账户已成功删除。"}],
+        ["Akun gagal dihapus.", {id:"Akun gagal dihapus.", en:"The account could not be deleted.", zh:"账户删除失败。"}],
+        ["Alasan penolakan wajib diisi.", {id:"Alasan penolakan wajib diisi.", en:"A rejection reason is required.", zh:"必须填写拒绝原因。"}],
+        ["Pengajuan cuti gagal disetujui.", {id:"Pengajuan cuti gagal disetujui.", en:"Leave request could not be approved.", zh:"请假申请批准失败。"}],
+        ["Pengajuan cuti gagal ditolak.", {id:"Pengajuan cuti gagal ditolak.", en:"Leave request could not be rejected.", zh:"请假申请拒绝失败。"}],
+        ["Klaim gagal disetujui.", {id:"Klaim gagal disetujui.", en:"Claim could not be approved.", zh:"报销批准失败。"}],
+        ["Klaim gagal ditolak.", {id:"Klaim gagal ditolak.", en:"Claim could not be rejected.", zh:"报销拒绝失败。"}],
+        ["Pengumuman gagal disimpan.", {id:"Pengumuman gagal disimpan.", en:"Announcement could not be saved.", zh:"公告保存失败。"}],
+        ["Pengumuman gagal dihapus.", {id:"Pengumuman gagal dihapus.", en:"Announcement could not be deleted.", zh:"公告删除失败。"}],
+        ["Acara gagal disimpan.", {id:"Acara gagal disimpan.", en:"Event could not be saved.", zh:"活动保存失败。"}],
+        ["Judul pengumuman wajib diisi.", {id:"Judul pengumuman wajib diisi.", en:"Announcement title is required.", zh:"公告标题为必填项。"}],
+        ["Isi pengumuman wajib diisi.", {id:"Isi pengumuman wajib diisi.", en:"Announcement content is required.", zh:"公告内容为必填项。"}],
+        ["Judul acara wajib diisi.", {id:"Judul acara wajib diisi.", en:"Event title is required.", zh:"活动标题为必填项。"}],
+        ["Hari / Tgl acara wajib diisi.", {id:"Hari / Tgl acara wajib diisi.", en:"Event day/date is required.", zh:"活动日期为必填项。"}],
+        ["Jam acara wajib diisi.", {id:"Jam acara wajib diisi.", en:"Event time is required.", zh:"活动时间为必填项。"}],
+        ["Lokasi acara wajib diisi.", {id:"Lokasi acara wajib diisi.", en:"Event location is required.", zh:"活动地点为必填项。"}],
+        ["Isi acara wajib diisi.", {id:"Isi acara wajib diisi.", en:"Event content is required.", zh:"活动内容为必填项。"}],
+        ["Masukkan jumlah pembayaran.", {id:"Masukkan jumlah pembayaran.", en:"Enter the payment amount.", zh:"请输入付款金额。"}],
+        ["Nomor kartu belum lengkap.", {id:"Nomor kartu belum lengkap.", en:"Card number is incomplete.", zh:"卡号不完整。"}],
+        ["Lengkapi data kartu terlebih dahulu.", {id:"Lengkapi data kartu terlebih dahulu.", en:"Please complete the card details first.", zh:"请先填写完整的卡片信息。"}],
+        ["Link untuk mengubah password telah dikirim ke email akun.", {id:"Link untuk mengubah password telah dikirim ke email akun.", en:"A password-change link has been sent to the account email.", zh:"修改密码链接已发送至账户邮箱。"}],
+    ]
+    for (const [original, item] of rules){
+        if(raw === original){
+            return item[lang] !== undefined ? item[lang] : original;
+        }
+    }
+    return raw;
+}
+
+function climexAlert(message){
+    window.alert(climexTranslateRuntimeText(message));
+}
+
+function climexConfirm(message){
+    return window.confirm(climexTranslateRuntimeText(message));
+}
+
+function climexPrompt(message, defaultValue){
+    return window.prompt(climexTranslateRuntimeText(message), defaultValue);
+}
 
 function climexT(key){
     const lang =
@@ -4041,12 +4284,76 @@ function climexT(key){
 }
 
 function prepareAppTranslations(){
-    document.querySelectorAll(".app *").forEach(function(el){
-        if(el.children.length !== 0) return;
+    const root = document.querySelector(".app");
+    if(!root) return;
 
-        const original = el.textContent.trim();
-        if(APP_TRANSLATIONS[original]){
-            el.setAttribute("data-climex-lang-key", original);
+    root.querySelectorAll("*").forEach(function(el){
+
+        if(el.children.length === 0){
+            const original = el.textContent.trim();
+            if(APP_TRANSLATIONS[original] && !el.hasAttribute("data-climex-lang-key")){
+                el.setAttribute("data-climex-lang-key", original);
+            }
+        }
+
+        ["placeholder","title","aria-label"].forEach(function(attr){
+            if(!el.hasAttribute(attr)) return;
+
+            const value = el.getAttribute(attr);
+            if(APP_TRANSLATIONS[value] && !el.hasAttribute("data-climex-" + attr + "-key")){
+                el.setAttribute("data-climex-" + attr + "-key", value);
+            }
+        });
+    });
+}
+
+function startClimexTranslationObserver(){
+    const root = document.querySelector(".app");
+    if(!root || window.climexTranslationObserver) return;
+
+    window.climexTranslationObserver = new MutationObserver(function(){
+        const lang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+        prepareAppTranslations();
+        applyAppLanguageToPreparedElements(lang);
+    });
+
+    window.climexTranslationObserver.observe(root, {
+        childList:true,
+        subtree:true,
+        characterData:true
+    });
+}
+
+function applyAppLanguageToPreparedElements(lang){
+    document.querySelectorAll("[data-climex-lang-key]").forEach(function(el){
+        const key = el.getAttribute("data-climex-lang-key");
+        const item = APP_TRANSLATIONS[key];
+        if(item && item[lang] !== undefined && el.textContent.trim() !== item[lang]){
+            el.textContent = item[lang];
+        }
+    });
+
+    document.querySelectorAll("[data-climex-placeholder-key]").forEach(function(el){
+        const key = el.getAttribute("data-climex-placeholder-key");
+        const item = APP_TRANSLATIONS[key];
+        if(item && item[lang] !== undefined){
+            el.placeholder = item[lang];
+        }
+    });
+
+    document.querySelectorAll("[data-climex-title-key]").forEach(function(el){
+        const key = el.getAttribute("data-climex-title-key");
+        const item = APP_TRANSLATIONS[key];
+        if(item && item[lang] !== undefined){
+            el.title = item[lang];
+        }
+    });
+
+    document.querySelectorAll("[data-climex-aria-label-key]").forEach(function(el){
+        const key = el.getAttribute("data-climex-aria-label-key");
+        const item = APP_TRANSLATIONS[key];
+        if(item && item[lang] !== undefined){
+            el.setAttribute("aria-label", item[lang]);
         }
     });
 }
@@ -4056,12 +4363,13 @@ function setAppLanguage(lang){
     const tLang = lang || "id";
 
     prepareAppTranslations();
+    applyAppLanguageToPreparedElements(tLang);
 
     document.querySelectorAll("[data-climex-lang-key]").forEach(function(el){
         const key = el.getAttribute("data-climex-lang-key");
         const item = APP_TRANSLATIONS[key];
 
-        if(item && item[tLang] !== undefined){
+        if(item && item[tLang] !== undefined && el.textContent.trim() !== item[tLang]){
             el.textContent = item[tLang];
         }
     });
@@ -4087,6 +4395,15 @@ function setAppLanguage(lang){
 
     if(appCurrentFlag){
         appCurrentFlag.className = "flag-circle " + appFlags[tLang];
+    }
+
+    // Panel notifikasi berada di luar .app, jadi terjemahkan secara eksplisit.
+    const notificationTitle = document.getElementById("employeeNotificationTitle");
+    const notificationMark = document.getElementById("employeeNotificationMark");
+    if(notificationTitle) notificationTitle.textContent = climexT("Notifikasi");
+    if(notificationMark) notificationMark.textContent = climexT("Tandai semua dibaca");
+    if(typeof renderWebConsoleNotifications === "function"){
+        renderWebConsoleNotifications();
     }
 
     document.querySelectorAll("#appLanguageMenu button").forEach(function(btn){
@@ -4160,7 +4477,7 @@ async function enterConsole(){
 
     if(!email || !password){
 
-        alert(
+        climexAlert(
             "Email / Username dan Password wajib diisi."
         );
 
@@ -4206,7 +4523,7 @@ async function enterConsole(){
 
             await climexAuth.signOut();
 
-            alert(
+            climexAlert(
                 "Akun ini belum memiliki profile CLIME-X."
             );
 
@@ -4229,7 +4546,7 @@ async function enterConsole(){
 
             await climexAuth.signOut();
 
-            alert(
+            climexAlert(
                 "Akun Employee tidak dapat masuk ke CLIME-X Web Console."
             );
 
@@ -4296,6 +4613,7 @@ if(typeof loadCompanyProfile === "function"){
 if(document.readyState === "loading"){
 
     document.addEventListener("DOMContentLoaded", function(){
+    startClimexTranslationObserver();
 
         if(typeof loadCompanyProfile === "function"){
             loadCompanyProfile();
@@ -4331,7 +4649,7 @@ if(document.readyState === "loading"){
             error
         );
 
-        alert(
+        climexAlert(
             "Login gagal. Email/Username atau Password salah."
         );
 
@@ -4376,7 +4694,7 @@ async function loginClimexWithGoogle(){
 
             await climexAuth.signOut();
 
-            alert(
+            climexAlert(
                 "Akun Google ini belum terdaftar di Clime-X. Silakan pilih Daftar disini terlebih dahulu."
             );
 
@@ -4406,7 +4724,7 @@ async function loginClimexWithGoogle(){
 
             await climexAuth.signOut();
 
-            alert(
+            climexAlert(
                 "Akun Employee tidak dapat masuk ke CLIME-X Web Console."
             );
 
@@ -4427,11 +4745,11 @@ async function loginClimexWithGoogle(){
         }
 
         if(error && error.code === "auth/popup-blocked"){
-            alert("Popup Google diblokir browser. Izinkan popup untuk CLIME-X.");
+            climexAlert("Popup Google diblokir browser. Izinkan popup untuk CLIME-X.");
         }else if(error && error.code === "auth/unauthorized-domain"){
-            alert("Domain website ini belum diizinkan di Firebase Authentication.");
+            climexAlert("Domain website ini belum diizinkan di Firebase Authentication.");
         }else{
-            alert("Login Google gagal. Silakan coba lagi.");
+            climexAlert("Login Google gagal. Silakan coba lagi.");
         }
 
     }finally{
@@ -4656,7 +4974,7 @@ async function saveNewClimexProfile(user, companyName, adminName){
 
 async function finishClimexRegistration(){
 
-    alert("Registrasi berhasil. Silakan login.");
+    climexAlert("Registrasi berhasil. Silakan login.");
 
     await climexAuth.signOut();
 
@@ -4719,17 +5037,17 @@ async function registerClimexAccount(){
         document.getElementById("registerConfirmPassword").value;
 
     if(!companyName || !adminName || !email || !password || !confirmPassword){
-        alert("Semua field wajib diisi.");
+        climexAlert("Semua field wajib diisi.");
         return;
     }
 
     if(password.length < 6){
-        alert("Password minimal 6 karakter.");
+        climexAlert("Password minimal 6 karakter.");
         return;
     }
 
     if(password !== confirmPassword){
-        alert("Password dan ulangi password tidak sama.");
+        climexAlert("Password dan ulangi password tidak sama.");
         return;
     }
 
@@ -4775,13 +5093,13 @@ async function registerClimexAccount(){
         );
 
         if(error && error.code === "auth/email-already-in-use"){
-            alert("Email tersebut sudah terdaftar. Silakan login.");
+            climexAlert("Email tersebut sudah terdaftar. Silakan login.");
         }else if(error && error.code === "auth/invalid-email"){
-            alert("Format email tidak valid.");
+            climexAlert("Format email tidak valid.");
         }else if(error && error.code === "auth/weak-password"){
-            alert("Password terlalu lemah. Gunakan minimal 6 karakter.");
+            climexAlert("Password terlalu lemah. Gunakan minimal 6 karakter.");
         }else{
-            alert("Registrasi gagal. Silakan coba lagi.");
+            climexAlert("Registrasi gagal. Silakan coba lagi.");
         }
 
     }finally{
@@ -4814,7 +5132,7 @@ async function registerClimexWithGoogle(){
         adminNameInput.value.trim();
 
     if(!companyName){
-        alert("Nama Perusahaan wajib diisi.");
+        climexAlert("Nama Perusahaan wajib diisi.");
         return;
     }
 
@@ -4852,7 +5170,7 @@ async function registerClimexWithGoogle(){
 
             await climexAuth.signOut();
 
-            alert("Akun Google ini sudah terdaftar. Silakan login.");
+            climexAlert("Akun Google ini sudah terdaftar. Silakan login.");
 
             showClimexLogin();
 
@@ -4888,11 +5206,11 @@ async function registerClimexWithGoogle(){
         }
 
         if(error && error.code === "auth/popup-blocked"){
-            alert("Popup Google diblokir browser. Izinkan popup untuk CLIME-X.");
+            climexAlert("Popup Google diblokir browser. Izinkan popup untuk CLIME-X.");
         }else if(error && error.code === "auth/unauthorized-domain"){
-            alert("Domain website ini belum diizinkan di Firebase Authentication.");
+            climexAlert("Domain website ini belum diizinkan di Firebase Authentication.");
         }else{
-            alert("Registrasi Google gagal. Silakan coba lagi.");
+            climexAlert("Registrasi Google gagal. Silakan coba lagi.");
         }
 
     }finally{
@@ -5110,7 +5428,7 @@ async function saveClimexClaim(claim){
         <nav class="menu">
 
             <button class="active" onclick="showPage('dashboard', this)">
-                Dasbord
+                Dashboard
             </button>
 
            <button onclick="showPage('announcements', this)">
@@ -7190,7 +7508,7 @@ async function saveContractPrintTemplateCore(){
         const ref = contractPrintTemplateCollection();
 
         if(!ref){
-            alert("User CLIME-X belum login.");
+            climexAlert("User CLIME-X belum login.");
             return;
         }
 
@@ -7222,7 +7540,7 @@ async function saveContractPrintTemplateCore(){
 
         renderContractTemplatePreview();
 
-        alert(climexT("Template kontrak berhasil disimpan."));
+        climexAlert(climexT("Template kontrak berhasil disimpan."));
 
     }catch(error){
 
@@ -7231,7 +7549,7 @@ async function saveContractPrintTemplateCore(){
             error
         );
 
-        alert(climexT("Template kontrak gagal disimpan."));
+        climexAlert(climexT("Template kontrak gagal disimpan."));
 
     }
 }
@@ -7421,7 +7739,7 @@ function openContractPrintPreview(returnHtml, autoPrint, existingWindow){
             window.open("", "_blank", "width=1000,height=900");
 
         if(!w){
-            alert("Izinkan pop-up browser untuk melihat preview.");
+            climexAlert("Izinkan pop-up browser untuk melihat preview.");
             return;
         }
     }
@@ -7536,7 +7854,7 @@ async function printSelectedEmployeeContract(){
         masterEmployees[selectedMasterEmployeeIndex];
 
     if(!employee){
-        alert(climexT("Pilih karyawan terlebih dahulu."));
+        climexAlert(climexT("Pilih karyawan terlebih dahulu."));
         return;
     }
 
@@ -7545,7 +7863,7 @@ async function printSelectedEmployeeContract(){
         window.open("", "_blank", "width=1000,height=900");
 
     if(!printWindow){
-        alert(climexT("Izinkan pop-up browser untuk mencetak kontrak."));
+        climexAlert(climexT("Izinkan pop-up browser untuk mencetak kontrak."));
         return;
     }
 
@@ -7746,7 +8064,7 @@ async function logoutWebConsole(){
             error
         );
 
-        alert(
+        climexAlert(
             "Logout gagal. Silakan coba lagi."
         );
 
@@ -7903,19 +8221,19 @@ async function saveEmployeeDomainCore(){
         .replace(/\s+/g, "");
 
     if(!domain){
-        alert("Employee Domain wajib diisi.");
+        climexAlert("Employee Domain wajib diisi.");
         input.focus();
         return;
     }
 
     if(!/^[a-z0-9-]+$/.test(domain)){
-        alert("Domain hanya boleh menggunakan huruf, angka, dan tanda -.");
+        climexAlert("Domain hanya boleh menggunakan huruf, angka, dan tanda -.");
         input.focus();
         return;
     }
 
     if(!climexAuth.currentUser){
-        alert("User CLIME-X belum login.");
+        climexAlert("User CLIME-X belum login.");
         return;
     }
 
@@ -7946,7 +8264,7 @@ async function saveEmployeeDomainCore(){
     }catch(error){
 
         console.error("CLIME-X EMPLOYEE DOMAIN SAVE ERROR:", error);
-        alert("Employee Domain gagal disimpan.");
+        climexAlert("Employee Domain gagal disimpan.");
 
     }
 
@@ -7973,7 +8291,7 @@ async function handleCompanyLogo(){
         }
 
         if(!climexAuth.currentUser){
-            alert("User CLIME-X belum login.");
+            climexAlert("User CLIME-X belum login.");
             input.remove();
             return;
         }
@@ -8082,7 +8400,7 @@ async function handleCompanyLogo(){
                 error
             );
 
-            alert(
+            climexAlert(
                 "Logo gagal disimpan."
             );
 
@@ -8358,7 +8676,7 @@ async function saveCompanyProfile(){
 async function saveCompanyProfileCore(){
 
     if(!climexAuth.currentUser){
-        alert("User CLIME-X belum login.");
+        climexAlert("User CLIME-X belum login.");
         return;
     }
 
@@ -8371,7 +8689,7 @@ async function saveCompanyProfileCore(){
             document.getElementById("companyName").value.trim();
 
         if(!companyName){
-            alert("Company Name wajib diisi.");
+            climexAlert("Company Name wajib diisi.");
             return;
         }
 
@@ -8415,7 +8733,7 @@ async function saveCompanyProfileCore(){
 
         applyCompanyProfile(companyData);
 
-        alert("Company Profile berhasil disimpan.");
+        climexAlert("Company Profile berhasil disimpan.");
 
         console.log(
             "CLIME-X COMPANY PROFILE SAVED:",
@@ -8429,7 +8747,7 @@ async function saveCompanyProfileCore(){
             error
         );
 
-        alert(
+        climexAlert(
             "Company Profile gagal disimpan."
         );
 
@@ -8596,19 +8914,19 @@ async function saveEmployeeGlobalPasswordCore(){
     const password = String(input.value || "").trim();
 
     if(!password){
-        alert("Password Global wajib diisi.");
+        climexAlert("Password Global wajib diisi.");
         input.focus();
         return;
     }
 
     if(password.length < 6){
-        alert("Password Global minimal 6 karakter.");
+        climexAlert("Password Global minimal 6 karakter.");
         input.focus();
         return;
     }
 
     if(!climexAuth.currentUser){
-        alert("User CLIME-X belum login.");
+        climexAlert("User CLIME-X belum login.");
         return;
     }
 
@@ -8637,7 +8955,7 @@ async function saveEmployeeGlobalPasswordCore(){
     }catch(error){
 
         console.error("CLIME-X EMPLOYEE GLOBAL PASSWORD SAVE ERROR:", error);
-        alert("Password Global gagal disimpan.");
+        climexAlert("Password Global gagal disimpan.");
 
     }
 
@@ -8846,14 +9164,14 @@ async function loadEmployeeAccounts(){
 function addEmployeeRow(){
 
     if(!employeeGlobalPassword){
-        alert("Simpan Password Global terlebih dahulu.");
+        climexAlert("Simpan Password Global terlebih dahulu.");
         return;
     }
 
     const domain = getEmployeeDomainValue();
 
     if(!domain){
-        alert("Employee Domain belum tersedia.");
+        climexAlert("Employee Domain belum tersedia.");
         return;
     }
 
@@ -8895,7 +9213,7 @@ function cancelEmployeeEdit(){
 async function deleteSelectedEmployee(){
 
     if(selectedEmployeeIndex < 0){
-        alert(climexT("Pilih employee yang ingin dihapus."));
+        climexAlert(climexT("Pilih employee yang ingin dihapus."));
         return;
     }
 
@@ -8931,7 +9249,7 @@ async function deleteSelectedEmployee(){
     }catch(error){
 
         console.error("CLIME-X EMPLOYEE DELETE ERROR:", error);
-        alert("Employee gagal dihapus.");
+        climexAlert("Employee gagal dihapus.");
 
     }
 
@@ -8952,19 +9270,19 @@ async function saveEmployees(){
 async function saveEmployeesCore(){
 
     if(!climexAuth.currentUser){
-        alert("User CLIME-X belum login.");
+        climexAlert("User CLIME-X belum login.");
         return;
     }
 
     if(!employeeGlobalPassword){
-        alert("Simpan Password Global terlebih dahulu.");
+        climexAlert("Simpan Password Global terlebih dahulu.");
         return;
     }
 
     const domain = getEmployeeDomainValue();
 
     if(!domain){
-        alert("Employee Domain belum tersedia.");
+        climexAlert("Employee Domain belum tersedia.");
         return;
     }
 
@@ -8973,7 +9291,7 @@ async function saveEmployeesCore(){
         const employee = settingsEmployees[i];
 
         if(!employee.name){
-            alert(
+            climexAlert(
                 "Nama Employee pada baris " +
                 (i + 1) +
                 " wajib diisi."
@@ -8982,14 +9300,14 @@ async function saveEmployeesCore(){
         }
 
         if(/\s/.test(employee.name)){
-            alert("Nama Employee tidak boleh mengandung spasi.");
+            climexAlert("Nama Employee tidak boleh mengandung spasi.");
             return;
         }
 
         employee.id = generateEmployeeId(employee.name);
 
         if(!employee.id){
-            alert(
+            climexAlert(
                 "Employee ID pada baris " +
                 (i + 1) +
                 " tidak dapat dibuat."
@@ -9098,7 +9416,7 @@ async function saveEmployeesCore(){
 
         }
 
-        alert(message);
+        climexAlert(message);
 
     }
 
@@ -9160,7 +9478,7 @@ async function loadClimexDashboard(){
                 const dateText=!isNaN(d.getTime())?d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"}):"-";
                 const status=String(c.status||"pending").toLowerCase();
                 const statusClass=status==="approved"?"approved":status==="paid"?"paid":"pending";
-                const statusText=status.charAt(0).toUpperCase()+status.slice(1);
+                const statusText=climexStatusLabel(status);
                 const tr=document.createElement("tr");
                 tr.innerHTML="<td>"+escapeClaimHtml(c.id||item.id)+"</td>"+
                     "<td>"+escapeClaimHtml(c.employeeName||"-")+"</td>"+
@@ -9863,6 +10181,18 @@ function webConsoleNotificationCollectionRef(){
         .collection("items");
 }
 
+function climexStatusLabel(status){
+    const raw = String(status || "pending").trim().toLowerCase();
+    const keyMap = {
+        pending: "Pending",
+        approved: "Approved",
+        rejected: "rejected",
+        paid: "Paid"
+    };
+    const key = keyMap[raw] || raw;
+    return climexT(key);
+}
+
 function webConsoleNotificationRelativeDate(value){
     if(!value) return "";
     let d=value;
@@ -9870,26 +10200,71 @@ function webConsoleNotificationRelativeDate(value){
     else if(value && value.seconds) d=new Date(value.seconds*1000);
     else if(typeof value === "string") d=new Date(value);
     if(!(d instanceof Date) || isNaN(d.getTime())) return "";
+
     const diff=Math.max(0,Date.now()-d.getTime());
     const min=Math.floor(diff/60000);
-    if(min<1) return "Baru saja";
-    if(min<60) return min+" menit lalu";
-    const hour=Math.floor(min/60);
-    if(hour<24) return hour+" jam lalu";
-    return Math.floor(hour/24)+" hari lalu";
-}
+    const lang=localStorage.getItem("climexLanguage") || currentLoginLang || "id";
 
+    if(min<1){
+        return climexT("Baru saja");
+    }
+
+    if(min<60){
+        if(lang === "zh") return min+"分钟前";
+        if(lang === "en") return min+" minute"+(min===1?"":"s")+" ago";
+        return min+" menit lalu";
+    }
+
+    const hour=Math.floor(min/60);
+    if(hour<24){
+        if(lang === "zh") return hour+"小时前";
+        if(lang === "en") return hour+" hour"+(hour===1?"":"s")+" ago";
+        return hour+" jam lalu";
+    }
+
+    const day=Math.floor(hour/24);
+    if(lang === "zh") return day+"天前";
+    if(lang === "en") return day+" day"+(day===1?"":"s")+" ago";
+    return day+" hari lalu";
+}
 function webConsoleNotificationText(item){
     const actor=escapeAnnouncementHtml(item.actorName || "Karyawan");
     const context=escapeAnnouncementHtml(item.contextText || item.announcementTitle || "");
-    if(item.type === "status_like") return actor+" menyukai status Anda";
-    if(item.type === "status_comment") return actor+" mengomentari status Anda"+(context ? " — "+context : "");
-    if(item.type === "comment_reply") return actor+" membalas komentar Anda"+(context ? " di status — "+context : "");
-    if(item.type === "comment_like") return actor+" menyukai komentar Anda"+(context ? " di status — "+context : "");
-    if(item.type === "photo_comment") return actor+" mengomentari foto Anda"+(context ? " di status — "+context : "");
-    return escapeAnnouncementHtml(item.message || "Notifikasi baru");
-}
+    const lang=localStorage.getItem("climexLanguage") || currentLoginLang || "id";
 
+    if(item.type === "status_like"){
+        if(lang === "zh") return actor+" 赞了你的动态";
+        if(lang === "en") return actor+" liked your post";
+        return actor+" menyukai status Anda";
+    }
+
+    if(item.type === "status_comment"){
+        if(lang === "zh") return actor+" 评论了你的动态"+(context ? " — "+context : "");
+        if(lang === "en") return actor+" commented on your post"+(context ? " — "+context : "");
+        return actor+" mengomentari status Anda"+(context ? " — "+context : "");
+    }
+
+    if(item.type === "comment_reply"){
+        if(lang === "zh") return actor+" 回复了你的评论"+(context ? " — "+context : "");
+        if(lang === "en") return actor+" replied to your comment"+(context ? " — "+context : "");
+        return actor+" membalas komentar Anda"+(context ? " di status — "+context : "");
+    }
+
+    if(item.type === "comment_like"){
+        if(lang === "zh") return actor+" 赞了你的评论"+(context ? " — "+context : "");
+        if(lang === "en") return actor+" liked your comment"+(context ? " — "+context : "");
+        return actor+" menyukai komentar Anda"+(context ? " di status — "+context : "");
+    }
+
+    if(item.type === "photo_comment"){
+        if(lang === "zh") return actor+" 评论了你的照片"+(context ? " — "+context : "");
+        if(lang === "en") return actor+" commented on your photo"+(context ? " — "+context : "");
+        return actor+" mengomentari foto Anda"+(context ? " di status — "+context : "");
+    }
+
+    const fallback=item.message || "Notifikasi baru";
+    return escapeAnnouncementHtml(climexT(fallback));
+}
 function webConsoleNotificationActorAvatar(item){
     const photo=String(item.actorPhotoData || "").trim();
     if(photo) return '<div class="notification-item-avatar"><img src="'+escapeAnnouncementHtml(photo)+'" alt=""></div>';
@@ -10091,7 +10466,7 @@ async function submitAnnouncementConsoleOwnComment(announcementId,button){
         if(wrap) wrap.style.display='block';
     }catch(error){
         console.error('CLIME-X WEB ANNOUNCEMENT OWN COMMENT ERROR:',error);
-        alert('Komentar gagal disimpan.');
+        climexAlert('Komentar gagal disimpan.');
     }finally{ if(button) button.disabled=false; }
 }
 
@@ -10199,7 +10574,7 @@ async function submitAnnouncementConsoleReply(announcementId,commentId,button){
         if(input) input.value='';
     }catch(error){
         console.error('CLIME-X WEB ANNOUNCEMENT REPLY ERROR:',error);
-        alert('Balasan gagal disimpan.');
+        climexAlert('Balasan gagal disimpan.');
     }finally{ if(button) button.disabled=false; }
 }
 
@@ -10249,7 +10624,7 @@ async function submitAnnouncementConsoleReplyToReply(announcementId,commentId,re
         if(input) input.value='';
     }catch(error){
         console.error('CLIME-X WEB ANNOUNCEMENT REPLY-TO-REPLY ERROR:',error);
-        alert('Balasan gagal disimpan.');
+        climexAlert('Balasan gagal disimpan.');
     }finally{ if(button) button.disabled=false; }
 }
 
@@ -10758,7 +11133,7 @@ async function submitAnnouncementConsolePhotoComment(id,index,button){
             photoIndex:Number(index), createdAt:firebase.firestore.FieldValue.serverTimestamp()
         });
         if(input) input.value='';
-    }catch(error){ console.error('CLIME-X WEB PHOTO COMMENT ERROR:',error); alert('Komentar gagal.'); }
+    }catch(error){ console.error('CLIME-X WEB PHOTO COMMENT ERROR:',error); climexAlert('Komentar gagal.'); }
     finally{ if(button) button.disabled=false; }
 }
 
@@ -10794,7 +11169,7 @@ async function submitAnnouncementConsolePhotoReply(announcementId,commentId,butt
         if(form){ form.style.display='none'; form.dataset.commentId=''; form.dataset.replyId=''; form.dataset.replyName=''; }
         if(input) input.value='';
         renderAnnouncementConsoleComments(announcementId);
-    }catch(e){ console.error('CLIME-X WEB PHOTO REPLY:',e); alert('Balasan gagal disimpan.'); }
+    }catch(e){ console.error('CLIME-X WEB PHOTO REPLY:',e); climexAlert('Balasan gagal disimpan.'); }
     finally{ if(button)button.disabled=false; }
 }
 
@@ -10927,13 +11302,13 @@ async function publishAnnouncement(){
     const endDate=document.getElementById("announcementEndDate");
     const interactions=document.getElementById("announcementInteractionsEnabled");
 
-    if(!climexAuth.currentUser){ alert("Silakan login terlebih dahulu."); return; }
+    if(!climexAuth.currentUser){ climexAlert("Silakan login terlebih dahulu."); return; }
     if(!title || !title.value.trim()){
-        alert("Judul pengumuman wajib diisi.");
+        climexAlert("Judul pengumuman wajib diisi.");
         return;
     }
     if(!content || !content.value.trim()){
-        alert("Isi pengumuman wajib diisi.");
+        climexAlert("Isi pengumuman wajib diisi.");
         return;
     }
     if(button && button.dataset.climexSaving === "1") return;
@@ -10975,7 +11350,7 @@ async function publishAnnouncement(){
         showEmployeeRenewToast("Pengumuman berhasil dipublikasikan.");
     }catch(error){
         console.error("CLIME-X ANNOUNCEMENT SAVE ERROR:",error);
-        alert("Pengumuman gagal disimpan.");
+        climexAlert("Pengumuman gagal disimpan.");
     }finally{
         if(button && typeof setClimexSaveButtonLoading === "function") setClimexSaveButtonLoading(button,false);
         else if(button){ button.disabled=false; button.style.transform=""; button.style.filter=""; }
@@ -11025,7 +11400,7 @@ function readClimexEventImageData(){
         reader.readAsDataURL(file);
     });
 }
-async function publishClimexEvent(){const button=document.getElementById("publishEventButton"),title=document.getElementById("eventTitleInput"),imageInput=document.getElementById("eventImageInput"),category=document.getElementById("eventCategoryInput"),opening=document.getElementById("eventOpeningInput"),date=document.getElementById("eventDateInput"),time=document.getElementById("eventTimeInput"),location=document.getElementById("eventLocationInput"),description=document.getElementById("eventDescriptionInput");if(!climexAuth.currentUser){alert("Silakan login terlebih dahulu.");return;}if(!title||!title.value.trim()){alert("Judul acara wajib diisi.");return;}if(!date||!date.value){alert("Hari / Tgl acara wajib diisi.");return;}if(!time||!time.value){alert("Jam acara wajib diisi.");return;}if(!location||!location.value.trim()){alert("Lokasi acara wajib diisi.");return;}if(!description||!description.value.trim()){alert("Isi acara wajib diisi.");return;}if(button&&button.dataset.climexSaving==="1")return;if(button&&typeof setClimexSaveButtonLoading==="function")setClimexSaveButtonLoading(button,true);else if(button)button.disabled=true;try{const uid=climexAuth.currentUser.uid;const imageData=await readClimexEventImageData();await climexDB.collection("users").doc(uid).collection("climex").doc("events").collection("items").add({title:title.value.trim(),imageData:imageData||"",category:category?(category.value||"__ALL__"):"__ALL__",opening:opening?opening.value.trim():"",date:date.value,time:time.value,location:location.value.trim(),description:description.value.trim(),createdBy:uid,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});title.value="";if(imageInput)imageInput.value="";if(category)category.value="__ALL__";if(opening)opening.value="";date.value="";time.value="";location.value="";description.value="";showEmployeeRenewToast("Acara berhasil dikirim.");}catch(error){console.error("CLIME-X EVENT SAVE ERROR:",error);alert("Acara gagal disimpan.");}finally{if(button&&typeof setClimexSaveButtonLoading==="function")setClimexSaveButtonLoading(button,false);else if(button)button.disabled=false;}}
+async function publishClimexEvent(){const button=document.getElementById("publishEventButton"),title=document.getElementById("eventTitleInput"),imageInput=document.getElementById("eventImageInput"),category=document.getElementById("eventCategoryInput"),opening=document.getElementById("eventOpeningInput"),date=document.getElementById("eventDateInput"),time=document.getElementById("eventTimeInput"),location=document.getElementById("eventLocationInput"),description=document.getElementById("eventDescriptionInput");if(!climexAuth.currentUser){climexAlert("Silakan login terlebih dahulu.");return;}if(!title||!title.value.trim()){climexAlert("Judul acara wajib diisi.");return;}if(!date||!date.value){climexAlert("Hari / Tgl acara wajib diisi.");return;}if(!time||!time.value){climexAlert("Jam acara wajib diisi.");return;}if(!location||!location.value.trim()){climexAlert("Lokasi acara wajib diisi.");return;}if(!description||!description.value.trim()){climexAlert("Isi acara wajib diisi.");return;}if(button&&button.dataset.climexSaving==="1")return;if(button&&typeof setClimexSaveButtonLoading==="function")setClimexSaveButtonLoading(button,true);else if(button)button.disabled=true;try{const uid=climexAuth.currentUser.uid;const imageData=await readClimexEventImageData();await climexDB.collection("users").doc(uid).collection("climex").doc("events").collection("items").add({title:title.value.trim(),imageData:imageData||"",category:category?(category.value||"__ALL__"):"__ALL__",opening:opening?opening.value.trim():"",date:date.value,time:time.value,location:location.value.trim(),description:description.value.trim(),createdBy:uid,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});title.value="";if(imageInput)imageInput.value="";if(category)category.value="__ALL__";if(opening)opening.value="";date.value="";time.value="";location.value="";description.value="";showEmployeeRenewToast("Acara berhasil dikirim.");}catch(error){console.error("CLIME-X EVENT SAVE ERROR:",error);climexAlert("Acara gagal disimpan.");}finally{if(button&&typeof setClimexSaveButtonLoading==="function")setClimexSaveButtonLoading(button,false);else if(button)button.disabled=false;}}
 async function loadClimexEvents(){const box=document.getElementById("climexEventHistory");if(!box||!climexAuth.currentUser)return;box.innerHTML='<div class="event-history-empty">Memuat acara...</div>';try{const uid=climexAuth.currentUser.uid;const snap=await climexDB.collection("users").doc(uid).collection("climex").doc("events").collection("items").orderBy("createdAt","desc").get();climexEventsCache=[];snap.forEach(function(doc){climexEventsCache.push({id:doc.id,...(doc.data()||{})});});if(!climexEventsCache.length){box.innerHTML='<div class="event-history-empty">Belum ada acara.</div>';return;}const rows=[];for(const item of climexEventsCache){let readerCount=0;try{const rs=await climexDB.collection("users").doc(uid).collection("climex").doc("events").collection("items").doc(item.id).collection("readers").get();readerCount=rs.size;}catch(e){console.warn("CLIME-X EVENT READERS COUNT:",e);}item.readerCount=readerCount;rows.push(`<tr><td>${escapeAnnouncementHtml(item.title||"-")}</td><td>${escapeAnnouncementHtml(formatClimexEventDate(item.date))}</td><td>${escapeAnnouncementHtml(item.time||"-")}</td><td>${escapeAnnouncementHtml(item.category==="__ALL__"?"Semua":(item.category||"Semua"))}</td><td>${escapeAnnouncementHtml(item.location||"-")}</td><td><button type="button" class="event-reader-count" onclick="showEventReaders('${String(item.id).replace(/'/g,"\'")}')">${readerCount} orang</button></td></tr>`);}box.innerHTML=`<table class="event-history-table"><thead><tr><th>Acara</th><th>Hari / Tgl</th><th>Jam</th><th>Kategori</th><th>Lokasi</th><th>Sudah Dibaca</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;}catch(error){console.error("CLIME-X EVENTS LOAD ERROR:",error);box.innerHTML='<div class="event-history-empty">Acara belum dapat dimuat.</div>';}}
 async function showEventReaders(eventId){const modal=document.getElementById("eventReaderModal"),body=document.getElementById("eventReaderModalBody"),title=document.getElementById("eventReaderModalTitle");if(!modal||!body||!climexAuth.currentUser)return;const event=climexEventsCache.find(function(x){return String(x.id)===String(eventId);});if(title)title.textContent=`Sudah Dibaca — ${event?event.title:"Acara"}`;body.innerHTML='<div class="event-history-empty">Memuat...</div>';modal.classList.add("show");try{const uid=climexAuth.currentUser.uid;const snap=await climexDB.collection("users").doc(uid).collection("climex").doc("events").collection("items").doc(eventId).collection("readers").orderBy("readAt","desc").get();if(snap.empty){body.innerHTML='<div class="event-history-empty">Belum ada karyawan yang membaca acara ini.</div>';return;}body.innerHTML=snap.docs.map(function(doc){const r=doc.data()||{};return `<div class="event-reader-row"><div><div class="event-reader-name">${escapeAnnouncementHtml(r.employeeName||"Karyawan")}</div><div class="event-reader-meta">${escapeAnnouncementHtml(r.employeeId||"-")}</div></div><div class="event-reader-meta">${escapeAnnouncementHtml(formatClimexEventDateTime(r.readAt))}</div></div>`;}).join("");}catch(error){console.error("CLIME-X EVENT READERS LOAD ERROR:",error);body.innerHTML='<div class="event-history-empty">Daftar pembaca belum dapat dimuat.</div>';}}
 function formatClimexEventDateTime(value){if(!value)return "-";let d=value;if(value&&typeof value.toDate==="function")d=value.toDate();else d=new Date(value);if(!(d instanceof Date)||isNaN(d.getTime()))return "-";return d.toLocaleString("id-ID",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});}
@@ -11035,13 +11410,13 @@ async function deleteAnnouncement(id){
     if(!climexAuth.currentUser) return;
     const item=announcementFeedItems.find(function(x){return String(x.id)===String(id);});
     if(!item) return;
-    if(!confirm("Hapus pengumuman ini?")) return;
+    if(!climexConfirm("Hapus pengumuman ini?")) return;
     try{
         await climexDB.collection("users").doc(climexAuth.currentUser.uid).collection("climex").doc("announcements").collection("items").doc(id).delete();
         showEmployeeRenewToast("Pengumuman dihapus.");
     }catch(error){
         console.error("CLIME-X ANNOUNCEMENT DELETE ERROR:",error);
-        alert("Pengumuman gagal dihapus.");
+        climexAlert("Pengumuman gagal dihapus.");
     }
 }
 
@@ -11160,21 +11535,21 @@ function submitBillingCardPayment(){
     const cvv = String(document.getElementById("billingCardCvv")?.value || "").trim();
 
     if(!amount || amount <= 0){
-        alert("Masukkan jumlah pembayaran.");
+        climexAlert("Masukkan jumlah pembayaran.");
         return;
     }
 
     if(number.length < 13 || number.length > 19){
-        alert("Nomor kartu belum lengkap.");
+        climexAlert("Nomor kartu belum lengkap.");
         return;
     }
 
     if(!name || !expiry || cvv.length < 3){
-        alert("Lengkapi data kartu terlebih dahulu.");
+        climexAlert("Lengkapi data kartu terlebih dahulu.");
         return;
     }
 
-    alert("Data pembayaran kartu siap diproses oleh payment gateway.");
+    climexAlert("Data pembayaran kartu siap diproses oleh payment gateway.");
     closeBillingPayment();
 }
 
@@ -11184,11 +11559,11 @@ function submitBillingGenericPayment(method){
     const amount = Number(input?.value || 0);
 
     if(!amount || amount <= 0){
-        alert("Masukkan jumlah pembayaran.");
+        climexAlert("Masukkan jumlah pembayaran.");
         return;
     }
 
-    alert("Pembayaran " + method + " siap diproses oleh payment gateway.");
+    climexAlert("Pembayaran " + method + " siap diproses oleh payment gateway.");
     closeBillingPayment();
 }
 
@@ -11197,11 +11572,11 @@ function submitBillingEwalletPayment(){
     const amount = Number(document.getElementById("billingEwalletAmount")?.value || 0);
 
     if(!amount || amount <= 0){
-        alert("Masukkan jumlah pembayaran.");
+        climexAlert("Masukkan jumlah pembayaran.");
         return;
     }
 
-    alert("Pembayaran " + currentBillingEwallet + " siap diproses oleh payment gateway.");
+    climexAlert("Pembayaran " + currentBillingEwallet + " siap diproses oleh payment gateway.");
     closeBillingPayment();
 }
 
@@ -11237,7 +11612,7 @@ async function reauthenticateClimexUser(){
         return true;
     }
 
-    const currentPassword = prompt("Masukkan password saat ini:");
+    const currentPassword = climexPrompt("Masukkan password saat ini:");
 
     if(currentPassword === null){
         throw new Error("DIBATALKAN");
@@ -11258,12 +11633,24 @@ async function reauthenticateClimexUser(){
     return true;
 }
 
+function updateAccountPasswordVisibility(user){
+    const btn = document.querySelector('.account-action-btn[onclick="changeClimexPassword()"]');
+    if(!btn) return;
+
+    const providers = (user && Array.isArray(user.providerData)) ? user.providerData : [];
+    const hasPasswordProvider = providers.some(function(p){
+        return p && p.providerId === "password";
+    });
+
+    btn.style.display = hasPasswordProvider ? "inline-flex" : "none";
+}
+
 async function changeClimexPassword(){
 
     const user = climexAuth && climexAuth.currentUser;
 
     if(!user){
-        alert("Sesi login tidak ditemukan.");
+        climexAlert("Sesi login tidak ditemukan.");
         return;
     }
 
@@ -11275,33 +11662,33 @@ async function changeClimexPassword(){
 
         if(providerIds.indexOf("password") === -1){
             await climexAuth.sendPasswordResetEmail(user.email);
-            alert("Link untuk mengubah password telah dikirim ke email akun.");
+            climexAlert("Link untuk mengubah password telah dikirim ke email akun.");
             return;
         }
 
         await reauthenticateClimexUser();
 
-        const newPassword = prompt("Masukkan password baru (minimal 6 karakter):");
+        const newPassword = climexPrompt("Masukkan password baru (minimal 6 karakter):");
 
         if(newPassword === null) return;
 
         if(newPassword.length < 6){
-            alert("Password baru minimal 6 karakter.");
+            climexAlert("Password baru minimal 6 karakter.");
             return;
         }
 
-        const confirmPassword = prompt("Ulangi password baru:");
+        const confirmPassword = climexPrompt("Ulangi password baru:");
 
         if(confirmPassword === null) return;
 
         if(newPassword !== confirmPassword){
-            alert("Konfirmasi password tidak sama.");
+            climexAlert("Konfirmasi password tidak sama.");
             return;
         }
 
         await user.updatePassword(newPassword);
 
-        alert("Password berhasil diubah.");
+        climexAlert("Password berhasil diubah.");
 
     }catch(error){
 
@@ -11310,11 +11697,11 @@ async function changeClimexPassword(){
         console.error("CLIME-X CHANGE PASSWORD ERROR:", error);
 
         if(error && error.code === "auth/wrong-password"){
-            alert("Password saat ini salah.");
+            climexAlert("Password saat ini salah.");
         }else if(error && error.code === "auth/requires-recent-login"){
-            alert("Silakan login kembali lalu ulangi perubahan password.");
+            climexAlert("Silakan login kembali lalu ulangi perubahan password.");
         }else{
-            alert("Password gagal diubah.");
+            climexAlert("Password gagal diubah.");
         }
 
     }
@@ -11418,11 +11805,11 @@ async function deleteClimexData(){
     const user = climexAuth && climexAuth.currentUser;
 
     if(!user){
-        alert("Sesi login tidak ditemukan.");
+        climexAlert("Sesi login tidak ditemukan.");
         return;
     }
 
-    const ok = confirm(
+    const ok = climexConfirm(
         "HAPUS DATA CLIME-X?\n\n" +
         "Semua data perusahaan CLIME-X yang tersimpan di Firestore akan dihapus. " +
         "Akun login tetap ada.\n\n" +
@@ -11435,7 +11822,7 @@ async function deleteClimexData(){
 
         await deleteClimexDataInternal(user.uid);
 
-        alert("Data CLIME-X berhasil dihapus.");
+        climexAlert("Data CLIME-X berhasil dihapus.");
 
         window.climexCurrentUser = {
             uid:user.uid,
@@ -11449,7 +11836,7 @@ async function deleteClimexData(){
     }catch(error){
 
         console.error("CLIME-X DELETE DATA ERROR:", error);
-        alert("Sebagian data gagal dihapus. Periksa Firestore Rules.");
+        climexAlert("Sebagian data gagal dihapus. Periksa Firestore Rules.");
 
     }
 }
@@ -11459,11 +11846,11 @@ async function deleteClimexAccount(){
     const user = climexAuth && climexAuth.currentUser;
 
     if(!user){
-        alert("Sesi login tidak ditemukan.");
+        climexAlert("Sesi login tidak ditemukan.");
         return;
     }
 
-    const ok = confirm(
+    const ok = climexConfirm(
         "HAPUS AKUN CLIME-X?\n\n" +
         "Data CLIME-X akan dihapus terlebih dahulu, kemudian akun login ini akan dihapus.\n\n" +
         "Tindakan ini tidak dapat dibatalkan."
@@ -11480,7 +11867,7 @@ async function deleteClimexAccount(){
 
         await user.delete();
 
-        alert("Akun CLIME-X berhasil dihapus.");
+        climexAlert("Akun CLIME-X berhasil dihapus.");
 
     }catch(error){
 
@@ -11489,15 +11876,19 @@ async function deleteClimexAccount(){
         console.error("CLIME-X DELETE ACCOUNT ERROR:", error);
 
         if(error && error.code === "auth/requires-recent-login"){
-            alert("Silakan login kembali lalu ulangi penghapusan akun.");
+            climexAlert("Silakan login kembali lalu ulangi penghapusan akun.");
         }else{
-            alert("Akun gagal dihapus.");
+            climexAlert("Akun gagal dihapus.");
         }
 
     }
 }
 
 function showPage(pageId, button){
+
+    if(pageId === "account" && typeof climexAuth !== "undefined" && climexAuth.currentUser){
+        updateAccountPasswordVisibility(climexAuth.currentUser);
+    }
 
     document.querySelectorAll(".page").forEach(function(page){
         page.style.display = "none";
@@ -11622,12 +12013,12 @@ async function openWebClaim(claimId){
 
     currentWebClaimId = claimId;
     overlay.classList.add("show");
-    body.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);">Memuat detail klaim...</div>';
+    body.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);">${climexT("Memuat detail klaim...")}</div>';
     actions.innerHTML = "";
 
     try{
         if(!climexAuth.currentUser){
-            body.innerHTML = '<div style="color:#b85c55;">User CLIME-X belum login.</div>';
+            body.innerHTML = '<div style="color:#b85c55;">${climexT("User CLIME-X belum login.")}</div>';
             return;
         }
 
@@ -11641,7 +12032,7 @@ async function openWebClaim(claimId){
             .get();
 
         if(!snap.exists){
-            body.innerHTML = '<div style="color:#b85c55;">Data klaim tidak ditemukan.</div>';
+            body.innerHTML = '<div style="color:#b85c55;">${climexT("Data klaim tidak ditemukan.")}</div>';
             return;
         }
 
@@ -11650,7 +12041,7 @@ async function openWebClaim(claimId){
         const receipts = Array.isArray(claim.receipts) ? claim.receipts : [];
 
         if(title){
-            title.textContent = "Detail Klaim — " + (claim.id || claimId);
+            title.textContent = climexT("Detail Klaim") + " — " + (claim.id || claimId);
         }
 
         let receiptHtml = "";
@@ -11673,32 +12064,32 @@ async function openWebClaim(claimId){
 
                 return `
                     <div class="claim-receipt-card">
-                        <div class="claim-receipt-title">Receipt #${i+1}</div>
+                        <div class="claim-receipt-title">${climexT("Receipt")} #${i+1}</div>
                         <div style="display:flex;gap:16px;align-items:flex-start;">
                             ${photoHtml}
                             <div style="flex:1;min-width:0;">
-                                <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">Tanggal</div><div class="claim-detail-value">${escapeClaimHtml(r.date || "-")}</div></div>
-                                <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">Kategori</div><div class="claim-detail-value">${escapeClaimHtml(r.category || "-")}</div></div>
-                                <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">Total</div><div class="claim-detail-value">${formatClaimMoney(r.amount,r.currency || claim.currency)}</div></div>
-                                <div class="claim-detail-field"><div class="claim-detail-label">Keterangan</div><div class="claim-detail-value">${escapeClaimHtml(r.description || "-")}</div></div>
+                                <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">${climexT("Tanggal")}</div><div class="claim-detail-value">${escapeClaimHtml(r.date || "-")}</div></div>
+                                <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">${climexT("Kategori")}</div><div class="claim-detail-value">${escapeClaimHtml(r.category || "-")}</div></div>
+                                <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">${climexT("Total")}</div><div class="claim-detail-value">${formatClaimMoney(r.amount,r.currency || claim.currency)}</div></div>
+                                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Keterangan")}</div><div class="claim-detail-value">${escapeClaimHtml(r.description || "-")}</div></div>
                             </div>
                         </div>
                     </div>`;
             }).join("");
         }else{
-            receiptHtml = '<div style="padding:18px 0;color:var(--muted);">Tidak ada receipt pada klaim ini.</div>';
+            receiptHtml = '<div style="padding:18px 0;color:var(--muted);">${climexT("Tidak ada receipt pada klaim ini.")}</div>';
         }
 
         body.innerHTML = `
             <div class="claim-detail-grid">
-                <div class="claim-detail-field"><div class="claim-detail-label">Claim ID</div><div class="claim-detail-value">${escapeClaimHtml(claim.id || claimId)}</div></div>
-                <div class="claim-detail-field"><div class="claim-detail-label">Karyawan</div><div class="claim-detail-value">${escapeClaimHtml(claim.employeeName || "-")}</div></div>
-                <div class="claim-detail-field"><div class="claim-detail-label">Jumlah Receipt</div><div class="claim-detail-value">${Number(claim.count) || receipts.length || 0}</div></div>
-                <div class="claim-detail-field"><div class="claim-detail-label">Total Klaim</div><div class="claim-detail-value">${formatClaimMoney(claim.total,claim.currency)}</div></div>
-                <div class="claim-detail-field"><div class="claim-detail-label">Tanggal Pengajuan</div><div class="claim-detail-value">${formatClaimDate(claim.createdAt || claim.date)}</div></div>
-                <div class="claim-detail-field"><div class="claim-detail-label">Status</div><div class="claim-detail-value">${escapeClaimHtml(claim.status || "pending")}</div></div>
+                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Claim ID")}</div><div class="claim-detail-value">${escapeClaimHtml(claim.id || claimId)}</div></div>
+                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Karyawan")}</div><div class="claim-detail-value">${escapeClaimHtml(claim.employeeName || "-")}</div></div>
+                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Jumlah Receipt")}</div><div class="claim-detail-value">${Number(claim.count) || receipts.length || 0}</div></div>
+                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Total Klaim")}</div><div class="claim-detail-value">${formatClaimMoney(claim.total,claim.currency)}</div></div>
+                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Tanggal Pengajuan")}</div><div class="claim-detail-value">${formatClaimDate(claim.createdAt || claim.date)}</div></div>
+                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Status")}</div><div class="claim-detail-value">${escapeClaimHtml(climexStatusLabel(status))}</div></div>
             </div>
-            <div style="font-size:14px;font-weight:800;color:var(--brown-dark);margin-bottom:4px;">Receipt</div>
+            <div style="font-size:14px;font-weight:800;color:var(--brown-dark);margin-bottom:4px;">${climexT("Receipt")}</div>
             ${receiptHtml}`;
 
         if(status === "pending"){
@@ -11710,12 +12101,12 @@ async function openWebClaim(claimId){
                 color:var(--brown-dark);
                 margin-bottom:6px;
             ">
-                Alasan Penolakan
+                ${climexT("Alasan Penolakan")}
             </div>
 
             <textarea
                 id="claimRejectionReason"
-                placeholder="Tuliskan alasan penolakan klaim..."
+                placeholder="${climexT("Tuliskan alasan penolakan klaim...")}"
                 style="
                     width:100%;
                     min-height:80px;
@@ -11738,7 +12129,7 @@ async function openWebClaim(claimId){
             class="claim-detail-btn reject"
             onclick="rejectWebClaim('${escapeClaimHtml(claimId)}')"
         >
-            TOLAK
+            ${climexT("TOLAK")}
         </button>
 
         <button
@@ -11746,7 +12137,7 @@ async function openWebClaim(claimId){
             class="claim-detail-btn approve"
             onclick="approveWebClaim('${escapeClaimHtml(claimId)}')"
         >
-            SETUJUI
+            ${climexT("SETUJUI")}
         </button>`;
 }
 
@@ -11760,7 +12151,7 @@ async function openWebClaim(claimId){
 
     }catch(error){
         console.error("CLIME-X OPEN CLAIM ERROR:",error);
-        body.innerHTML = '<div style="color:#b85c55;">Gagal memuat detail klaim.</div>';
+        body.innerHTML = '<div style="color:#b85c55;">${climexT("Gagal memuat detail klaim.")}</div>';
     }
 }
 
@@ -11787,7 +12178,7 @@ function closeClaimPhoto(){
 
 async function approveWebClaim(claimId){
     if(!climexAuth.currentUser) return;
-    if(!confirm("Setujui klaim " + claimId + "?")) return;
+    if(!climexConfirm("Setujui klaim " + claimId + "?")) return;
     try{
         await climexDB.collection("users").doc(climexAuth.currentUser.uid).collection("climex").doc("claims").collection("items").doc(claimId).update({
             status:"approved",
@@ -11799,7 +12190,7 @@ async function approveWebClaim(claimId){
         await openWebClaim(claimId);
     }catch(error){
         console.error("CLIME-X APPROVE CLAIM ERROR:",error);
-        alert("Klaim gagal disetujui.");
+        climexAlert("Klaim gagal disetujui.");
     }
 }
 
@@ -11843,12 +12234,12 @@ function updatePrintSelectionBar(){
 async function printSelectedClaims(){
     if(!climexAuth.currentUser) return;
     if(!selectedClaimPrintIds.length){
-        alert("Belum ada klaim yang ditambahkan ke Form Cetak.");
+        climexAlert("Belum ada klaim yang ditambahkan ke Form Cetak.");
         return;
     }
     const printWindow = window.open("","_blank","width=900,height=900");
     if(!printWindow){
-        alert("Popup cetak diblokir browser. Izinkan popup untuk CLIME-X lalu coba lagi.");
+        climexAlert("Popup cetak diblokir browser. Izinkan popup untuk CLIME-X lalu coba lagi.");
         return;
     }
     printWindow.document.open();
@@ -11878,7 +12269,7 @@ async function printSelectedClaims(){
 
         if(!employeeClaims.length){
             printWindow.close();
-            alert("Tidak ada klaim approved yang dipilih untuk dicetak.");
+            climexAlert("Tidak ada klaim approved yang dipilih untuk dicetak.");
             return;
         }
 
@@ -12291,7 +12682,7 @@ window.onload=function(){setTimeout(function(){window.print();},300);};
         printWindow.document.close();
     }catch(error){
         console.error("CLIME-X PRINT CLAIM ERROR:",error);
-        alert("Klaim gagal dicetak.");
+        climexAlert("Klaim gagal dicetak.");
     }
 }
 
@@ -12306,12 +12697,12 @@ async function rejectWebClaim(claimId){
         : "";
 
     if(!reason){
-        alert("Alasan penolakan wajib diisi.");
+        climexAlert("Alasan penolakan wajib diisi.");
         if(reasonEl) reasonEl.focus();
         return;
     }
 
-    if(!confirm("Tolak klaim " + claimId + "?")) return;
+    if(!climexConfirm("Tolak klaim " + claimId + "?")) return;
 
     try{
 
@@ -12337,7 +12728,7 @@ async function rejectWebClaim(claimId){
 
         console.error("CLIME-X REJECT CLAIM ERROR:",error);
 
-        alert("Klaim gagal ditolak.");
+        climexAlert("Klaim gagal ditolak.");
     }
 }
 
@@ -12363,13 +12754,13 @@ async function openClimexLeave(leaveDocId){
     if(!overlay || !body || !actions) return;
 
     overlay.classList.add("show");
-    body.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);">Memuat detail cuti...</div>';
+    body.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);">${climexT("Memuat detail cuti...")}</div>';
     actions.innerHTML = "";
 
     try{
 
         if(!climexAuth.currentUser){
-            body.innerHTML = '<div style="color:#b85c55;">User CLIME-X belum login.</div>';
+            body.innerHTML = '<div style="color:#b85c55;">${climexT("User CLIME-X belum login.")}</div>';
             return;
         }
 
@@ -12383,7 +12774,7 @@ async function openClimexLeave(leaveDocId){
             .get();
 
         if(!snap.exists){
-            body.innerHTML = '<div style="color:#b85c55;">Data pengajuan cuti tidak ditemukan.</div>';
+            body.innerHTML = '<div style="color:#b85c55;">${climexT("Data pengajuan cuti tidak ditemukan.")}</div>';
             return;
         }
 
@@ -12392,7 +12783,7 @@ async function openClimexLeave(leaveDocId){
         const status = String(leave.status || "pending").toLowerCase();
 
         if(title){
-            title.textContent = "Detail Cuti — " + leaveId;
+            title.textContent = climexT("Detail Cuti") + " — " + leaveId;
         }
 
         const startDate = String(leave.startDate || "").trim();
@@ -12411,69 +12802,70 @@ async function openClimexLeave(leaveDocId){
         let statusText = "MENUNGGU";
         if(status === "approved") statusText = "DISETUJUI";
         if(status === "rejected") statusText = "DITOLAK";
+        statusText = climexT(statusText);
 
         body.innerHTML = `
             <div class="claim-detail-grid">
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Cuti ID</div>
+                    <div class="claim-detail-label">${climexT("Cuti ID")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(String(leaveId))}</div>
                 </div>
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Karyawan</div>
+                    <div class="claim-detail-label">${climexT("Karyawan")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(String(leave.employeeName || "-"))}</div>
                 </div>
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Jenis Cuti</div>
+                    <div class="claim-detail-label">${climexT("Jenis Cuti")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(String(leave.leaveType || "-"))}</div>
                 </div>
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Jumlah Hari</div>
+                    <div class="claim-detail-label">${climexT("Jumlah Hari")}</div>
                     <div class="claim-detail-value">${Number(leave.days) || 0} hari</div>
                 </div>
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Periode Cuti</div>
+                    <div class="claim-detail-label">${climexT("Periode Cuti")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(period)}</div>
                 </div>
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Tanggal Pengajuan</div>
+                    <div class="claim-detail-label">${climexT("Tanggal Pengajuan")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(submittedAt)}</div>
                 </div>
                 <div class="claim-detail-field" style="grid-column:1 / -1;">
-                    <div class="claim-detail-label">Alasan Cuti</div>
+                    <div class="claim-detail-label">${climexT("Alasan Cuti")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(String(leave.reason || "-"))}</div>
                 </div>
                 ${leave.note ? `
                 <div class="claim-detail-field" style="grid-column:1 / -1;">
-                    <div class="claim-detail-label">Catatan</div>
+                    <div class="claim-detail-label">${climexT("Catatan")}</div>
                     <div class="claim-detail-value">${escapeAnnouncementHtml(String(leave.note))}</div>
                 </div>` : ""}
                 <div class="claim-detail-field">
-                    <div class="claim-detail-label">Status</div>
+                    <div class="claim-detail-label">${climexT("Status")}</div>
                     <div class="claim-detail-value">${statusText}</div>
                 </div>
                 ${status === "rejected" ? `
                 <div class="claim-detail-field" style="grid-column:1 / -1;">
-                    <div class="claim-detail-label">Alasan Penolakan</div>
+                    <div class="claim-detail-label">${climexT("Alasan Penolakan")}</div>
                     <div class="claim-detail-value" style="color:#a54e48;">${escapeAnnouncementHtml(String(leave.rejectionReason || "-"))}</div>
                 </div>` : ""}
             </div>
 
             ${status === "pending" ? `
             <div style="margin-top:4px;">
-                <div style="font-size:12px;font-weight:800;color:var(--brown-dark);margin-bottom:7px;">Alasan Penolakan</div>
-                <textarea id="leaveRejectionReason" placeholder="Tuliskan alasan penolakan cuti..." style="width:100%;min-height:86px;resize:vertical;box-sizing:border-box;border:1px solid var(--line);border-radius:9px;padding:10px;font-family:inherit;font-size:12px;color:var(--brown-dark);background:#fff;outline:none;"></textarea>
+                <div style="font-size:12px;font-weight:800;color:var(--brown-dark);margin-bottom:7px;">${climexT("Alasan Penolakan")}</div>
+                <textarea id="leaveRejectionReason" placeholder="${climexT("Tuliskan alasan penolakan cuti...")}" style="width:100%;min-height:86px;resize:vertical;box-sizing:border-box;border:1px solid var(--line);border-radius:9px;padding:10px;font-family:inherit;font-size:12px;color:var(--brown-dark);background:#fff;outline:none;"></textarea>
             </div>` : ""}
         `;
 
         if(status === "pending"){
             actions.innerHTML = `
-                <button type="button" class="claim-detail-btn reject" onclick="rejectClimexLeave('${escapeAnnouncementHtml(String(leaveDocId))}')">TOLAK</button>
-                <button type="button" class="claim-detail-btn approve" onclick="approveClimexLeave('${escapeAnnouncementHtml(String(leaveDocId))}')">SETUJUI</button>`;
+                <button type="button" class="claim-detail-btn reject" onclick="rejectClimexLeave('${escapeAnnouncementHtml(String(leaveDocId))}')">${climexT("TOLAK")}</button>
+                <button type="button" class="claim-detail-btn approve" onclick="approveClimexLeave('${escapeAnnouncementHtml(String(leaveDocId))}')">${climexT("SETUJUI")}</button>`;
         }
 
     }catch(error){
         console.error("CLIME-X OPEN LEAVE ERROR:",error);
-        body.innerHTML = '<div style="color:#b85c55;">Gagal memuat detail pengajuan cuti.</div>';
+        body.innerHTML = '<div style="color:#b85c55;">${climexT("Gagal memuat detail pengajuan cuti.")}</div>';
     }
 }
 
@@ -12486,7 +12878,7 @@ async function approveClimexLeave(leaveDocId){
 
     if(!climexAuth.currentUser) return;
 
-    if(!confirm("Setujui pengajuan cuti ini?")) return;
+    if(!climexConfirm("Setujui pengajuan cuti ini?")) return;
 
     try{
         await climexDB
@@ -12507,7 +12899,7 @@ async function approveClimexLeave(leaveDocId){
 
     }catch(error){
         console.error("CLIME-X APPROVE LEAVE ERROR:",error);
-        alert("Pengajuan cuti gagal disetujui.");
+        climexAlert("Pengajuan cuti gagal disetujui.");
     }
 }
 
@@ -12519,12 +12911,12 @@ async function rejectClimexLeave(leaveDocId){
     const reason = reasonEl ? String(reasonEl.value || "").trim() : "";
 
     if(!reason){
-        alert("Alasan penolakan wajib diisi.");
+        climexAlert("Alasan penolakan wajib diisi.");
         if(reasonEl) reasonEl.focus();
         return;
     }
 
-    if(!confirm("Tolak pengajuan cuti ini?")) return;
+    if(!climexConfirm("Tolak pengajuan cuti ini?")) return;
 
     try{
         await climexDB
@@ -12546,7 +12938,7 @@ async function rejectClimexLeave(leaveDocId){
 
     }catch(error){
         console.error("CLIME-X REJECT LEAVE ERROR:",error);
-        alert("Pengajuan cuti gagal ditolak.");
+        climexAlert("Pengajuan cuti gagal ditolak.");
     }
 }
 
@@ -12658,6 +13050,8 @@ async function loadClimexLeave(){
                 statusBg = "#fdebea";
                 statusColor = "#b85c55";
             }
+
+            statusText = climexT(statusText);
 
             const tr = document.createElement("tr");
 
@@ -13353,7 +13747,7 @@ function addEmployeeCategory(type){
         });
 
     if(exists){
-        alert(
+        climexAlert(
             type === "department"
                 ? "Departemen tersebut sudah ada."
                 : "Jabatan tersebut sudah ada."
@@ -13445,7 +13839,7 @@ async function saveEmployeeCategories(){
 
 async function saveEmployeeCategoriesCore(){
     if(!climexAuth.currentUser){
-        alert("User CLIME-X belum login.");
+        climexAlert("User CLIME-X belum login.");
         return;
     }
 
@@ -13480,7 +13874,7 @@ async function saveEmployeeCategoriesCore(){
 
     }catch(error){
         console.error("CLIME-X EMPLOYEE CATEGORIES SAVE ERROR:",error);
-        alert("Kategori departemen & jabatan gagal disimpan.");
+        climexAlert("Kategori departemen & jabatan gagal disimpan.");
     }
 }
 
@@ -13995,7 +14389,7 @@ function bindEmployeeMasterCells(){
                             const duplicate =
                                 masterEmployees[duplicateIndex];
 
-                            alert(
+                            climexAlert(
                                 "ID Karyawan " +
                                 value +
                                 " sudah digunakan oleh " +
@@ -14216,7 +14610,7 @@ function addMasterEmployeeRow(){
 function deleteSelectedMasterEmployee(){
 
     if(selectedMasterEmployeeIndex < 0){
-        alert(climexT("Pilih employee yang ingin dihapus."));
+        climexAlert(climexT("Pilih employee yang ingin dihapus."));
         return;
     }
 
@@ -14230,7 +14624,7 @@ function deleteSelectedMasterEmployee(){
     const name =
         employee.name || employee.id || "employee ini";
 
-    if(!confirm(climexT("Hapus") + " " + name + "?")){
+    if(!climexConfirm(climexT("Hapus") + " " + name + "?")){
         return;
     }
 
@@ -14334,24 +14728,24 @@ function saveClimexEmployeeIdPopup(){
         .replace(/\.com$/i, "");
 
     if(!employee.name || !employee.id){
-        alert("Nama Karyawan dan ID Karyawan harus diisi terlebih dahulu.");
+        climexAlert("Nama Karyawan dan ID Karyawan harus diisi terlebih dahulu.");
         return;
     }
 
     if(!localPart){
-        alert("ID Clime-X wajib diisi.");
+        climexAlert("ID Clime-X wajib diisi.");
         if(localInput) localInput.focus();
         return;
     }
 
     if(!/^[a-z0-9._-]+$/.test(localPart)){
-        alert("ID Clime-X hanya boleh berisi huruf, angka, titik, garis bawah, atau tanda minus.");
+        climexAlert("ID Clime-X hanya boleh berisi huruf, angka, titik, garis bawah, atau tanda minus.");
         if(localInput) localInput.focus();
         return;
     }
 
     if(!domain){
-        alert("Employee Domain belum tersedia.");
+        climexAlert("Employee Domain belum tersedia.");
         return;
     }
 
@@ -14522,7 +14916,7 @@ async function validateMasterEmployeeIds(rows,collection){
         const key = id.toLowerCase();
 
         if(seen[key]){
-            alert(
+            climexAlert(
                 "ID Karyawan " + id +
                 " sudah digunakan oleh " +
                 (seen[key].name || "employee lain") + "."
@@ -14566,7 +14960,7 @@ async function validateMasterEmployeeIds(rows,collection){
                 continue;
             }
 
-            alert(
+            climexAlert(
                 "ID Karyawan " + employee.id +
                 " sudah digunakan oleh " +
                 (oldRecord.name || "employee lain") + "."
@@ -14576,7 +14970,7 @@ async function validateMasterEmployeeIds(rows,collection){
 
     }catch(error){
         console.error("CLIME-X EMPLOYEE ID DUPLICATE CHECK ERROR:",error);
-        alert("ID Karyawan tidak dapat diperiksa. Silakan coba lagi.");
+        climexAlert("ID Karyawan tidak dapat diperiksa. Silakan coba lagi.");
         return false;
     }
 
@@ -14597,7 +14991,7 @@ async function saveMasterEmployees(){
 async function saveMasterEmployeesCore(){
 
     if(!climexAuth.currentUser){
-        alert("User CLIME-X belum login.");
+        climexAlert("User CLIME-X belum login.");
         return false;
     }
 
@@ -14652,7 +15046,7 @@ async function saveMasterEmployeesCore(){
 
         if(!employee.name){
 
-            alert(climexT("Nama Karyawan wajib diisi."));
+            climexAlert(climexT("Nama Karyawan wajib diisi."));
 
             return false;
         }
@@ -14680,7 +15074,7 @@ async function saveMasterEmployeesCore(){
             employee.contractEnd < employee.contractStart
         ){
 
-            alert(
+            climexAlert(
                 climexT("Berakhir Kontrak tidak boleh sebelum Mulai Kontrak.")
             );
 
@@ -14767,7 +15161,7 @@ async function saveMasterEmployeesCore(){
             ){
 
                 if(!masterGlobalPassword){
-                    alert(
+                    climexAlert(
                         "Password Global belum tersedia. Silakan pastikan Password Global sudah tersimpan di Settings → Employee."
                     );
                     return false;
@@ -14785,7 +15179,7 @@ async function saveMasterEmployeesCore(){
                     !localPart ||
                     !/^[a-z0-9._-]+$/.test(localPart)
                 ){
-                    alert("ID Clime-X tidak valid.");
+                    climexAlert("ID Clime-X tidak valid.");
                     return false;
                 }
 
@@ -15034,7 +15428,7 @@ department:employee.department || "",
             error
         );
 
-        alert(
+        climexAlert(
             climexT("Data employee gagal disimpan.")
         );
 
@@ -16369,5 +16763,411 @@ setAppLanguage = function(lang){
     </div>
 </div>
 </div>
+
+<script>
+/* =========================================================
+   CLIME-X TRANSLATION PATCH
+   Hanya menerjemahkan teks UI yang sudah ada. Tidak mengubah
+   data Firestore, logika fitur, atau struktur halaman.
+   ========================================================= */
+(function(){
+    const PATCH_TRANSLATIONS = {
+        "Lihat foto & komentar": {id:"Lihat foto & komentar", en:"View photos & comments", zh:"查看照片和评论"},
+        "Feedback aktif": {id:"Feedback aktif", en:"Feedback enabled", zh:"已启用反馈"},
+        "Feedback dimatikan": {id:"Feedback dimatikan", en:"Feedback disabled", zh:"已关闭反馈"},
+        "Suka": {id:"Suka", en:"Like", zh:"赞"},
+        "Komentar": {id:"Komentar", en:"Comment", zh:"评论"},
+        "Balas": {id:"Balas", en:"Reply", zh:"回复"},
+        "Balas komentar...": {id:"Balas komentar...", en:"Reply to comment...", zh:"回复评论..."},
+        "Tulis komentar...": {id:"Tulis komentar...", en:"Write a comment...", zh:"写下评论..."},
+        "Lihat komentar sebelumnya": {id:"Lihat komentar sebelumnya", en:"View previous comments", zh:"查看之前的评论"},
+        "Lihat balasan berikutnya": {id:"Lihat balasan berikutnya", en:"View more replies", zh:"查看更多回复"},
+        "Sembunyikan balasan": {id:"Sembunyikan balasan", en:"Hide replies", zh:"隐藏回复"},
+        "Belum ada komentar.": {id:"Belum ada komentar.", en:"No comments yet.", zh:"暂无评论。"},
+        "Memuat komentar...": {id:"Memuat komentar...", en:"Loading comments...", zh:"正在加载评论..."},
+        "Kirim": {id:"Kirim", en:"Send", zh:"发送"},
+        "Hapus": {id:"Hapus", en:"Delete", zh:"删除"},
+        "Lihat detail": {id:"Lihat detail", en:"View details", zh:"查看详情"},
+        "Receipt": {id:"Receipt", en:"Receipt", zh:"收据"},
+        "Tidak ada foto": {id:"Tidak ada foto", en:"No photo", zh:"没有照片"},
+        "Tidak ada receipt pada klaim ini.": {id:"Tidak ada receipt pada klaim ini.", en:"No receipts found for this claim.", zh:"此报销没有收据。"},
+        "Data klaim tidak ditemukan.": {id:"Data klaim tidak ditemukan.", en:"Claim data not found.", zh:"未找到报销数据。"},
+        "Gagal memuat detail klaim.": {id:"Gagal memuat detail klaim.", en:"Failed to load claim details.", zh:"加载报销详情失败。"},
+        "TAMBAH KE FORM CETAK": {id:"TAMBAH KE FORM CETAK", en:"ADD TO PRINT FORM", zh:"添加到打印表单"},
+        "HAPUS DARI FORM": {id:"HAPUS DARI FORM", en:"REMOVE FROM FORM", zh:"从表单中移除"},
+        "KOSONGKAN": {id:"KOSONGKAN", en:"CLEAR", zh:"清空"},
+        "CETAK FORM": {id:"CETAK FORM", en:"PRINT FORM", zh:"打印表单"},
+        "Tolak klaim": {id:"Tolak klaim", en:"Reject claim", zh:"拒绝报销"},
+        "Setujui klaim": {id:"Setujui klaim", en:"Approve claim", zh:"批准报销"},
+        "Tuliskan alasan penolakan klaim...": {id:"Tuliskan alasan penolakan klaim...", en:"Enter the reason for rejecting the claim...", zh:"请输入拒绝报销的原因..."},
+        "Klaim gagal dicetak.": {id:"Klaim gagal dicetak.", en:"Claim could not be printed.", zh:"报销打印失败。"},
+        "Klaim yang telah disetujui dan menunggu pembayaran.": {id:"Klaim yang telah disetujui dan menunggu pembayaran.", en:"Approved claims awaiting payment.", zh:"已批准且等待付款的报销。"},
+        "Riwayat seluruh klaim yang telah diproses.": {id:"Riwayat seluruh klaim yang telah diproses.", en:"History of all processed claims.", zh:"所有已处理报销的历史记录。"},
+        "Kelola seluruh pengajuan cuti karyawan.": {id:"Kelola seluruh pengajuan cuti karyawan.", en:"Manage all employee leave requests.", zh:"管理所有员工请假申请。"},
+        "Gagal memuat detail pengajuan cuti.": {id:"Gagal memuat detail pengajuan cuti.", en:"Failed to load leave request details.", zh:"加载请假申请详情失败。"},
+        "Data pengajuan cuti tidak ditemukan.": {id:"Data pengajuan cuti tidak ditemukan.", en:"Leave request data not found.", zh:"未找到请假申请数据。"},
+        "Tolak pengajuan cuti ini?": {id:"Tolak pengajuan cuti ini?", en:"Reject this leave request?", zh:"拒绝此请假申请？"},
+        "Tuliskan alasan penolakan cuti...": {id:"Tuliskan alasan penolakan cuti...", en:"Enter the reason for rejecting this leave request...", zh:"请输入拒绝此请假申请的原因..."},
+        "Tolak": {id:"Tolak", en:"Reject", zh:"拒绝"},
+        "Setujui": {id:"Setujui", en:"Approve", zh:"批准"},
+        "Memuat klaim...": {id:"Memuat klaim...", en:"Loading claims...", zh:"正在加载报销..."},
+        "Belum ada klaim masuk.": {id:"Belum ada klaim masuk.", en:"No incoming claims.", zh:"暂无待处理报销。"},
+        "Memuat pengajuan cuti...": {id:"Memuat pengajuan cuti...", en:"Loading leave requests...", zh:"正在加载请假申请..."},
+        "Belum ada pengajuan cuti masuk.": {id:"Belum ada pengajuan cuti masuk.", en:"No incoming leave requests.", zh:"暂无待处理请假申请。"},
+        "Memuat data...": {id:"Memuat data...", en:"Loading data...", zh:"正在加载数据..."},
+        "Memuat pengumuman...": {id:"Memuat pengumuman...", en:"Loading announcements...", zh:"正在加载公告..."},
+        "Memuat karyawan...": {id:"Memuat karyawan...", en:"Loading employees...", zh:"正在加载员工..."},
+        "Memuat acara...": {id:"Memuat acara...", en:"Loading events...", zh:"正在加载活动..."},
+        "Memuat laporan...": {id:"Memuat laporan...", en:"Loading reports...", zh:"正在加载报告..."},
+        "Pengumuman belum dapat dimuat.": {id:"Pengumuman belum dapat dimuat.", en:"Announcements could not be loaded.", zh:"公告无法加载。"},
+        "Belum ada pengumuman.": {id:"Belum ada pengumuman.", en:"No announcements yet.", zh:"暂无公告。"},
+        "Pengumuman": {id:"Pengumuman", en:"Announcements", zh:"公告"},
+        "Laporan": {id:"Laporan", en:"Reports", zh:"报告"},
+        "Perusahaan": {id:"Perusahaan", en:"Company", zh:"公司"},
+        "Pengumuman berhasil dipublikasikan.": {id:"Pengumuman berhasil dipublikasikan.", en:"Announcement published successfully.", zh:"公告发布成功。"},
+        "Pengumuman dihapus.": {id:"Pengumuman dihapus.", en:"Announcement deleted.", zh:"公告已删除。"},
+        "Hapus pengumuman ini?": {id:"Hapus pengumuman ini?", en:"Delete this announcement?", zh:"删除此公告？"},
+        "Masukkan ID Clime-X": {id:"Masukkan ID Clime-X", en:"Enter Clime-X ID", zh:"输入 Clime-X ID"},
+        "Buat ID Clime-X Employee": {id:"Buat ID Clime-X Employee", en:"Create Clime-X Employee ID", zh:"创建 Clime-X Employee ID"},
+        "Tidak ada Employee CLIME-X.": {id:"Tidak ada Employee CLIME-X.", en:"No CLIME-X Employees.", zh:"没有 CLIME-X 员工。"},
+        "Pilih employee yang ingin dihapus.": {id:"Pilih employee yang ingin dihapus.", en:"Select an employee to delete.", zh:"请选择要删除的员工。"},
+        "Pilih karyawan terlebih dahulu.": {id:"Pilih karyawan terlebih dahulu.", en:"Please select an employee first.", zh:"请先选择员工。"},
+        "Belum ada data karyawan.": {id:"Belum ada data karyawan.", en:"No employee data.", zh:"暂无员工资料。"},
+        "Belum ada riwayat kontrak.": {id:"Belum ada riwayat kontrak.", en:"No contract history.", zh:"暂无合同历史记录。"},
+        "Employee berhasil dihapus.": {id:"Employee berhasil dihapus.", en:"Employee deleted successfully.", zh:"员工删除成功。"},
+        "Employee gagal dihapus.": {id:"Employee gagal dihapus.", en:"Employee could not be deleted.", zh:"员工删除失败。"},
+        "Data employee siap disimpan.": {id:"Data employee siap disimpan.", en:"Employee data is ready to be saved.", zh:"员工资料已准备好保存。"},
+        "Data employee berhasil disimpan.": {id:"Data employee berhasil disimpan.", en:"Employee data saved successfully.", zh:"员工资料保存成功。"},
+        "Data employee gagal disimpan.": {id:"Data employee gagal disimpan.", en:"Employee data could not be saved.", zh:"员工资料保存失败。"},
+        "Nama Karyawan wajib diisi.": {id:"Nama Karyawan wajib diisi.", en:"Employee Name is required.", zh:"员工姓名为必填项。"},
+        "Nama Karyawan": {id:"Nama Karyawan", en:"Employee Name", zh:"员工姓名"},
+        "ID Karyawan": {id:"ID Karyawan", en:"Employee ID", zh:"员工编号"},
+        "Departemen": {id:"Departemen", en:"Department", zh:"部门"},
+        "Jabatan": {id:"Jabatan", en:"Position", zh:"职位"},
+        "Tanggal Masuk": {id:"Tanggal Masuk", en:"Join Date", zh:"入职日期"},
+        "Mulai Kontrak": {id:"Mulai Kontrak", en:"Contract Start", zh:"合同开始"},
+        "Berakhir Kontrak": {id:"Berakhir Kontrak", en:"Contract End", zh:"合同结束"},
+        "Sisa Kontrak": {id:"Sisa Kontrak", en:"Contract Remaining", zh:"合同剩余"},
+        "DATA KARYAWAN": {id:"DATA KARYAWAN", en:"EMPLOYEE DATA", zh:"员工资料"},
+        "RIWAYAT KONTRAK": {id:"RIWAYAT KONTRAK", en:"CONTRACT HISTORY", zh:"合同历史"},
+        "RIWAYAT EMPLOYEE": {id:"RIWAYAT EMPLOYEE", en:"EMPLOYEE HISTORY", zh:"员工历史"},
+        "PERBARUI KONTRAK": {id:"PERBARUI KONTRAK", en:"RENEW CONTRACT", zh:"更新合同"},
+        "TAMBAH": {id:"TAMBAH", en:"ADD", zh:"添加"},
+        "SIMPAN": {id:"SIMPAN", en:"SAVE", zh:"保存"},
+        "UBAH": {id:"UBAH", en:"EDIT", zh:"编辑"},
+        "HAPUS": {id:"HAPUS", en:"DELETE", zh:"删除"},
+        "CETAK KONTRAK": {id:"CETAK KONTRAK", en:"PRINT CONTRACT", zh:"打印合同"},
+        "Pilih Departemen": {id:"Pilih Departemen", en:"Select Department", zh:"选择部门"},
+        "Pilih Jabatan": {id:"Pilih Jabatan", en:"Select Position", zh:"选择职位"},
+        "Cari employee / ID": {id:"Cari employee / ID", en:"Search employee / ID", zh:"搜索员工 / 编号"},
+        "Masukkan nama perusahaan": {id:"Masukkan nama perusahaan", en:"Enter company name", zh:"输入公司名称"},
+        "Masukkan nama Anda": {id:"Masukkan nama Anda", en:"Enter your name", zh:"输入您的姓名"},
+        "Masukkan email": {id:"Masukkan email", en:"Enter email", zh:"输入邮箱"},
+        "Masukkan password": {id:"Masukkan password", en:"Enter password", zh:"输入密码"},
+        "Ulangi password": {id:"Ulangi password", en:"Re-enter password", zh:"再次输入密码"},
+        "Minimal 6 karakter": {id:"Minimal 6 karakter", en:"Minimum 6 characters", zh:"至少 6 个字符"},
+        "Tulis isi pengumuman...": {id:"Tulis isi pengumuman...", en:"Write the announcement...", zh:"填写公告内容..."},
+        "Judul pengumuman": {id:"Judul pengumuman", en:"Announcement title", zh:"公告标题"},
+        "Isi pengumuman": {id:"Isi pengumuman", en:"Announcement content", zh:"公告内容"},
+        "Contoh: Meeting Departemen Production": {id:"Contoh: Meeting Departemen Production", en:"Example: Production Department Meeting", zh:"示例：生产部门会议"},
+        "Tulis pembukaan acara...": {id:"Tulis pembukaan acara...", en:"Write the event introduction...", zh:"填写活动开场内容..."},
+        "Contoh: Meeting Room 1": {id:"Contoh: Meeting Room 1", en:"Example: Meeting Room 1", zh:"示例：会议室 1"},
+        "Tulis isi acara...": {id:"Tulis isi acara...", en:"Write the event details...", zh:"填写活动内容..."},
+        "Unggah foto (opsional)": {id:"Unggah foto (opsional)", en:"Upload photo (optional)", zh:"上传照片（可选）"},
+        "Pilih sampai 5 foto sekaligus": {id:"Pilih sampai 5 foto sekaligus", en:"Select up to 5 photos at once", zh:"一次最多选择 5 张照片"},
+        "Hapus Foto": {id:"Hapus Foto", en:"Remove Photo", zh:"删除照片"},
+        "POST": {id:"POST", en:"POST", zh:"发布"},
+        "KIRIM ACARA": {id:"KIRIM ACARA", en:"SUBMIT EVENT", zh:"提交活动"},
+        "Buat Acara": {id:"Buat Acara", en:"Create Event", zh:"创建活动"},
+        "Judul Acara": {id:"Judul Acara", en:"Event Title", zh:"活动标题"},
+        "Hari / Tgl": {id:"Hari / Tgl", en:"Day / Date", zh:"日期"},
+        "Jam": {id:"Jam", en:"Time", zh:"时间"},
+        "Lokasi": {id:"Lokasi", en:"Location", zh:"地点"},
+        "Isi acara": {id:"Isi acara", en:"Event details", zh:"活动内容"},
+        "Company Name": {id:"Company Name", en:"Company Name", zh:"公司名称"},
+        "Company Address": {id:"Company Address", en:"Company Address", zh:"公司地址"},
+        "City": {id:"City", en:"City", zh:"城市"},
+        "Country": {id:"Country", en:"Country", zh:"国家"},
+        "Phone": {id:"Phone", en:"Phone", zh:"电话"},
+        "Website": {id:"Website", en:"Website", zh:"网站"},
+        "Company Logo": {id:"Company Logo", en:"Company Logo", zh:"公司标志"},
+        "UPLOAD LOGO": {id:"UPLOAD LOGO", en:"UPLOAD LOGO", zh:"上传标志"},
+        "Informasi Akun": {id:"Informasi Akun", en:"Account Information", zh:"账户信息"},
+        "Peran": {id:"Peran", en:"Role", zh:"角色"},
+        "Company ID": {id:"Company ID", en:"Company ID", zh:"公司编号"},
+        "ID Pengguna": {id:"ID Pengguna", en:"User ID", zh:"用户编号"},
+        "UBAH PASSWORD": {id:"UBAH PASSWORD", en:"CHANGE PASSWORD", zh:"修改密码"},
+        "LOGOUT": {id:"LOGOUT", en:"LOG OUT", zh:"退出登录"},
+        "HAPUS DATA": {id:"HAPUS DATA", en:"DELETE DATA", zh:"删除数据"},
+        "HAPUS AKUN": {id:"HAPUS AKUN", en:"DELETE ACCOUNT", zh:"删除账户"},
+        "Cuti": {id:"Cuti", en:"Leave", zh:"请假"},
+        "Klaim": {id:"Klaim", en:"Claims", zh:"报销"},
+        "Cuti Masuk": {id:"Cuti Masuk", en:"Incoming Leave Requests", zh:"待处理请假"},
+        "Cuti ID": {id:"Cuti ID", en:"Leave ID", zh:"请假编号"},
+        "Periode": {id:"Periode", en:"Period", zh:"期间"},
+        "Hari": {id:"Hari", en:"Days", zh:"天数"},
+        "Alasan": {id:"Alasan", en:"Reason", zh:"原因"},
+        "Tanggal Pengajuan": {id:"Tanggal Pengajuan", en:"Submission Date", zh:"申请日期"},
+        "Detail Cuti": {id:"Detail Cuti", en:"Leave Details", zh:"请假详情"},
+        "Detail Klaim": {id:"Detail Klaim", en:"Claim Details", zh:"报销详情"},
+        "Jumlah Receipt": {id:"Jumlah Receipt", en:"Receipt Count", zh:"收据数量"},
+        "Total Klaim": {id:"Total Klaim", en:"Total Claim", zh:"报销总额"},
+        "Tanggal": {id:"Tanggal", en:"Date", zh:"日期"},
+        "Status": {id:"Status", en:"Status", zh:"状态"},
+        "Aksi": {id:"Aksi", en:"Actions", zh:"操作"},
+        "Karyawan": {id:"Karyawan", en:"Employee", zh:"员工"},
+        "Kategori": {id:"Kategori", en:"Category", zh:"类别"},
+        "Total": {id:"Total", en:"Total", zh:"总额"},
+        "Approved": {id:"Approved", en:"Approved", zh:"已批准"},
+        "Pending": {id:"Pending", en:"Pending", zh:"待处理"},
+        "Paid": {id:"Paid", en:"Paid", zh:"已支付"},
+        "rejected": {id:"rejected", en:"Rejected", zh:"已拒绝"},
+        "approved": {id:"approved", en:"Approved", zh:"已批准"},
+        "Klaim Masuk": {id:"Klaim Masuk", en:"Incoming Claims", zh:"待处理报销"},
+        "Tandai semua dibaca": {id:"Tandai semua dibaca", en:"Mark all as read", zh:"全部标记为已读"},
+        "Belum ada notifikasi.": {id:"Belum ada notifikasi.", en:"No notifications yet.", zh:"暂无通知。"},
+        "NOTIFIKASI": {id:"NOTIFIKASI", en:"NOTIFICATIONS", zh:"通知"},
+        "LOADING": {id:"LOADING", en:"LOADING", zh:"加载中"},
+        "Preparing your Clime-X account...": {id:"Menyiapkan akun Clime-X...", en:"Preparing your Clime-X account...", zh:"正在准备您的 Clime-X 账户..."},
+        "Menyiapkan akun Clime-X...": {id:"Menyiapkan akun Clime-X...", en:"Preparing your Clime-X account...", zh:"正在准备您的 Clime-X 账户..."},
+        "Membuat ID dan Password untuk masuk ke aplikasi Clime-X Employee": {id:"Membuat ID dan Password untuk masuk ke aplikasi Clime-X Employee", en:"Create an ID and password to sign in to the Clime-X Employee app", zh:"创建用于登录 Clime-X Employee 应用的 ID 和密码"},
+        "Nama Employee": {id:"Nama Employee", en:"Employee Name", zh:"员工姓名"},
+        "Employee ID": {id:"Employee ID", en:"Employee ID", zh:"员工编号"},
+        "PWD GLOBAL :": {id:"PWD GLOBAL :", en:"GLOBAL PASSWORD:", zh:"全局密码："},
+        "TAMBAH ID": {id:"TAMBAH ID", en:"ADD ID", zh:"添加 ID"},
+        "HAPUS ID": {id:"HAPUS ID", en:"DELETE ID", zh:"删除 ID"},
+        "SIMPAN PERUBAHAN": {id:"SIMPAN PERUBAHAN", en:"SAVE CHANGES", zh:"保存更改"},
+        "Akun Administrator": {id:"Akun Administrator", en:"Administrator Account", zh:"管理员账户"},
+        "KELUAR": {id:"KELUAR", en:"EXIT", zh:"退出"},
+        "Tambah departemen": {id:"Tambah departemen", en:"Add department", zh:"添加部门"},
+        "Tambah jabatan": {id:"Tambah jabatan", en:"Add position", zh:"添加职位"},
+        "KATEGORI DEPARTEMEN & JABATAN": {id:"KATEGORI DEPARTEMEN & JABATAN", en:"DEPARTMENT & POSITION CATEGORIES", zh:"部门与职位类别"},
+        "BUAT ID CLIME-X EMPLOYEE": {id:"BUAT ID CLIME-X EMPLOYEE", en:"CREATE CLIME-X EMPLOYEE ID", zh:"创建 CLIME-X Employee ID"},
+        "Format Tanggal": {id:"Format Tanggal", en:"Date Format", zh:"日期格式"},
+        "SIMPAN TEMPLATE": {id:"SIMPAN TEMPLATE", en:"SAVE TEMPLATE", zh:"保存模板"},
+        "RESET TEMPLATE": {id:"RESET TEMPLATE", en:"RESET TEMPLATE", zh:"重置模板"},
+        "PREVIEW HASIL CETAK": {id:"PREVIEW HASIL CETAK", en:"PRINT PREVIEW", zh:"打印预览"},
+        "CETAK KONTRAK": {id:"CETAK KONTRAK", en:"PRINT CONTRACT", zh:"打印合同"},
+        "Perbarui Kontrak": {id:"Perbarui Kontrak", en:"Renew Contract", zh:"更新合同"},
+        "Mulai Kontrak Baru": {id:"Mulai Kontrak Baru", en:"New Contract Start", zh:"新合同开始"},
+        "Berakhir Kontrak Baru": {id:"Berakhir Kontrak Baru", en:"New Contract End", zh:"新合同结束"},
+        "BATAL": {id:"BATAL", en:"CANCEL", zh:"取消"},
+        "SIMPAN & LANJUT": {id:"SIMPAN & LANJUT", en:"SAVE & CONTINUE", zh:"保存并继续"},
+        "Data belum disimpan": {id:"Data belum disimpan", en:"Unsaved data", zh:"未保存的数据"},
+        "Anda memiliki perubahan data karyawan yang belum disimpan.": {id:"Anda memiliki perubahan data karyawan yang belum disimpan.", en:"You have unsaved employee data changes.", zh:"您有未保存的员工资料更改。"},
+        "Silakan simpan terlebih dahulu.": {id:"Silakan simpan terlebih dahulu.", en:"Please save first.", zh:"请先保存。"},
+        "Tanggal kontrak wajib diisi.": {id:"Tanggal kontrak wajib diisi.", en:"Contract dates are required.", zh:"必须填写合同日期。"},
+        "Kontrak berhasil diperbarui.": {id:"Kontrak berhasil diperbarui.", en:"Contract updated successfully.", zh:"合同更新成功。"},
+        "Kontrak gagal diperbarui.": {id:"Kontrak gagal diperbarui.", en:"Contract could not be updated.", zh:"合同更新失败。"},
+        "Template kontrak berhasil disimpan.": {id:"Template kontrak berhasil disimpan.", en:"Contract template saved successfully.", zh:"合同模板保存成功。"},
+        "Template kontrak gagal disimpan.": {id:"Template kontrak gagal disimpan.", en:"Contract template could not be saved.", zh:"合同模板保存失败。"},
+        "Nama Employee pada baris": {id:"Nama Employee pada baris", en:"Employee Name on row", zh:"第...行员工姓名"},
+        "Employee ID pada baris": {id:"Employee ID pada baris", en:"Employee ID on row", zh:"第...行员工编号"},
+        "Tidak ada Employee CLIME-X": {id:"Tidak ada Employee CLIME-X", en:"No CLIME-X Employee", zh:"没有 CLIME-X Employee"},
+        "Suka": {id:"Suka", en:"Like", zh:"赞"},
+
+        /* Status dinamis dari Firestore / tabel / popup */
+        "MENUNGGU": {id:"MENUNGGU", en:"PENDING", zh:"待处理"},
+        "DISETUJUI": {id:"DISETUJUI", en:"APPROVED", zh:"已批准"},
+        "DITOLAK": {id:"DITOLAK", en:"REJECTED", zh:"已拒绝"},
+        "DIBAYAR": {id:"DIBAYAR", en:"PAID", zh:"已支付"},
+        "BELUM DIBAYAR": {id:"BELUM DIBAYAR", en:"UNPAID", zh:"未支付"},
+        "AKTIF": {id:"AKTIF", en:"ACTIVE", zh:"有效"},
+
+        /* Klaim — teks yang dibuat langsung oleh fungsi popup */
+        "Memuat detail klaim...": {id:"Memuat detail klaim...", en:"Loading claim details...", zh:"正在加载报销详情..."},
+        "User CLIME-X belum login.": {id:"User CLIME-X belum login.", en:"CLIME-X user is not logged in.", zh:"CLIME-X 用户尚未登录。"},
+        "Keterangan": {id:"Keterangan", en:"Description", zh:"说明"},
+        "Tidak ada receipt pada klaim ini.": {id:"Tidak ada receipt pada klaim ini.", en:"No receipts found for this claim.", zh:"此报销没有收据。"},
+        "TOLAK": {id:"TOLAK", en:"REJECT", zh:"拒绝"},
+        "SETUJUI": {id:"SETUJUI", en:"APPROVE", zh:"批准"},
+        "Alasan Penolakan": {id:"Alasan Penolakan", en:"Rejection Reason", zh:"拒绝原因"},
+
+        /* Cuti — teks yang dibuat langsung oleh fungsi popup */
+        "Memuat detail cuti...": {id:"Memuat detail cuti...", en:"Loading leave details...", zh:"正在加载请假详情..."},
+        "Jenis Cuti": {id:"Jenis Cuti", en:"Leave Type", zh:"请假类型"},
+        "Jumlah Hari": {id:"Jumlah Hari", en:"Number of Days", zh:"请假天数"},
+        "Periode Cuti": {id:"Periode Cuti", en:"Leave Period", zh:"请假期间"},
+        "Alasan Cuti": {id:"Alasan Cuti", en:"Leave Reason", zh:"请假原因"},
+        "Gagal memuat detail pengajuan cuti.": {id:"Gagal memuat detail pengajuan cuti.", en:"Failed to load leave request details.", zh:"加载请假申请详情失败。"},
+        "Data pengajuan cuti tidak ditemukan.": {id:"Data pengajuan cuti tidak ditemukan.", en:"Leave request data not found.", zh:"未找到请假申请数据。"},
+        "Setujui pengajuan cuti ini?": {id:"Setujui pengajuan cuti ini?", en:"Approve this leave request?", zh:"批准此请假申请？"},
+        "Tolak pengajuan cuti ini?": {id:"Tolak pengajuan cuti ini?", en:"Reject this leave request?", zh:"拒绝此请假申请？"},
+        "Pengajuan cuti gagal disetujui.": {id:"Pengajuan cuti gagal disetujui.", en:"Leave request could not be approved.", zh:"请假申请批准失败。"},
+        "Pengajuan cuti gagal ditolak.": {id:"Pengajuan cuti gagal ditolak.", en:"Leave request could not be rejected.", zh:"请假申请拒绝失败。"},
+        "Alasan penolakan wajib diisi.": {id:"Alasan penolakan wajib diisi.", en:"A rejection reason is required.", zh:"必须填写拒绝原因。"},
+
+        /* Beranda / komentar / waktu */
+        "Baru saja": {id:"Baru saja", en:"Just now", zh:"刚刚"},
+        "Hari ini": {id:"Hari ini", en:"Today", zh:"今天"},
+        "kemarin": {id:"kemarin", en:"yesterday", zh:"昨天"},
+        "Kemarin": {id:"Kemarin", en:"Yesterday", zh:"昨天"},
+        "Komentar 0": {id:"Komentar 0", en:"Comments 0", zh:"评论 0"},
+        "Suka 0": {id:"Suka 0", en:"Likes 0", zh:"赞 0"},
+        "Balasan 0": {id:"Balasan 0", en:"Replies 0", zh:"回复 0"},
+
+        /* Label popup umum */
+        "Nama": {id:"Nama", en:"Name", zh:"姓名"},
+        "Tanggal": {id:"Tanggal", en:"Date", zh:"日期"},
+        "Waktu": {id:"Waktu", en:"Time", zh:"时间"},
+        "Catatan": {id:"Catatan", en:"Notes", zh:"备注"},
+        "Alasan": {id:"Alasan", en:"Reason", zh:"原因"}
+    };
+
+    const allMaps=[typeof APP_TRANSLATIONS!=='undefined'?APP_TRANSLATIONS:{},PATCH_TRANSLATIONS];
+    const reverse={};
+    allMaps.forEach(function(map){
+        Object.keys(map).forEach(function(key){
+            const item=map[key];
+            if(!item)return;
+            reverse[key]=key;
+            ['id','en','zh'].forEach(function(lang){
+                if(item[lang]!==undefined && item[lang]!==null){
+                    reverse[String(item[lang]).trim()]=key;
+                }
+            });
+        });
+    });
+
+    function currentLang(){
+        return localStorage.getItem('climexLanguage') || window.currentLoginLang || 'id';
+    }
+
+    function translateValue(value){
+        const raw=String(value||'').trim();
+        if(!raw)return null;
+        const key=reverse[raw] || raw;
+        for(let i=allMaps.length-1;i>=0;i--){
+            const item=allMaps[i][key];
+            if(item && item[currentLang()]!==undefined) return String(item[currentLang()]);
+        }
+        return null;
+    }
+
+    function translateDynamicText(raw){
+        let text=String(raw||'');
+        const lang=currentLang();
+        /* Normalisasi teks dinamis dari bahasa yang sedang tampil kembali ke bentuk Indonesia. */
+        if(/^Likes? \d+$/i.test(text)) text=text.replace(/^Likes? (\d+)$/i,'Suka $1');
+        if(/^Comments? \d+$/i.test(text)) text=text.replace(/^Comments? (\d+)$/i,'Komentar $1');
+        if(/^Replies? \d+$/i.test(text)) text=text.replace(/^Replies? (\d+)$/i,'Balasan $1');
+        if(/^View \d+ Replies$/i.test(text)) text=text.replace(/^View (\d+) Replies$/i,'Lihat $1 Balasan');
+        if(/^查看 \d+ 条回复$/.test(text)) text=text.replace(/^查看 (\d+) 条回复$/,'Lihat $1 Balasan');
+        if(/^回复 \d+$/.test(text)) text=text.replace(/^回复 (\d+)$/,'Balasan $1');
+        if(/^评论 \d+$/.test(text)) text=text.replace(/^评论 (\d+)$/,'Komentar $1');
+        if(/^赞 \d+$/.test(text)) text=text.replace(/^赞 (\d+)$/,'Suka $1');
+        if(text==='Like') text='Suka';
+        if(text==='Comment') text='Komentar';
+        if(text==='Reply') text='Balas';
+        if(text==='Replies') text='Balasan';
+        if(text==='View previous comments') text='Lihat komentar sebelumnya';
+        if(text==='View more replies') text='Lihat balasan berikutnya';
+        if(text==='Hide replies') text='Sembunyikan balasan';
+        if(text==='No comments yet.') text='Belum ada komentar.';
+        if(text==='Loading comments...') text='Memuat komentar...';
+        if(text==='APPROVED') text='DISETUJUI';
+        if(text==='REJECTED') text='DITOLAK';
+        if(text==='PENDING') text='MENUNGGU';
+        if(text==='PAID') text='DIBAYAR';
+        if(text==='UNPAID') text='BELUM DIBAYAR';
+        if(text==='ACTIVE') text='AKTIF';
+        if(text==='Approved') text='Disetujui';
+        if(text==='Rejected') text='Ditolak';
+        if(text==='Pending') text='Menunggu';
+        if(text==='Today') text='Hari ini';
+        if(text==='Just now') text='Baru saja';
+        if(text==='minutes ago') text='menit lalu';
+        if(text==='hours ago') text='jam lalu';
+        if(text==='days ago') text='hari lalu';
+        const exact=translateValue(text);
+        if(exact!==null)return exact;
+
+        const dict={
+            'Suka':{en:'Like',zh:'赞'},
+            'Komentar':{en:'Comment',zh:'评论'},
+            'Balas':{en:'Reply',zh:'回复'},
+            'Balasan':{en:'Replies',zh:'回复'},
+            'membalas':{en:'replied to',zh:'回复了'},
+            'Hari ini':{en:'Today',zh:'今天'},
+            'Baru saja':{en:'Just now',zh:'刚刚'},
+            'menit lalu':{en:'minutes ago',zh:'分钟前'},
+            'jam lalu':{en:'hours ago',zh:'小时前'},
+            'hari lalu':{en:'days ago',zh:'天前'},
+            'hari':{en:'days',zh:'天'},
+            'Kontrak Berakhir':{en:'Contract Expired',zh:'合同已到期'},
+            'Segera Berakhir':{en:'Expiring Soon',zh:'即将到期'},
+            'Aktif':{en:'Active',zh:'有效'}
+        };
+        Object.keys(dict).forEach(function(k){
+            if(lang==='id')return;
+            const v=dict[k][lang];
+            text=text.replace(new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),v);
+        });
+
+        if(lang==='en') text=text.replace(/Lihat (\d+) Balasan/g,'View $1 Replies').replace(/Balasan (\d+)/g,'Replies $1').replace(/Komentar (\d+)/g,'Comments $1').replace(/Suka (\d+)/g,'Likes $1');
+        if(lang==='zh') text=text.replace(/Lihat (\d+) Balasan/g,'查看 $1 条回复').replace(/Balasan (\d+)/g,'回复 $1').replace(/Komentar (\d+)/g,'评论 $1').replace(/Suka (\d+)/g,'赞 $1');
+        return text;
+    }
+
+    function process(root){
+        if(!root)return;
+        const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+        const nodes=[];
+        let n; while((n=walker.nextNode())) nodes.push(n);
+        nodes.forEach(function(node){
+            const parent=node.parentElement;
+            if(!parent)return;
+            const tag=parent.tagName;
+            if(tag==='SCRIPT'||tag==='STYLE'||tag==='NOSCRIPT'||tag==='TEXTAREA'||tag==='INPUT')return;
+            const raw=node.nodeValue || '';
+            const trimmed=raw.trim();
+            if(!trimmed)return;
+            const translated=translateDynamicText(trimmed);
+            if(translated===null || translated===trimmed)return;
+            const lead=raw.match(/^\s*/)?.[0] || '';
+            const trail=raw.match(/\s*$/)?.[0] || '';
+            node.nodeValue=lead+translated+trail;
+        });
+
+        root.querySelectorAll('input[placeholder],textarea[placeholder],button[title],button[aria-label],img[alt]').forEach(function(el){
+            ['placeholder','title','aria-label','alt'].forEach(function(attr){
+                if(!el.hasAttribute(attr))return;
+                const raw=el.getAttribute(attr);
+                const translated=translateValue(raw) || translateDynamicText(raw);
+                if(translated && translated!==raw) el.setAttribute(attr,translated);
+            });
+        });
+    }
+
+    let scheduled=false;
+    function apply(){
+        scheduled=false;
+        process(document.body);
+    }
+    function schedule(){
+        if(scheduled)return;
+        scheduled=true;
+        requestAnimationFrame(apply);
+    }
+
+    window.applyClimexTranslationPatch=apply;
+    window.addEventListener('load',function(){setTimeout(apply,80);setTimeout(apply,500);});
+
+    const observer=new MutationObserver(function(){schedule();});
+    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+
+    document.addEventListener('click',function(){setTimeout(apply,30);});
+
+    const originalSetAppLanguage=window.setAppLanguage;
+    if(typeof originalSetAppLanguage==='function' && !window.__climexTranslationPatchWrapped){
+        window.__climexTranslationPatchWrapped=true;
+        window.setAppLanguage=function(lang){
+            const result=originalSetAppLanguage.apply(this,arguments);
+            setTimeout(apply,0);
+            return result;
+        };
+    }
+})();
+</script>
 </body>
 </html>
