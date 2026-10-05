@@ -3,417 +3,480 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Privacy Policy | Clime-X</title>
-
+<title>Clime-X Platform Policy</title>
 <style>
-:root{
-    --brown:#b68b62;
-    --dark:#5b3d29;
-    --cream:#f7f2eb;
-    --text:#34291f;
-    --muted:#74695f;
-    --line:#e8ded3
-}
-
-*{
-    box-sizing:border-box
-}
-
-body{
-    margin:0;
-    background:var(--cream);
-    color:var(--text);
-    font-family:Arial,Helvetica,sans-serif;
-    line-height:1.7
-}
-
-header{
-    background:#379d6a;
-    color:#fff;
-    padding:22px 24px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px
-}
-
-.brand{
-    font-size:22px;
-    font-weight:800
-}
-
-.brand img{
-    height:60px !important;
-    width:auto !important;
-    display:block;
-    filter:brightness(0) invert(1)
-}
-
-.lang{
-    border:1px solid rgba(255,255,255,.4);
-    border-radius:9px;
-    background:transparent;
-    color:#fff;
-    padding:9px 12px;
-    font-weight:700;
-    cursor:pointer
-}
-
-.lang option{
-    color:#34291f;
-    background:#fff;
-    font-weight:700
-}
-
-main{
-    max-width:900px;
-    margin:35px auto;
-    padding:0 20px 50px
-}
-
-.card{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:15px;
-    padding:32px;
-    box-shadow:0 8px 24px rgba(75,52,34,.08)
-}
-
-h1{
-    margin:0 0 7px;
-    color:var(--dark);
-    font-size:29px
-}
-
-h2{
-    margin:28px 0 8px;
-    color:var(--dark);
-    font-size:18px
-}
-
-p,li{
-    font-size:14px
-}
-
-.updated{
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:25px
-}
-
-.footer{
-    text-align:center;
-    color:var(--muted);
-    font-size:12px;
-    margin-top:20px
-}
-
-@media(max-width:600px){
-    main{
-        margin:18px auto;
-        padding:0 12px
-    }
-
-    .card{
-        padding:22px
-    }
-
-    h1{
-        font-size:24px
-    }
-}
+:root{--brown:#b68b62;--dark:#5b3d29;--cream:#f7f2eb;--text:#34291f;--muted:#74695f;--line:#e8ded3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.7}
+header{background:#379d6a;color:#fff;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand img{height:60px!important;width:auto!important;display:block;filter:brightness(0) invert(1)}
+.lang{border:1px solid rgba(255,255,255,.4);border-radius:9px;background:transparent;color:#fff;padding:9px 12px;font-weight:700;cursor:pointer}
+.lang option{color:#34291f;background:#fff;font-weight:700}
+main{max-width:900px;margin:35px auto;padding:0 20px 50px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:32px;box-shadow:0 8px 24px rgba(75,52,34,.08)}
+h1{margin:0 0 7px;color:var(--dark);font-size:29px}
+h2{margin:28px 0 8px;color:var(--dark);font-size:18px}
+h3{margin:20px 0 6px;color:var(--dark);font-size:16px}
+p,.policy-list{font-size:14px}
+.updated{color:var(--muted);font-size:12px;margin-bottom:25px}
+.policy-body{font-size:14px;line-height:1.7}
+.policy-body p{margin:0 0 14px}
+.policy-list{margin:0 0 16px;padding-left:22px}
+.policy-list li{margin-bottom:7px}
+.part-title{margin:34px 0 10px;padding-top:4px;color:var(--dark);font-size:21px;font-weight:800}
+.divider{height:1px;background:var(--line);margin:42px 0 30px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+@media(max-width:600px){main{margin:18px auto;padding:0 12px}.card{padding:22px}h1{font-size:24px}.part-title{font-size:19px}}
 </style>
 </head>
-
 <body>
-
 <header>
-    <div class="brand">
-        <img src="/welcome.png" alt="Clime-X">
-    </div>
-
-    <select id="lang" class="lang" onchange="setLang(this.value)">
-    <option value="id" style="color:#34291f;background:#fff;">🇮🇩 Indonesia</option>
-    <option value="en" style="color:#34291f;background:#fff;">🇬🇧 English</option>
-    <option value="zh" style="color:#34291f;background:#fff;">🇨🇳 中文</option>
-</select>
+  <div class="brand"><img src="/welcome.png" alt="Clime-X"></div>
+  <select id="lang" class="lang" onchange="setLang(this.value)">
+    <option value="id">🇮🇩 Indonesia</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="zh">🇨🇳 中文</option>
+  </select>
 </header>
-
 <main>
-    <div class="card" id="content"></div>
-    <div class="footer">© Clime-X</div>
+  <div class="card" id="content"></div>
+  <div class="footer">© Clime-X</div>
 </main>
-
 <script>
+const T = {
+  id: {"body": `
+<h1>KEBIJAKAN PLATFORM CLIME-X</h1>
+<div class="updated">Terakhir diperbarui: 6 Oktober 2026</div>
 
-const T={
+<div class="part-title">BAGIAN I — PENANGANAN PENYALAHGUNAAN</div>
+<div class="updated">Berlaku Efektif: 6 Oktober 2026</div>
 
-id:{
-title:"Kebijakan Privasi",
-date:"Terakhir diperbarui: 6 Oktober 2026",
-sections:[
+<h2>1. Pendahuluan dan Tujuan</h2>
+<p>Clime-X adalah platform komunikasi dan manajemen kerja yang dapat diakses secara global. Kami berkomitmen menjaga lingkungan digital yang aman, profesional, dan patuh hukum. Dokumen ini mengatur ketentuan penggunaan, mekanisme pelaporan, penanganan penyalahgunaan, serta pengelolaan data dan privasi seluruh pengguna.</p>
+<p>Clime-X dikelola dari Indonesia dan tunduk pada peraturan perundang-undangan yang berlaku di Indonesia, termasuk Permenkominfo No. 5 Tahun 2020 tentang Penyelenggara Sistem Elektronik Lingkup Privat. Pengguna yang mengakses dari negara lain tetap wajib mematuhi ketentuan ini serta hukum dan peraturan yang berlaku di negara tempat pengguna berada.</p>
 
-["KEBIJAKAN PENANGANAN PENYALAHGUNAAN PLATFORM Clime-X",`Berlaku Efektif: 6 Oktober 2026<br><br>
-<strong>1. PENDAHULUAN DAN TUJUAN</strong><br>
-Clime-X adalah platform komunikasi dan manajemen kerja untuk lingkungan perusahaan. Kami berkomitmen menjaga lingkungan digital yang aman, profesional, dan patuh hukum. Dokumen ini mengatur larangan, mekanisme pelaporan, dan penanganan penyalahgunaan platform.<br><br>
-Clime-X adalah Penyelenggara Sistem Elektronik (PSE) Lingkup Privat dengan model User Generated Content (UGC) sebagaimana diatur dalam Permenkominfo No. 5 Tahun 2020.<br><br>
-<strong>2. DEFINISI PENYALAHGUNAAN</strong><br>
-Penyalahgunaan adalah setiap penggunaan Clime-X yang bertentangan dengan hukum Republik Indonesia, norma kesusilaan, dan tujuan sah platform.<br><br>
-<strong>3. LARANGAN PENGGUNAAN</strong><br>
-Pengguna dilarang keras menggunakan Clime-X untuk:<br>
-a. Melakukan ancaman kekerasan, intimidasi, perundungan, atau tindakan yang membahayakan keselamatan orang lain;<br>
-b. Menyebarkan ujaran kebencian, diskriminasi, dan konten bermuatan SARA;<br>
-c. Melakukan penipuan, pemerasan, penggelapan, atau pencemaran nama baik;<br>
-d. Mengirim, menyimpan, atau menyebarkan konten pornografi, perjudian, narkotika, terorisme, dan konten lain yang dilarang oleh peraturan perundang-undangan;<br>
-e. Menyebarkan informasi palsu / hoaks yang merugikan pihak lain;<br>
-f. Berupaya meretas, merusak sistem, atau menghilangkan / memusnahkan bukti elektronik atas dugaan pelanggaran hukum.<br><br>
-<strong>4. MEKANISME PELAPORAN</strong><br>
-Setiap Pengguna berhak dan didorong untuk melapor jika menemukan dugaan penyalahgunaan:<br>
-1. Gunakan tombol [Lapor] yang tersedia pada setiap pesan, file, atau profil;<br>
-2. Pilih kategori pelanggaran;<br>
-3. Tuliskan kronologi singkat (apa, kapan, di mana terjadi);<br>
-4. Sistem Clime-X akan secara otomatis mengunci dan mengarsipkan bukti terkait untuk keperluan pemeriksaan.<br><br>
-<strong>5. TATA CARA PEMERIKSAAN DAN TINDAKAN</strong><br><br>
-<strong>5.1 Pelanggaran Internal Perusahaan</strong><br>
-Untuk pelanggaran etika kerja, komunikasi tidak profesional, atau perselisihan antar karyawan:<br>
-- Laporan diteruskan sepenuhnya kepada Admin Perusahaan terkait;<br>
-- Admin Perusahaan berwenang penuh untuk memeriksa, memediasi, dan memberikan sanksi internal (peringatan, pembatasan akses, pengeluaran dari grup perusahaan);<br>
-- Clime-X tidak mengintervensi dan tidak menyimpan data putusan internal tersebut.<br><br>
-<strong>5.2 Dugaan Kejahatan dan Pelanggaran Berat</strong><br>
-Untuk dugaan tindak pidana, pelanggaran hukum berat, atau laporan yang melibatkan banyak pengguna:<br>
-- Laporan ditangani langsung oleh Tim Kepercayaan dan Keamanan (Trust &amp; Safety) Clime-X;<br>
-- Tindakan yang dapat diambil: penghapusan konten, pembekuan sementara, pemblokiran permanen akun, dan penguncian data;<br>
-- Clime-X akan bekerja sama dengan Aparat Penegak Hukum apabila terdapat permintaan resmi yang sah.<br><br>
-<strong>5.3 Laporan yang Tidak Berdasar</strong><br>
-- Jika pemeriksaan menunjukkan laporan tidak terbukti karena kekeliruan atau kesalahpahaman, tidak ada sanksi bagi pelapor. Akun terlapor akan dipulihkan segera.<br>
-- Jika terbukti laporan dibuat secara sengaja dan beritikad buruk untuk memfitnah atau merugikan orang lain, pelapor dapat dikenakan sanksi berupa peringatan hingga pemblokiran akun, dan dapat ditindaklanjuti sesuai ketentuan hukum yang berlaku.<br><br>
-<strong>5.4 Hak Banding</strong><br>
-Setiap pengguna yang dikenakan tindakan pembatasan atau pemblokiran berhak mengajukan banding melalui Pusat Bantuan &gt; Ajukan Banding dalam waktu 7 (tujuh) hari kalender sejak pemberitahuan. Clime-X akan memberikan keputusan banding maksimal dalam 14 (empat belas) hari kerja.<br><br>
-<strong>6. PENGELOLAAN DAN PENYIMPANAN BUKTI</strong><br>
-a. Saat sebuah konten dilaporkan, sistem akan menerapkan Retensi Bukti (Legal Hold). Konten tersebut tidak dapat dihapus, diubah, atau disembunyikan oleh siapapun, termasuk pembuatnya, hingga pemeriksaan selesai.<br>
-b. Pengguna berhak menghapus konten miliknya sendiri selama belum masuk dalam status laporan atau pemeriksaan.<br>
-c. Upaya menghapus atau menghancurkan bukti setelah adanya laporan dapat dianggap sebagai pelanggaran tersendiri dan dapat dilaporkan kepada pihak berwenang.<br>
-d. Data terkait laporan disimpan sesuai dengan prinsip retensi terbatas dalam UU Perlindungan Data Pribadi No. 27 Tahun 2022. Untuk dugaan tindak pidana, data disimpan selama diperlukan untuk proses hukum dan sesuai kewajiban retensi peraturan perundang-undangan yang berlaku, paling lama 5 (lima) tahun, kecuali ada perintah penahanan data dari Aparat Penegak Hukum atau Pengadilan.<br><br>
-<strong>7. BATAS TANGGUNG JAWAB DAN KERJA SAMA HUKUM</strong><br>
-a. Clime-X hanya menyediakan wadah/platform. Isi, kebenaran, dan akibat hukum dari setiap konten sepenuhnya menjadi tanggung jawab Pengguna yang membuatnya.<br>
-b. Clime-X tidak bertanggung jawab atas kerugian yang timbul akibat tindakan pengguna lain di luar kendali Clime-X.<br>
-c. Clime-X hanya akan memberikan data pribadi atau bukti elektronik kepada pihak berwenang berdasarkan permintaan resmi yang sah sesuai prosedur hukum Indonesia (misalnya Surat Perintah Penyidik, Penetapan Pengadilan).<br><br>
-Dengan menggunakan Clime-X, Anda dianggap telah membaca, memahami, dan menyetujui Kebijakan ini.<br><br>
-<strong>Tim Clime-X</strong>`],
+<h2>2. Definisi Penyalahgunaan</h2>
+<p>Penyalahgunaan adalah setiap penggunaan Clime-X yang bertentangan dengan hukum yang berlaku, norma kesusilaan, serta tujuan dan ketentuan sah platform ini.</p>
 
-["1. Pendahuluan","Clime-X menghargai privasi pengguna. Kebijakan Privasi ini menjelaskan bagaimana Clime-X mengumpulkan, menggunakan, menyimpan, dan melindungi informasi ketika Anda menggunakan Clime-X Employee, Clime-X Web Console, dan layanan terkait."],
+<h2>3. Larangan Penggunaan</h2>
+<p>Pengguna dilarang melakukan hal-hal berikut:</p>
+<ol class="policy-list" type="a">
+<li>Melakukan ancaman kekerasan, intimidasi, perundungan, atau tindakan yang membahayakan keselamatan orang lain;</li>
+<li>Menyebarkan ujaran kebencian, diskriminasi, dan konten yang melanggar hak asasi manusia atau ketentuan hukum yang berlaku;</li>
+<li>Melakukan penipuan, pemerasan, penggelapan, atau pencemaran nama baik;</li>
+<li>Mengirim, menyimpan, atau menyebarkan konten pornografi, perjudian, narkotika, terorisme, atau konten lain yang dilarang hukum di mana pun;</li>
+<li>Menyebarkan informasi palsu atau berita yang tidak benar yang dapat merugikan pihak lain;</li>
+<li>Mengakses tanpa hak, merusak sistem, atau menghilangkan serta memusnahkan bukti elektronik terkait dugaan pelanggaran hukum.</li>
+</ol>
 
-["2. Informasi yang Kami Kelola","Informasi yang dapat diproses melalui Clime-X meliputi informasi akun seperti nama, alamat email, dan informasi autentikasi; informasi perusahaan seperti nama, alamat, kontak, logo, dan informasi perusahaan lain yang dimasukkan Administrator; data karyawan seperti nama, ID karyawan, departemen, jabatan, tanggal masuk, kontrak, dan informasi terkait yang dimasukkan perusahaan; serta data operasional seperti pengajuan cuti, klaim/pengeluaran, pengumuman, event, komentar, notifikasi, dan foto yang diunggah melalui fitur yang tersedia."],
+<h2>4. Mekanisme Pelaporan</h2>
+<p>Setiap pengguna berhak melaporkan dugaan penyalahgunaan melalui:</p>
+<ol class="policy-list">
+<li>Tombol [Lapor] yang tersedia pada setiap konten atau profil;</li>
+<li>Memilih kategori pelanggaran yang sesuai;</li>
+<li>Menjelaskan kronologi kejadian secara singkat;</li>
+<li>Sistem akan secara otomatis mengunci dan mengarsipkan bukti terkait untuk keperluan pemeriksaan.</li>
+</ol>
 
-["3. Login dan Autentikasi","Clime-X mendukung pendaftaran dan login menggunakan email dan password serta login dengan Google. Informasi autentikasi diproses melalui Firebase Authentication. Clime-X tidak meminta atau menyimpan password Google Anda."],
+<h2>5. Tata Cara Pemeriksaan dan Tindakan</h2>
+<h3>5.1 Pelanggaran Lingkup Perusahaan</h3>
+<p>Untuk pelanggaran etika kerja, komunikasi tidak pantas, atau perselisihan antar anggota perusahaan:</p>
+<ul class="policy-list">
+<li>Laporan diserahkan kepada pengelola atau Administrator perusahaan yang bersangkutan;</li>
+<li>Administrator berwenang memeriksa, memediasi, dan menjatuhkan tindakan sesuai aturan internal perusahaan;</li>
+<li>Clime-X tidak ikut campur dan tidak menyimpan keputusan internal tersebut.</li>
+</ul>
 
-["4. Penggunaan Informasi","Informasi digunakan untuk membuat dan mengelola akun, menghubungkan Administrator dengan data perusahaan, menyediakan fitur Employee dan Web Console, memproses pengajuan cuti dan klaim/pengeluaran, menampilkan pengumuman dan event, mengirim notifikasi yang diperlukan, menjaga keamanan layanan, serta melakukan perbaikan dan pemeliharaan layanan."],
+<h3>5.2 Dugaan Pelanggaran Hukum</h3>
+<p>Untuk dugaan tindak pidana atau pelanggaran berat:</p>
+<ul class="policy-list">
+<li>Ditangani langsung oleh Tim Kepercayaan dan Keamanan Clime-X;</li>
+<li>Tindakan dapat berupa penghapusan konten, pembatasan akses, pembekuan, hingga pemblokiran akun;</li>
+<li>Clime-X bekerja sama dengan pihak berwenang sesuai prosedur hukum yang berlaku.</li>
+</ul>
 
-["5. Foto dan Konten yang Diunggah","Jika Anda menggunakan fitur yang memungkinkan pengunggahan foto, foto tersebut diproses untuk tujuan fitur terkait, misalnya sebagai bukti pada klaim atau sebagai bagian dari konten perusahaan. Jangan mengunggah informasi yang tidak diperlukan atau informasi milik pihak lain tanpa hak yang sesuai."],
+<h3>5.3 Laporan yang Tidak Berdasar</h3>
+<ul class="policy-list">
+<li>Jika laporan tidak terbukti, pelapor tidak dikenakan sanksi dan akun yang dilaporkan dipulihkan;</li>
+<li>Jika laporan dibuat dengan sengaja untuk merugikan orang lain, pelapor dapat dikenakan sanksi hingga pemblokiran.</li>
+</ul>
 
-["6. Penyimpanan Data","Data Clime-X disimpan dan diproses menggunakan layanan Firebase, termasuk Firebase Authentication dan Cloud Firestore. Data dapat tetap tersimpan selama diperlukan untuk menyediakan layanan, memenuhi kewajiban perusahaan, menyelesaikan sengketa, menjaga keamanan, atau untuk tujuan bisnis yang sah."],
+<h3>5.4 Hak Banding</h3>
+<p>Pengguna yang dikenakan tindakan berhak mengajukan banding dalam 7 hari kalender sejak pemberitahuan. Keputusan diberikan paling lama 14 hari kerja.</p>
 
-["7. Akses dan Pengelolaan Data","Administrator perusahaan bertanggung jawab atas data perusahaan dan data karyawan yang dimasukkan ke dalam Clime-X. Akses terhadap data dibatasi berdasarkan akun dan fungsi yang tersedia di dalam sistem. Pengguna harus menjaga keamanan akun dan tidak membagikan kredensial kepada pihak lain."],
+<h2>6. Pengelolaan dan Penyimpanan Bukti</h2>
+<ol class="policy-list" type="a">
+<li>Konten yang dilaporkan masuk dalam status Retensi Bukti dan tidak dapat dihapus atau diubah siapa pun sampai pemeriksaan selesai;</li>
+<li>Pengguna tetap dapat menghapus konten miliknya selama belum dilaporkan atau sedang diperiksa;</li>
+<li>Upaya menghapus bukti setelah adanya laporan dapat dianggap pelanggaran tersendiri;</li>
+<li>Data disimpan sesuai prinsip perlindungan data yang berlaku. Untuk dugaan tindak pidana, penyimpanan dilakukan selama diperlukan untuk proses hukum.</li>
+</ol>
 
-["8. Keamanan","Clime-X menerapkan langkah-langkah yang wajar untuk membantu melindungi informasi dari akses, perubahan, pengungkapan, atau penghancuran yang tidak sah. Namun, tidak ada sistem elektronik yang dapat dijamin 100% aman."],
+<h2>7. Batas Tanggung Jawab dan Kerja Sama Hukum</h2>
+<ol class="policy-list" type="a">
+<li>Clime-X hanya menyediakan wadah/platform. Isi dan akibat dari setiap konten menjadi tanggung jawab pembuatnya;</li>
+<li>Clime-X tidak bertanggung jawab atas kerugian akibat tindakan pengguna lain di luar kendali sistem;</li>
+<li>Data hanya diserahkan kepada pihak berwenang berdasarkan permintaan resmi sesuai prosedur hukum;</li>
+<li>Hukum yang mengatur pelaksanaan ketentuan ini adalah hukum Republik Indonesia.</li>
+</ol>
 
-["9. Layanan Pihak Ketiga","Clime-X menggunakan layanan pihak ketiga yang diperlukan untuk menjalankan layanan, termasuk Firebase Authentication dan Cloud Firestore. Penggunaan layanan tersebut juga tunduk pada kebijakan penyedia layanan masing-masing."],
+<div class="divider"></div>
 
-["10. Hak Pengguna","Pengguna dapat meminta informasi mengenai data yang terkait dengan akun atau perusahaan mereka dan dapat meminta koreksi atau penghapusan data sejauh dapat dilakukan dan tidak bertentangan dengan kebutuhan operasional, kewajiban hukum, atau kepentingan keamanan."],
+<div class="part-title">BAGIAN II — KEBIJAKAN PRIVASI</div>
 
-["11. Penghapusan Akun dan Data","Permintaan penghapusan akun atau data dapat diajukan kepada pihak Clime-X. Penghapusan dapat memerlukan verifikasi kepemilikan akun. Sebagian data dapat tetap dipertahankan apabila diperlukan untuk keamanan, pencatatan, penyelesaian sengketa, atau kewajiban hukum."],
+<h2>8. Ruang Lingkup</h2>
+<p>Kebijakan ini mengatur bagaimana Clime-X mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pengguna pada seluruh layanan Clime-X. Pengguna dari berbagai negara juga berhak atas perlindungan data sesuai ketentuan yang berlaku di negara masing-masing.</p>
 
-["12. Perubahan Kebijakan","Kebijakan Privasi ini dapat diperbarui dari waktu ke waktu. Versi terbaru akan dipublikasikan pada halaman ini dengan tanggal pembaruan yang sesuai."],
+<h2>9. Jenis Informasi yang Dikelola</h2>
+<ul class="policy-list">
+<li><strong>Informasi akun</strong> — nama, alamat email, dan data autentikasi;</li>
+<li><strong>Informasi perusahaan</strong> — nama, alamat, kontak, logo, dan data lain yang dimasukkan pengelola perusahaan;</li>
+<li><strong>Data anggota</strong> — nama, identitas, peran, dan informasi terkait yang diperlukan untuk keperluan kerja;</li>
+<li><strong>Data operasional</strong> — pengajuan, laporan, pengumuman, acara, komentar, notifikasi, dan berkas yang diunggah.</li>
+</ul>
 
-["13. Hubungi Kami","Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi atau pengelolaan data di Clime-X, silakan hubungi pihak Clime-X melalui kontak resmi yang tersedia di situs Clime-X."]
-]
-},
+<h2>10. Cara Masuk dan Keamanan Akses</h2>
+<ul class="policy-list">
+<li>Pengguna dapat mendaftar dan masuk menggunakan email dan kata sandi, atau akun layanan pihak ketiga yang didukung;</li>
+<li>Proses masuk dikelola melalui sistem pengelolaan akses yang aman. Clime-X tidak menyimpan kata sandi akun pihak ketiga pengguna;</li>
+<li>Setiap pengguna wajib menjaga kerahasiaan akun dan tidak membagikan data masuk kepada pihak lain.</li>
+</ul>
 
-en:{
-title:"Privacy Policy",
-date:"Last updated: October 6, 2026",
-sections:[
+<h2>11. Tujuan Penggunaan Informasi</h2>
+<p>Data digunakan untuk:</p>
+<ul class="policy-list">
+<li>Mengelola akun dan menghubungkan pengguna dengan lingkungan kerja;</li>
+<li>Menjalankan fitur aplikasi dan memproses permohonan yang dikirimkan;</li>
+<li>Menyampaikan pemberitahuan terkait layanan;</li>
+<li>Menjaga keamanan serta melakukan pemeliharaan dan perbaikan sistem.</li>
+</ul>
 
-["CLIME-X PLATFORM ABUSE HANDLING POLICY",`Effective Date: October 6, 2026<br><br>
-<strong>1. INTRODUCTION AND PURPOSE</strong><br>
-Clime-X is a communication and work management platform for corporate environments. We are committed to maintaining a safe, professional, and legally compliant digital environment. This document governs prohibited conduct, reporting mechanisms, and the handling of platform abuse.<br><br>
-Clime-X is a Private-Scope Electronic System Operator (PSE) using a User Generated Content (UGC) model as regulated under Indonesian Minister of Communication and Information Regulation No. 5 of 2020.<br><br>
-<strong>2. DEFINITION OF ABUSE</strong><br>
-Abuse means any use of Clime-X that violates the laws of the Republic of Indonesia, public decency, or the legitimate purposes of the platform.<br><br>
-<strong>3. PROHIBITED USE</strong><br>
-Users are strictly prohibited from using Clime-X to:<br>
-a. Make threats of violence, intimidation, bullying, or take actions that endanger the safety of others;<br>
-b. Spread hate speech, discrimination, or content containing SARA-related elements;<br>
-c. Commit fraud, extortion, embezzlement, or defamation;<br>
-d. Send, store, or distribute pornography, gambling, narcotics, terrorism-related content, or other content prohibited by applicable laws and regulations;<br>
-e. Spread false information / hoaxes that harm other parties;<br>
-f. Attempt to hack or damage systems, or remove / destroy electronic evidence related to alleged legal violations.<br><br>
-<strong>4. REPORTING MECHANISM</strong><br>
-Every User has the right and is encouraged to report suspected abuse:<br>
-1. Use the [Report] button available on each message, file, or profile;<br>
-2. Select the violation category;<br>
-3. Provide a brief chronology (what, when, and where it occurred);<br>
-4. The Clime-X system will automatically lock and archive the relevant evidence for review purposes.<br><br>
-<strong>5. REVIEW AND ENFORCEMENT PROCEDURES</strong><br><br>
-<strong>5.1 Internal Company Violations</strong><br>
-For violations of work ethics, unprofessional communication, or disputes between employees:<br>
-- The report will be forwarded entirely to the relevant Company Administrator;<br>
-- The Company Administrator has full authority to review, mediate, and impose internal sanctions (warnings, access restrictions, removal from company groups);<br>
-- Clime-X does not intervene in or retain records of such internal decisions.<br><br>
-<strong>5.2 Suspected Crimes and Serious Violations</strong><br>
-For suspected criminal acts, serious legal violations, or reports involving multiple users:<br>
-- The report will be handled directly by the Clime-X Trust &amp; Safety Team;<br>
-- Actions may include content removal, temporary suspension, permanent account blocking, and data preservation/locking;<br>
-- Clime-X will cooperate with law enforcement authorities when there is a valid official request.<br><br>
-<strong>5.3 Unsubstantiated Reports</strong><br>
-- If a review finds that a report is unsubstantiated due to an error or misunderstanding, the reporter will not be sanctioned. The reported account will be restored promptly.<br>
-- If a report is proven to have been intentionally and maliciously made to defame or harm another person, the reporter may receive sanctions ranging from a warning to account blocking and may be subject to further action under applicable law.<br><br>
-<strong>5.4 Right to Appeal</strong><br>
-Any user subject to access restrictions or account blocking has the right to appeal through Help Center &gt; Submit an Appeal within 7 (seven) calendar days from notification. Clime-X will provide an appeal decision within a maximum of 14 (fourteen) business days.<br><br>
-<strong>6. EVIDENCE MANAGEMENT AND RETENTION</strong><br>
-a. When content is reported, the system will apply Evidence Retention (Legal Hold). Such content may not be deleted, altered, or hidden by anyone, including its creator, until the review is completed.<br>
-b. Users may delete their own content as long as it has not entered a reported or review status.<br>
-c. Attempts to delete or destroy evidence after a report has been submitted may be considered a separate violation and may be reported to the relevant authorities.<br>
-d. Report-related data is retained in accordance with the principle of limited retention under Indonesia's Personal Data Protection Law No. 27 of 2022. For suspected criminal acts, data is retained as long as necessary for legal proceedings and in accordance with applicable statutory retention obligations, for a maximum of 5 (five) years, unless a law enforcement authority or court issues a valid data preservation order.<br><br>
-<strong>7. LIMITATION OF RESPONSIBILITY AND LEGAL COOPERATION</strong><br>
-a. Clime-X only provides the platform. The content, accuracy, and legal consequences of each piece of content are entirely the responsibility of the User who created it.<br>
-b. Clime-X is not responsible for losses arising from actions of other users outside Clime-X's control.<br>
-c. Clime-X will only provide personal data or electronic evidence to authorized parties based on a valid official request in accordance with Indonesian legal procedures (for example, an investigator's order or a court order).<br><br>
-By using Clime-X, you are deemed to have read, understood, and agreed to this Policy.<br><br>
-<strong>Clime-X Team</strong>`],
+<h2>12. Konten dan Berkas yang Diunggah</h2>
+<p>Berkas yang dikirimkan melalui aplikasi diproses sesuai tujuan fitur yang digunakan. Pengguna wajib memastikan konten yang dikirim tidak melanggar hak orang lain atau ketentuan yang berlaku.</p>
 
-["1. Introduction","Clime-X respects user privacy. This Privacy Policy explains how Clime-X collects, uses, stores, and protects information when you use Clime-X Employee, Clime-X Web Console, and related services."],
+<h2>13. Penyimpanan Data</h2>
+<p>Data disimpan melalui sistem penyimpanan yang aman. Data tetap disimpan selama diperlukan untuk menjalankan layanan, memenuhi kewajiban hukum, menyelesaikan perselisihan, serta menjaga keamanan sistem.</p>
 
-["2. Information We Process","Information processed through Clime-X may include account information such as name, email address, and authentication information; company information such as company name, address, contact details, logo, and other information entered by an Administrator; employee data such as name, employee ID, department, position, joining date, contract information, and related information entered by the company; and operational data such as leave requests, claims/expenses, announcements, events, comments, notifications, and photos uploaded through available features."],
+<h2>14. Pembatasan Akses</h2>
+<ul class="policy-list">
+<li>Pengelola perusahaan bertanggung jawab atas data yang dimasukkan melalui akun perusahaan;</li>
+<li>Akses dibatasi sesuai peran dan kebutuhan masing-masing pengguna;</li>
+<li>Data pribadi pengguna tidak dibagikan kepada pihak lain tanpa izin, kecuali diwajibkan hukum.</li>
+</ul>
 
-["3. Login and Authentication","Clime-X supports registration and login using email and password as well as Google sign-in. Authentication information is processed through Firebase Authentication. Clime-X does not request or store your Google password."],
+<h2>15. Perlindungan Data</h2>
+<p>Sistem menerapkan langkah-langkah keamanan yang wajar untuk melindungi informasi dari akses, perubahan, atau pengungkapan yang tidak sah. Tidak ada sistem elektronik yang sepenuhnya bebas risiko, namun Clime-X senantiasa meningkatkan keamanan layanan.</p>
 
-["4. How Information Is Used","Information is used to create and manage accounts, connect Administrators with company data, provide Employee and Web Console features, process leave requests and claims/expenses, display announcements and events, deliver necessary notifications, maintain service security, and improve and maintain the service."],
+<h2>16. Layanan Pihak Ketiga</h2>
+<p>Clime-X dapat menggunakan layanan pendukung untuk beroperasi. Penggunaan data pada layanan tersebut tunduk pula pada ketentuan penyedia layanan masing-masing.</p>
 
-["5. Photos and Uploaded Content","When you use features that allow photo uploads, photos are processed for the relevant feature, such as supporting a claim or as part of company content. Do not upload unnecessary information or another person's information without appropriate rights."],
+<h2>17. Hak Pengguna</h2>
+<p>Pengguna dapat meminta informasi, perbaikan, atau penghapusan data miliknya sejauh tidak bertentangan dengan kebutuhan operasional, kewajiban hukum, atau kepentingan keamanan.</p>
 
-["6. Data Storage","Clime-X stores and processes data using Firebase services, including Firebase Authentication and Cloud Firestore. Data may remain stored as long as necessary to provide the service, meet company obligations, resolve disputes, maintain security, or for other legitimate business purposes."],
+<h2>18. Penghapusan Akun</h2>
+<p>Permintaan penghapusan akun dapat diajukan kepada Clime-X. Sebagian data dapat tetap disimpan apabila diperlukan untuk pencatatan, penyelesaian masalah, atau kewajiban hukum.</p>
 
-["7. Access and Data Management","Company Administrators are responsible for company and employee data entered into Clime-X. Access to data is limited according to accounts and functions available in the system. Users are responsible for keeping their accounts secure and must not share credentials with others."],
+<h2>19. Pembaruan Kebijakan</h2>
+<p>Kebijakan ini dapat diperbarui dari waktu ke waktu. Versi terbaru akan dipublikasikan pada halaman ini dengan tanggal pembaruan yang tertera.</p>
 
-["8. Security","Clime-X uses reasonable measures to help protect information from unauthorized access, alteration, disclosure, or destruction. However, no electronic system can be guaranteed to be completely secure."],
+<h2>20. Hubungi Kami</h2>
+<p>Untuk pertanyaan terkait kebijakan ini, silakan hubungi Clime-X melalui kontak resmi yang tersedia di situs Clime-X.</p>
 
-["9. Third-Party Services","Clime-X uses third-party services required to operate the service, including Firebase Authentication and Cloud Firestore. Use of those services is also subject to the respective providers' policies."],
+<p><strong>Dengan menggunakan Clime-X, Anda dianggap telah membaca, memahami, dan menyetujui seluruh ketentuan di atas.</strong></p>
+<p><strong>Tim Clime-X</strong></p>
+`},
+  en: {"body": `
+<h1>CLIME-X PLATFORM POLICY</h1>
+<div class="updated">Last updated: October 6, 2026</div>
+<div class="part-title">PART I — ABUSE HANDLING</div>
+<div class="updated">Effective Date: October 6, 2026</div>
 
-["10. User Rights","Users may request information regarding data associated with their account or company and may request correction or deletion where reasonably possible and where this does not conflict with operational needs, legal obligations, or security interests."],
+<h2>1. Introduction and Purpose</h2>
+<p>Clime-X is a communication and work management platform accessible globally. We are committed to maintaining a safe, professional, and legally compliant digital environment. This document governs the terms of use, reporting mechanisms, handling of abuse, and data and privacy management for all users.</p>
+<p>Clime-X is operated from Indonesia and is subject to the laws and regulations applicable in Indonesia, including Minister of Communication and Information Regulation No. 5 of 2020 concerning Private-Scope Electronic System Operators. Users accessing Clime-X from other countries must also comply with these provisions and with the laws and regulations applicable in the country where they are located.</p>
 
-["11. Account and Data Deletion","Requests to delete an account or data may be submitted to Clime-X. Verification of account ownership may be required. Certain data may be retained when necessary for security, records, dispute resolution, or legal obligations."],
+<h2>2. Definition of Abuse</h2>
+<p>Abuse means any use of Clime-X that violates applicable law, public decency, or the legitimate purposes and terms of this platform.</p>
 
-["12. Changes to This Policy","This Privacy Policy may be updated from time to time. The latest version will be published on this page together with the applicable update date."],
+<h2>3. Prohibited Use</h2>
+<p>Users are prohibited from:</p>
+<ol class="policy-list" type="a">
+<li>Making threats of violence, intimidation, bullying, or taking actions that endanger the safety of others;</li>
+<li>Spreading hate speech, discrimination, or content that violates human rights or applicable laws;</li>
+<li>Committing fraud, extortion, embezzlement, or defamation;</li>
+<li>Sending, storing, or distributing pornography, gambling, narcotics, terrorism, or other content prohibited by law anywhere;</li>
+<li>Spreading false information or untrue news that may harm another party;</li>
+<li>Accessing systems without authorization, damaging systems, or removing or destroying electronic evidence related to suspected legal violations.</li>
+</ol>
 
-["13. Contact Us","If you have questions about this Privacy Policy or data handling in Clime-X, please contact Clime-X through the official contact information available on the Clime-X website."]
-]
-},
+<h2>4. Reporting Mechanism</h2>
+<p>Every user may report suspected abuse through:</p>
+<ol class="policy-list">
+<li>The [Report] button available on each piece of content or profile;</li>
+<li>Selecting the appropriate violation category;</li>
+<li>Providing a brief description of the incident;</li>
+<li>The system will automatically lock and archive relevant evidence for review.</li>
+</ol>
 
-zh:{
-title:"隐私政策",
-date:"最后更新：2026年10月6日",
-sections:[
+<h2>5. Review and Enforcement Procedures</h2>
+<h3>5.1 Company-Scope Violations</h3>
+<p>For violations of work ethics, inappropriate communication, or disputes among company members:</p>
+<ul class="policy-list">
+<li>The report is submitted to the relevant company manager or Administrator;</li>
+<li>The Administrator has authority to review, mediate, and impose actions under the company's internal rules;</li>
+<li>Clime-X does not intervene and does not retain such internal decisions.</li>
+</ul>
 
-["Clime-X 平台滥用处理政策",`生效日期：2026年10月6日<br><br>
-<strong>1. 引言与目的</strong><br>
-Clime-X 是面向企业环境的通信和工作管理平台。我们致力于维护安全、专业并符合法律要求的数字环境。本政策规定平台滥用的禁止行为、举报机制以及处理方式。<br><br>
-Clime-X 是依据印度尼西亚通信与信息部 2020 年第 5 号条例所规定的、采用用户生成内容（UGC）模式的私人范围电子系统运营商（PSE）。<br><br>
-<strong>2. 滥用的定义</strong><br>
-滥用是指任何违反印度尼西亚共和国法律、社会道德规范或平台合法目的的 Clime-X 使用行为。<br><br>
-<strong>3. 禁止使用</strong><br>
-严禁用户利用 Clime-X 进行以下行为：<br>
-a. 进行暴力威胁、恐吓、欺凌或危及他人人身安全的行为；<br>
-b. 传播仇恨言论、歧视性内容或涉及种族、宗教、民族和群体（SARA）的内容；<br>
-c. 实施欺诈、敲诈、挪用或诽谤行为；<br>
-d. 发送、存储或传播色情、赌博、毒品、恐怖主义内容以及其他法律法规禁止的内容；<br>
-e. 传播对他人造成损害的虚假信息 / 谣言；<br>
-f. 试图入侵或破坏系统，或删除 / 销毁与涉嫌违法行为有关的电子证据。<br><br>
-<strong>4. 举报机制</strong><br>
-每位用户均有权并鼓励在发现疑似滥用行为时进行举报：<br>
-1. 使用每条消息、文件或个人资料中提供的[举报]按钮；<br>
-2. 选择违规类别；<br>
-3. 填写简要经过（发生了什么、何时以及在哪里发生）；<br>
-4. Clime-X 系统将自动锁定并归档相关证据，以供审查使用。<br><br>
-<strong>5. 审查与处理程序</strong><br><br>
-<strong>5.1 企业内部违规</strong><br>
-对于违反工作道德、不专业的沟通或员工之间的争议：<br>
-- 举报将完整转交相关企业管理员；<br>
-- 企业管理员拥有审查、调解并实施内部处分的全部权限（警告、限制访问、移出企业群组）；<br>
-- Clime-X 不介入，也不保存此类内部决定记录。<br><br>
-<strong>5.2 疑似犯罪及严重违规</strong><br>
-对于涉嫌犯罪、严重违法行为或涉及多名用户的举报：<br>
-- 举报将由 Clime-X 信任与安全团队（Trust &amp; Safety）直接处理；<br>
-- 可采取的措施包括删除内容、暂时冻结、永久封禁账户以及锁定数据；<br>
-- 如收到合法有效的正式请求，Clime-X 将与执法机关合作。<br><br>
-<strong>5.3 无依据的举报</strong><br>
-- 如果审查发现举报因错误或误解而无法证实，不会对举报人进行处罚。被举报账户将立即恢复。<br>
-- 如果证实举报是出于恶意，故意诽谤或损害他人，举报人可能受到从警告到封禁账户的处罚，并可能依据适用法律进一步处理。<br><br>
-<strong>5.4 申诉权</strong><br>
-任何受到访问限制或账户封禁措施的用户，都有权在收到通知后的 7（七）个日历日内，通过帮助中心 &gt; 提交申诉提出申诉。Clime-X 将在最长 14（十四）个工作日内作出申诉决定。<br><br>
-<strong>6. 证据管理与保存</strong><br>
-a. 当内容被举报时，系统将实施证据保留（Legal Hold）。在审查完成之前，包括内容创建者在内的任何人都不得删除、修改或隐藏相关内容。<br>
-b. 用户可以删除自己的内容，前提是该内容尚未进入举报或审查状态。<br>
-c. 在举报发生后试图删除或销毁证据，可能被视为单独的违规行为，并可能被报告给有关部门。<br>
-d. 与举报有关的数据按照印度尼西亚《2022年第27号个人数据保护法》的有限保存原则进行保存。对于涉嫌犯罪的情况，数据将在法律程序所需期间并依照适用法律法规规定的保存义务进行保存，最长为 5（五）年；除非执法机关或法院发出合法有效的数据保全命令。<br><br>
-<strong>7. 责任范围与法律合作</strong><br>
-a. Clime-X 仅提供平台。每项内容的内容、真实性及其法律后果均由创建该内容的用户承担全部责任。<br>
-b. 对于 Clime-X 无法控制的其他用户行为所造成的损失，Clime-X 不承担责任。<br>
-c. Clime-X 仅会根据符合印度尼西亚法律程序的合法正式请求，向有权机关提供个人数据或电子证据（例如调查人员命令或法院裁定）。<br><br>
-使用 Clime-X 即表示您已阅读、理解并同意本政策。<br><br>
-<strong>Clime-X 团队</strong>`],
+<h3>5.2 Suspected Legal Violations</h3>
+<p>For suspected criminal acts or serious violations:</p>
+<ul class="policy-list">
+<li>Handled directly by the Clime-X Trust &amp; Safety Team;</li>
+<li>Actions may include content removal, access restrictions, suspension, or account blocking;</li>
+<li>Clime-X cooperates with authorities in accordance with applicable legal procedures.</li>
+</ul>
 
-["1. 简介","Clime-X 重视用户隐私。本隐私政策说明您使用 Clime-X Employee、Clime-X Web Console 及相关服务时，Clime-X 如何收集、使用、存储和保护信息。"],
+<h3>5.3 Unsubstantiated Reports</h3>
+<ul class="policy-list">
+<li>If a report is not substantiated, the reporter will not be sanctioned and the reported account will be restored;</li>
+<li>If a report is intentionally made to harm another person, the reporter may be sanctioned up to account blocking.</li>
+</ul>
 
-["2. 我们处理的信息","Clime-X 可能处理账户信息，例如姓名、电子邮箱和身份验证信息；企业信息，例如企业名称、地址、联系方式、标志及管理员输入的其他企业信息；员工资料，例如姓名、员工编号、部门、职位、入职日期、合同信息及企业输入的相关资料；以及请假申请、报销/费用、公告、活动、评论、通知和通过相关功能上传的照片等业务数据。"],
+<h3>5.4 Right to Appeal</h3>
+<p>Users subject to an enforcement action may appeal within 7 calendar days from notification. A decision will be provided within a maximum of 14 business days.</p>
 
-["3. 登录与身份验证","Clime-X 支持使用电子邮箱和密码注册及登录，也支持使用 Google 登录。身份验证信息通过 Firebase Authentication 处理。Clime-X 不会要求或保存您的 Google 密码。"],
+<h2>6. Evidence Management and Retention</h2>
+<ol class="policy-list" type="a">
+<li>Reported content is placed under Evidence Retention status and may not be deleted or altered by anyone until the review is completed;</li>
+<li>Users may still delete their own content as long as it has not been reported or is not under review;</li>
+<li>Attempts to delete evidence after a report may be considered a separate violation;</li>
+<li>Data is retained according to applicable data protection principles. For suspected criminal acts, retention continues as necessary for legal proceedings.</li>
+</ol>
 
-["4. 信息的使用","信息用于创建和管理账户、将管理员与企业数据关联、提供 Employee 和 Web Console 功能、处理请假及报销/费用申请、显示公告和活动、发送必要通知、维护服务安全以及改进和维护服务。"],
+<h2>7. Limitation of Responsibility and Legal Cooperation</h2>
+<ol class="policy-list" type="a">
+<li>Clime-X only provides the platform. The content and consequences of each piece of content are the responsibility of its creator;</li>
+<li>Clime-X is not responsible for losses resulting from actions of other users outside the system's control;</li>
+<li>Data is provided to authorities only upon an official request in accordance with legal procedures;</li>
+<li>The laws of the Republic of Indonesia govern the implementation of these provisions.</li>
+</ol>
 
-["5. 照片及上传内容","当您使用允许上传照片的功能时，照片将用于相关功能，例如作为报销凭证或企业内容的一部分。请勿上传不必要的信息，也不要在没有适当权利的情况下上传他人的信息。"],
+<div class="divider"></div>
+<div class="part-title">PART II — PRIVACY POLICY</div>
 
-["6. 数据存储","Clime-X 使用 Firebase 服务存储和处理数据，包括 Firebase Authentication 和 Cloud Firestore。数据可能在提供服务、履行企业义务、解决争议、维护安全或其他合法业务目的所需期间继续保存。"],
+<h2>8. Scope</h2>
+<p>This Policy governs how Clime-X collects, uses, stores, and protects user information across all Clime-X services. Users in different countries are also entitled to data protection under the laws applicable in their respective countries.</p>
 
-["7. 数据访问与管理","企业管理员负责通过 Clime-X 输入的企业及员工数据。数据访问根据系统中的账户和可用功能进行限制。用户应妥善保护账户安全，不得向他人分享账户凭据。"],
+<h2>9. Types of Information We Manage</h2>
+<ul class="policy-list">
+<li><strong>Account information</strong> — name, email address, and authentication data;</li>
+<li><strong>Company information</strong> — name, address, contact details, logo, and other data entered by company administrators;</li>
+<li><strong>Member data</strong> — name, identity, role, and information necessary for work purposes;</li>
+<li><strong>Operational data</strong> — requests, reports, announcements, events, comments, notifications, and uploaded files.</li>
+</ul>
 
-["8. 安全","Clime-X 采取合理措施帮助保护信息，防止未经授权的访问、修改、披露或破坏。但是，任何电子系统都无法保证绝对安全。"],
+<h2>10. Login and Access Security</h2>
+<ul class="policy-list">
+<li>Users may register and sign in using email and password, or supported third-party service accounts;</li>
+<li>Sign-in is managed through a secure access management system. Clime-X does not store passwords for users' third-party accounts;</li>
+<li>Every user must keep account information confidential and must not share login credentials with others.</li>
+</ul>
 
-["9. 第三方服务","Clime-X 使用运行服务所需的第三方服务，包括 Firebase Authentication 和 Cloud Firestore。使用这些服务也受相应服务提供商政策的约束。"],
+<h2>11. Purpose of Using Information</h2>
+<p>Data is used to:</p>
+<ul class="policy-list">
+<li>Manage accounts and connect users with their work environment;</li>
+<li>Operate application features and process submitted requests;</li>
+<li>Provide service-related notifications;</li>
+<li>Maintain security and perform system maintenance and improvements.</li>
+</ul>
 
-["10. 用户权利","用户可以请求了解与其账户或企业相关的数据，并可在合理可行且不影响运营需求、法律义务或安全利益的情况下请求更正或删除数据。"],
+<h2>12. Uploaded Content and Files</h2>
+<p>Files submitted through the application are processed according to the purpose of the feature used. Users must ensure that submitted content does not violate the rights of others or applicable requirements.</p>
 
-["11. 账户和数据删除","您可以向 Clime-X 提交账户或数据删除请求。删除请求可能需要验证账户所有权。出于安全、记录保存、争议解决或法律义务的需要，部分数据可能需要继续保留。"],
+<h2>13. Data Storage</h2>
+<p>Data is stored through secure storage systems. Data remains stored for as long as necessary to operate the service, comply with legal obligations, resolve disputes, and maintain system security.</p>
 
-["12. 政策变更","本隐私政策可能不时更新。最新版本及相应更新日期将在本页面公布。"],
+<h2>14. Access Restrictions</h2>
+<ul class="policy-list">
+<li>Company administrators are responsible for data entered through company accounts;</li>
+<li>Access is restricted according to each user's role and needs;</li>
+<li>Users' personal data is not shared with other parties without permission, unless required by law.</li>
+</ul>
 
-["13. 联系我们","如果您对本隐私政策或 Clime-X 的数据处理有任何疑问，请通过 Clime-X 官方网站提供的联系方式与我们联系。"]
-]
-}
+<h2>15. Data Protection</h2>
+<p>The system applies reasonable security measures to protect information from unauthorized access, alteration, or disclosure. No electronic system is entirely risk-free, but Clime-X continuously improves service security.</p>
+
+<h2>16. Third-Party Services</h2>
+<p>Clime-X may use supporting services to operate the platform. Data use by those services is also subject to the respective providers' terms.</p>
+
+<h2>17. User Rights</h2>
+<p>Users may request information, correction, or deletion of their data to the extent that doing so does not conflict with operational needs, legal obligations, or security interests.</p>
+
+<h2>18. Account Deletion</h2>
+<p>Requests to delete an account may be submitted to Clime-X. Some data may remain stored when necessary for recordkeeping, issue resolution, or legal obligations.</p>
+
+<h2>19. Policy Updates</h2>
+<p>This Policy may be updated from time to time. The latest version will be published on this page with the stated update date.</p>
+
+<h2>20. Contact Us</h2>
+<p>For questions regarding this Policy, please contact Clime-X through the official contact information available on the Clime-X website.</p>
+
+<p><strong>By using Clime-X, you are deemed to have read, understood, and agreed to all of the provisions above.</strong></p>
+<p><strong>Clime-X Team</strong></p>
+`},
+  zh: {"body": `
+<h1>CLIME-X 平台政策</h1>
+<div class="updated">最后更新：2026年10月6日</div>
+<div class="part-title">第一部分 — 滥用行为处理</div>
+<div class="updated">生效日期：2026年10月6日</div>
+
+<h2>1. 引言与目的</h2>
+<p>Clime-X 是一个可在全球范围访问的通信和工作管理平台。我们致力于维护安全、专业并符合法律要求的数字环境。本文件规定使用条款、举报机制、滥用行为处理以及所有用户的数据与隐私管理。</p>
+<p>Clime-X 在印度尼西亚运营，并受印度尼西亚适用的法律法规约束，包括关于私人范围电子系统运营商的 2020 年第 5 号通信与信息部条例。从其他国家访问 Clime-X 的用户也必须遵守本规定以及其所在国家适用的法律法规。</p>
+
+<h2>2. 滥用的定义</h2>
+<p>滥用是指任何违反适用法律、社会道德规范或本平台合法目的及规定的 Clime-X 使用行为。</p>
+
+<h2>3. 禁止使用</h2>
+<p>用户不得进行以下行为：</p>
+<ol class="policy-list" type="a">
+<li>进行暴力威胁、恐吓、欺凌或危及他人安全的行为；</li>
+<li>传播仇恨言论、歧视或违反人权及适用法律的内容；</li>
+<li>实施欺诈、敲诈、挪用或诽谤行为；</li>
+<li>发送、存储或传播色情、赌博、毒品、恐怖主义或任何法律禁止的其他内容；</li>
+<li>传播可能损害他人的虚假信息或不实新闻；</li>
+<li>未经授权访问系统、破坏系统，或删除、销毁与涉嫌违法行为有关的电子证据。</li>
+</ol>
+
+<h2>4. 举报机制</h2>
+<p>每位用户均可通过以下方式举报疑似滥用行为：</p>
+<ol class="policy-list">
+<li>使用每个内容或个人资料中提供的[举报]按钮；</li>
+<li>选择适当的违规类别；</li>
+<li>简要说明事件经过；</li>
+<li>系统将自动锁定并归档相关证据，以供审查。</li>
+</ol>
+
+<h2>5. 审查与处理程序</h2>
+<h3>5.1 企业范围内的违规行为</h3>
+<p>对于违反工作道德、不当沟通或企业成员之间的争议：</p>
+<ul class="policy-list">
+<li>举报将提交给相关企业管理人员或管理员；</li>
+<li>管理员有权根据企业内部规定进行审查、调解和采取相应措施；</li>
+<li>Clime-X 不介入，也不保存此类内部决定。</li>
+</ul>
+
+<h3>5.2 疑似违法行为</h3>
+<p>对于涉嫌犯罪或严重违规行为：</p>
+<ul class="policy-list">
+<li>由 Clime-X 信任与安全团队直接处理；</li>
+<li>措施可以包括删除内容、限制访问、暂停或封禁账户；</li>
+<li>Clime-X 根据适用法律程序与有关部门合作。</li>
+</ul>
+
+<h3>5.3 无依据的举报</h3>
+<ul class="policy-list">
+<li>如果举报无法证实，举报人不会受到处罚，被举报账户将恢复；</li>
+<li>如果举报是故意为了损害他人而提出，举报人可能受到处罚，直至账户被封禁。</li>
+</ul>
+
+<h3>5.4 申诉权</h3>
+<p>受到处理措施的用户可以在收到通知后的 7 个日历日内提出申诉。申诉决定将在最长 14 个工作日内作出。</p>
+
+<h2>6. 证据管理与保存</h2>
+<ol class="policy-list" type="a">
+<li>被举报的内容将进入证据保留状态，在审查完成之前任何人都不得删除或修改；</li>
+<li>只要内容尚未被举报或处于审查状态，用户仍可删除自己的内容；</li>
+<li>举报后试图删除证据可能被视为单独的违规行为；</li>
+<li>数据按照适用的数据保护原则保存。对于涉嫌犯罪的情况，数据将在法律程序所需期间保存。</li>
+</ol>
+
+<h2>7. 责任范围与法律合作</h2>
+<ol class="policy-list" type="a">
+<li>Clime-X 仅提供平台。每项内容及其后果由创建该内容的用户负责；</li>
+<li>对于系统控制范围之外的其他用户行为造成的损失，Clime-X 不承担责任；</li>
+<li>只有根据符合法律程序的正式请求，数据才会提供给有关部门；</li>
+<li>本规定的执行适用印度尼西亚共和国法律。</li>
+</ol>
+
+<div class="divider"></div>
+<div class="part-title">第二部分 — 隐私政策</div>
+
+<h2>8. 范围</h2>
+<p>本政策规定 Clime-X 如何在所有 Clime-X 服务中收集、使用、存储和保护用户信息。不同国家的用户也享有其所在国家适用法律所规定的数据保护权利。</p>
+
+<h2>9. 我们管理的信息类型</h2>
+<ul class="policy-list">
+<li><strong>账户信息</strong> — 姓名、电子邮箱和身份验证数据；</li>
+<li><strong>企业信息</strong> — 企业名称、地址、联系方式、标志以及企业管理员输入的其他数据；</li>
+<li><strong>成员数据</strong> — 姓名、身份、角色以及工作所需的相关信息；</li>
+<li><strong>运营数据</strong> — 申请、报告、公告、活动、评论、通知和上传的文件。</li>
+</ul>
+
+<h2>10. 登录与访问安全</h2>
+<ul class="policy-list">
+<li>用户可以使用电子邮箱和密码注册及登录，也可以使用受支持的第三方服务账户；</li>
+<li>登录过程通过安全的访问管理系统进行。Clime-X 不保存用户第三方账户的密码；</li>
+<li>每位用户都必须保护账户信息的机密性，不得向他人分享登录凭据。</li>
+</ul>
+
+<h2>11. 信息使用目的</h2>
+<p>数据用于：</p>
+<ul class="policy-list">
+<li>管理账户并将用户与工作环境连接；</li>
+<li>运行应用功能并处理提交的申请；</li>
+<li>发送与服务相关的通知；</li>
+<li>维护安全以及进行系统维护和改进。</li>
+</ul>
+
+<h2>12. 上传的内容和文件</h2>
+<p>通过应用提交的文件将根据所使用功能的目的进行处理。用户必须确保所提交的内容不侵犯他人的权利或违反适用规定。</p>
+
+<h2>13. 数据存储</h2>
+<p>数据通过安全的存储系统保存。数据将在运行服务、履行法律义务、解决争议以及维护系统安全所需期间继续保存。</p>
+
+<h2>14. 访问限制</h2>
+<ul class="policy-list">
+<li>企业管理员负责通过企业账户输入的数据；</li>
+<li>访问权限根据每位用户的角色和需求进行限制；</li>
+<li>未经许可，用户个人数据不会与其他方共享，法律要求的情况除外。</li>
+</ul>
+
+<h2>15. 数据保护</h2>
+<p>系统采取合理的安全措施，保护信息免受未经授权的访问、修改或披露。任何电子系统都无法完全没有风险，但 Clime-X 会持续提升服务安全性。</p>
+
+<h2>16. 第三方服务</h2>
+<p>Clime-X 可以使用运行平台所需的支持服务。这些服务对数据的使用也受相应服务提供商条款的约束。</p>
+
+<h2>17. 用户权利</h2>
+<p>用户可以请求了解、更正或删除自己的数据，但前提是此类请求不与运营需求、法律义务或安全利益相冲突。</p>
+
+<h2>18. 账户删除</h2>
+<p>用户可以向 Clime-X 提交账户删除请求。如为记录保存、问题解决或履行法律义务所需，部分数据可能继续保留。</p>
+
+<h2>19. 政策更新</h2>
+<p>本政策可能不时更新。最新版本及注明的更新日期将在本页面公布。</p>
+
+<h2>20. 联系我们</h2>
+<p>如对本政策有任何疑问，请通过 Clime-X 网站提供的官方联系方式与 Clime-X 联系。</p>
+
+<p><strong>使用 Clime-X 即表示您已阅读、理解并同意上述全部规定。</strong></p>
+<p><strong>Clime-X 团队</strong></p>
+`}
 };
 
 function setLang(l){
-    localStorage.setItem("climexLegalLanguage",l);
-    render(l)
+  localStorage.setItem("climexLegalLanguage",l);
+  render(l);
 }
 
 function render(l){
-    const t=T[l]||T.id;
-    document.getElementById("lang").value=l;
-    document.getElementById("content").innerHTML=
-        `<h1>${t.title}</h1>
-        <div class="updated">${t.date}</div>
-        ${t.sections.map(s=>
-            `<section>
-                <h2>${s[0]}</h2>
-                <p>${s[1]}</p>
-            </section>`
-        ).join("")}`
+  const t=T[l]||T.id;
+  document.getElementById("lang").value=l;
+  document.getElementById("content").innerHTML=t.body;
 }
 
 render(localStorage.getItem("climexLegalLanguage")||"id");
-
 </script>
-
 </body>
 </html>
