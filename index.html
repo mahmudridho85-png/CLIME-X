@@ -11638,6 +11638,17 @@ function updateAccountPasswordVisibility(user){
     if(!btn) return;
 
     const providers = (user && Array.isArray(user.providerData)) ? user.providerData : [];
+
+    // Akun yang login dengan Google tidak menampilkan tombol UBAH PASSWORD.
+    const hasGoogleProvider = providers.some(function(p){
+        return p && p.providerId === "google.com";
+    });
+
+    if(hasGoogleProvider){
+        btn.style.display = "none";
+        return;
+    }
+
     const hasPasswordProvider = providers.some(function(p){
         return p && p.providerId === "password";
     });
