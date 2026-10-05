@@ -1,0 +1,6558 @@
+<!DOCTYPE html>
+<head>
+ <meta charset="utf-8"/>
+ <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport"/>
+ <title>
+  CLIME-X Console
+ </title>
+ <style>
+  *{box-sizing:border-box}
+body{margin:0;background:#c9a77d;color:#292929;font-family:Arial,Helvetica,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;max-width:560px;margin:auto;background:#fff;}
+.top{height:64px;background:#C6A078;border-bottom:1px solid #e3ddd6;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:20}
+.logo{font-size:22px;font-weight:900;letter-spacing:1px;color:#7A421F}
+.lang{padding:8px 9px;border:1px solid #ddd5cd;border-radius:9px;background:#fff}
+.page{padding:17px 16px 92px}
+h1{font-size:24px;margin:3px 0 6px}
+h2{font-size:18px;margin:0}
+h3{font-size:15px;margin:0 0 7px}
+.muted{color:#777;font-size:12px}
+.card{
+    background:#f3f3f3;
+    border:1px solid #e4ddd5;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:13px;
+}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#fff;border:1px solid #e4ddd5;border-radius:12px;padding:11px}
+.stat b{display:block;font-size:20px;margin-top:5px}
+.row{display:flex;gap:8px;align-items:center}
+.between{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.btn{border:0;border-radius:10px;padding:11px 13px;font-weight:700}
+.primary{background:#7A421F;color:#fff}
+.outline{background:#fff;color:#7A421F;border:1px solid #7A421F}
+.danger{background:#fff;color:#a44242;border:1px solid #d7a4a4}
+.full{width:100%}
+.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:700}
+.pending{background:#fff0c8;color:#7d5d00}
+.approved{background:#e0f1e4;color:#347048}
+.paid{background:#e0edf9;color:#39638a}
+.rejected{background:#f7e0e0;color:#a13d3d}
+.unread{background:#f2e5d8;color:#79583d}
+.listitem{padding:13px 0;border-top:1px solid #eee}
+.listitem:first-child{border-top:0}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,100%);height:70px;background:#fff;border-top:1px solid #e3ddd6;display:grid;grid-template-columns:repeat(5,1fr);z-index:30}
+.nav{border:0;background:#fff;color:#080000;font-size:10px}
+.nav span{display:block;font-size:15px;margin-bottom:3px}
+.nav img{display:block;width:42px;height:42px;object-fit:contain;margin:0 auto 3px;}
+.bottom{
+    border-top:none !important;
+}
+.nav.active{color:#7A421F;font-weight:700}
+.form{margin-bottom:12px}
+.form label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
+.form input,.form textarea,.form select{width:100%;padding:11px;border:1px solid #ddd5cd;border-radius:10px;background:#fff}
+.form textarea{min-height:100px;resize:vertical}
+.tabs{display:flex;gap:6px;overflow:auto;margin:13px 0}
+.tab{white-space:nowrap;border:1px solid #ddd5cd;background:#fff;border-radius:99px;padding:8px 12px;font-size:11px}
+.tab.active{background:#7A421F;color:#fff;border-color:#7A421F}
+.receipt-img{height:190px;background:#eee8e1;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#888;margin:10px 0}
+.response{padding:10px;background:#f7f4f0;border-radius:10px;margin-top:8px;font-size:12px}
+.modal{position:fixed;inset:0;background:#0007;z-index:50;display:flex;justify-content:center;align-items:stretch}
+.modalbox{background:#fff;width:min(560px,100%);height:100vh;overflow:auto;padding:18px;scrollbar-width:none}
+.modalbox::-webkit-scrollbar{display:none}
+.login{visibility:hidden;min-height:100vh;display:flex;align-items:center;padding:20px;background:#c9a77d}
+.loginbox{width:100%;max-width:430px;margin:auto}
+.loginbox > .card{
+    background:#c9a77d;
+    border:none;
+}
+.loginlogo{text-align:center;font-size:34px;font-weight:900;color:#7A421F;letter-spacing:2px}
+.login-lang-wrap{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:18px;
+    position:relative;
+    transform:translateY(-120px)
+}
+.login-lang-button{
+    width:150px;
+    height:42px;
+    padding:0 12px;
+    border:1px solid #A95F32;
+    border-radius:12px;
+    background:#c9a77d;
+    color:#4A2A18;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    justify-content:flex-start;
+    font-size:13px;
+    font-weight:700;
+}
+
+.login-lang-button .arrow{
+    margin-left:auto;
+    font-size:11px;
+    color:#6E472D;
+}
+
+.login-lang-button:hover,
+.login-lang-button:focus,
+.login-lang-button:active{
+    background:#c9a77d;
+    color:#4A2A18;
+    border-color:#A95F32;
+    outline:none;
+    box-shadow:none;
+}
+
+.login-lang-button .arrow{margin-left:auto;font-size:11px;color:#6E472D}.login-lang-button:hover,.login-lang-button:focus{background:#c9a77d;border-color:#8F4D27;outline:none}
+.login-lang-menu{display:none;position:absolute;top:48px;right:0;width:150px;background:#fff;border:1px solid #e3d8ce;border-radius:12px;padding:6px;box-shadow:0 10px 25px rgba(75,52,34,.15);z-index:100}
+.login-lang-menu.open{display:block}
+.login-lang-menu button{width:100%;border:0;background:transparent;padding:10px 8px;text-align:left;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;color:#4A2A18}
+.login-lang-menu button:hover{background:#ead8c5}.login-lang-menu button:focus{background:transparent;outline:none}.login-lang-menu button.selected{background:transparent}
+.flag-circle{width:22px;height:22px;border-radius:50%;display:inline-block;flex:none;overflow:hidden;position:relative}
+.flag-id{background:linear-gradient(to bottom,#e53935 0%,#e53935 50%,#fff 50%,#fff 100%)}
+.flag-en{background:linear-gradient(90deg,transparent 42%,#fff 42%,#fff 58%,transparent 58%),linear-gradient(0deg,transparent 42%,#fff 42%,#fff 58%,transparent 58%),linear-gradient(90deg,transparent 46%,#c8102e 46%,#c8102e 54%,transparent 54%),linear-gradient(0deg,transparent 46%,#c8102e 46%,#c8102e 54%,transparent 54%),#012169}
+.flag-zh{background:#de2910}
+.login-actions{margin-top:16px;display:grid;gap:9px}
+.google-btn{width:100%;background:#fff;color:#3d332b;border:1px solid #d8cec4;border-radius:10px;padding:11px 13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:9px}
+.google-icon{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#4285f4}
+.forgot{text-align:right;margin:-2px 0 14px}.forgot button{border:0;background:transparent;color:#5b4939;font-size:12px;padding:0;cursor:pointer}.login-register{text-align:center;margin-top:14px;color:#7a6b5d;font-size:12px}
+.login-register button{border:0;background:transparent;color:#7A421F;font-weight:800;padding:0;cursor:pointer}
+.register-screen{min-height:100vh;display:flex;align-items:center;padding:20px;background:#c9a77d}
+.registerbox{width:100%;max-width:430px;margin:auto}
+.register-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.registerbox > .card{
+    background:#c9a77d;
+    border:none;
+}
+.back-btn{
+    border:0;
+    background:transparent;
+    color:#292929;
+    font-size:30px;
+    line-height:1;
+    padding:0;
+    transform:translateY(-90px);
+}
+
+.register-lang{
+position:relative
+}
+
+.register-lang{
+    position:relative;
+    transform:translateY(-77px)
+}
+
+.register-title{text-align:center;font-size:34px;font-weight:900;color:#7A421F;letter-spacing:2px}
+.register-sub{text-align:center;color:#777;font-size:12px;margin-top:5px}
+.register-card{margin-top:32px}
+.register-or{text-align:center;color:#6f6257;font-size:14px;margin:14px 0}
+.google-register{background:#8BCF3F;color:#111;border-color:#8BCF3F;font-size:16px;padding:14px}
+.terms{display:flex;gap:10px;align-items:flex-start;margin:15px 4px;font-size:12px;color:#6f6257;line-height:1.45}
+.terms input{width:18px;height:18px;flex:none;margin:1px 0 0}
+.terms a{color:#5b4939;text-decoration:underline}
+.toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#222;
+    color:#fff;
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    z-index:99999;
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+
+/* ================================
+   FLOATING NOTIFICATION PANEL
+   Header dan footer tetap terlihat
+================================ */
+.notification-float{
+    position:fixed;
+    top:64px;
+    bottom:70px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(560px,100%);
+    box-sizing:border-box;
+    background:#fff;
+    overflow-y:auto;
+    z-index:25;
+    padding:17px 16px 20px;
+    border-top:1px solid #eee7e0;
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+.notification-float.hidden{
+    display:none!important;
+}
+
+.notification-float .notification-list{
+    background:#f3f3f3;
+    border:1px solid #e4ddd5;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.notification-float .notification-item{
+    padding:15px 13px;
+    border-bottom:1px solid #e4ddd5;
+}
+
+.notification-float .notification-item:last-child{
+    border-bottom:0;
+}
+
+.notification-float .notification-title{
+    font-size:14px;
+    font-weight:800;
+    color:#111;
+}
+
+.notification-float .notification-text{
+    margin-top:4px;
+    color:#666;
+    font-size:12px;
+    line-height:1.35;
+}
+
+.notification-float .notification-time{
+    margin-top:5px;
+    color:#888;
+    font-size:11px;
+}
+
+.notification-float .notification-new{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:99px;
+    background:#f2e5d8;
+    color:#79583d;
+    font-size:10px;
+    font-weight:700;
+}
+
+.hidden{display:none!important}
+.switch{width:44px;height:24px;border-radius:20px;background:#bbb;border:0;position:relative}
+.switch.on{background:#7A421F}
+.switch:after{content:"";width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.15s}
+.switch.on:after{left:23px}
+@media(min-width:700px){
+.app{box-shadow:0 0 35px #00000012}
+}
+
+.top .lang{
+    display:none!important;
+}
+
+#startup{
+    position:fixed;
+    inset:0;
+    background:#c9a77d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+#startup img{
+    width:150px;
+    height:auto;
+    display:block;
+}
+
+/* ================================
+   COMPANY PROFILE SETUP
+================================ */
+
+.company-setup{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:#c9a77d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+.company-setup.hidden{
+    display:none;
+}
+
+.company-setup-card{
+    width:100%;
+    max-width:430px;
+    max-height:calc(100dvh - 24px);
+    background:#c9a77d;
+    border:none;
+    border-radius:14px;
+    padding:14px 16px;
+    box-sizing:border-box;
+    box-shadow:none;
+    overflow-y:auto;
+}
+
+.company-setup-title{
+    font-size:20px;
+    line-height:1.15;
+    font-weight:800;
+    color:#222;
+    text-align:center;
+    margin-bottom:7px;
+}
+
+.company-setup-subtitle{
+    font-size:13px;
+    line-height:1.35;
+    color:#5f554d;
+    text-align:center;
+    margin-bottom:13px;
+}
+
+.company-setup-field{
+    margin-bottom:9px;
+}
+
+.company-setup-field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:#4b4038;
+    margin-bottom:4px;
+}
+
+.company-setup-field input{
+    width:100%;
+    height:39px;
+    box-sizing:border-box;
+    border:1px solid #ddd3ca;
+    border-radius:8px;
+    padding:0 10px;
+    font-size:13px;
+    outline:none;
+    background:#fff;
+    color:#222;
+}
+
+.company-setup-field input:focus{
+    border-color:#7A421F;
+}
+
+.company-setup-continue{
+    width:100%;
+    height:42px;
+    border:0;
+    border-radius:9px;
+    background:#7A421F;
+    color:#fff;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    margin-top:5px;
+}
+
+.company-setup-continue:active{
+    transform:scale(.99);
+}
+
+.company-profile-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 2px;
+    font-size:13px;
+    line-height:1.4;
+}
+
+.company-profile-row span{
+    width:125px;
+    flex-shrink:0;
+    color:#555;
+}
+
+.company-profile-row b{
+    flex:1;
+    color:#222;
+    font-weight:600;
+}
+
+.company-profile-line{
+    height:1px;
+    background:#e4e4e4;
+}
+
+.company-profile-edit label{
+    display:block;
+    margin:10px 0 4px;
+    font-size:12px;
+    font-weight:600;
+    color:#555;
+}
+
+.company-profile-edit input{
+    width:100%;
+    height:40px;
+    box-sizing:border-box;
+    border:1px solid #d8d8d8;
+    border-radius:8px;
+    padding:0 10px;
+    background:#fff;
+    color:#222;
+    font-size:13px;
+    outline:none;
+}
+
+.company-profile-edit input:focus{
+    border-color:#7A421F;
+}
+
+ </style>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey:"AIzaSyCXzfGE9hri8f1uh6aRozW7uaft4ZlHohI",
+    authDomain:"kasir-cuan-pos.firebaseapp.com",
+    projectId:"kasir-cuan-pos",
+    storageBucket:"kasir-cuan-pos.firebasestorage.app",
+    messagingSenderId:"525682379931",
+    appId:"1:525682379931:web:77b36c3dd62e9cd7134a3e"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+// ==============================
+// AUTH KHUSUS MOBILE CONSOLE
+// Dipisahkan dari Employee App
+// ==============================
+const climexConsoleApp =
+    firebase.initializeApp(
+        firebaseConfig,
+        "climexMobileConsole"
+    );
+
+const climexAuth =
+    climexConsoleApp.auth();
+
+const climexDB =
+    climexConsoleApp.firestore();
+
+climexAuth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+).catch(function(error){
+    console.error("CLIME-X CONSOLE AUTH PERSISTENCE ERROR:", error);
+});
+
+async function verifyConsoleAdministrator(user){
+
+    if(!user){
+        return false;
+    }
+
+    try{
+
+        const profileSnap =
+            await climexDB
+                .collection("users")
+                .doc(user.uid)
+                .collection("climex")
+                .doc("profile")
+                .get();
+
+        if(!profileSnap.exists){
+            return false;
+        }
+
+        const profile = profileSnap.data();
+
+        // Simpan data perusahaan dari Firebase
+        window.climexCompanyProfile = profile;
+
+        return String(profile.role || "").trim() === "Administrator";
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CONSOLE ROLE CHECK ERROR:",
+            error
+        );
+
+        return false;
+    }
+}
+
+let authStateVersion = 0;
+
+climexAuth.onAuthStateChanged(async function(user){
+
+    const currentVersion = ++authStateVersion;
+
+    const startup = document.getElementById("startup");
+    const loginPage = document.getElementById("login");
+    const appPage = document.getElementById("app");
+
+    if(startup){
+        startup.style.display = "none";
+    }
+
+    console.log(
+        "CLIME-X AUTH CHECK:",
+        user ? user.uid : "BELUM LOGIN"
+    );
+
+    // BELUM LOGIN
+    if(!user){
+
+        if(loginPage){
+            loginPage.style.visibility = "visible";
+            loginPage.classList.remove("hidden");
+        }
+
+        if(appPage){
+            appPage.classList.add("hidden");
+        }
+
+        // KOSONGKAN EMAIL & PASSWORD LOGIN
+        if(loginPage){
+            const inputs = loginPage.querySelectorAll("input");
+
+            if(inputs[0]){
+                inputs[0].value = "";
+            }
+
+            if(inputs[1]){
+                inputs[1].value = "";
+            }
+        }
+
+        return;
+    }
+
+    // CEK ADMINISTRATOR
+    const isAdministrator =
+        await verifyConsoleAdministrator(user);
+
+    // Jika selama proses pengecekan user sudah logout,
+    // abaikan hasil pengecekan lama.
+    if(currentVersion !== authStateVersion){
+        return;
+    }
+
+    if(!isAdministrator){
+
+        console.log(
+            "CLIME-X: akun bukan Administrator, akses ditolak."
+        );
+
+        await climexAuth.signOut();
+
+        return;
+    }
+
+    // CEK LAGI setelah proses async
+    if(currentVersion !== authStateVersion){
+        return;
+    }
+
+    if(loginPage){
+        loginPage.classList.add("hidden");
+    }
+
+    if(appPage){
+        appPage.classList.remove("hidden");
+    }
+
+    if(typeof page === "function"){
+        page("home");
+    }
+
+    console.log(
+        "CLIME-X AUTO LOGIN ADMIN OK:",
+        user.uid
+    );
+
+});
+
+
+// LOGOUT CLIME-X CONSOLE
+async function logoutClimeX(){
+
+    // Naikkan versi supaya proses login/cek lama
+    // tidak boleh mengembalikan Dashboard.
+    authStateVersion++;
+
+    const loginPage = document.getElementById("login");
+    const appPage = document.getElementById("app");
+
+    // LANGSUNG tampilkan LOGIN
+    if(appPage){
+        appPage.classList.add("hidden");
+    }
+
+    if(loginPage){
+        loginPage.style.visibility = "visible";
+        loginPage.classList.remove("hidden");
+    }
+
+    // KOSONGKAN EMAIL & PASSWORD
+    if(loginPage){
+        const inputs = loginPage.querySelectorAll("input");
+
+        if(inputs[0]){
+            inputs[0].value = "";
+        }
+
+        if(inputs[1]){
+            inputs[1].value = "";
+        }
+    }
+
+    // Logout Firebase
+    try{
+        await climexAuth.signOut();
+        console.log("CLIME-X LOGOUT OK");
+    }catch(error){
+        console.error("CLIME-X LOGOUT ERROR:", error);
+    }
+}
+
+</script>
+
+</head>
+<body>
+<div id="startup">
+    <img src="Clime-X.png" alt="Clime-X">
+</div>
+ <div class="login" id="login">
+  <div class="loginbox">
+   <div class="login-lang-wrap" id="loginLangWrap">
+    <button class="login-lang-button" id="loginLangButton" onclick="toggleLoginLangMenu()" type="button">
+     <span class="flag-circle flag-id" id="loginCurrentFlag"></span>
+     <span id="loginCurrentLang">Indonesia</span>
+     <span class="arrow">▼</span>
+    </button>
+    <div class="login-lang-menu" id="loginLangMenu">
+     <button data-lang="id" onclick="chooseLoginLang('id')" type="button"><span class="flag-circle flag-id"></span><span>Indonesia</span></button>
+     <button data-lang="en" onclick="chooseLoginLang('en')" type="button"><span class="flag-circle flag-en"></span><span>English</span></button>
+     <button data-lang="zh" onclick="chooseLoginLang('zh')" type="button"><span class="flag-circle flag-zh"></span><span>中文</span></button>
+    </div>
+    <select class="hidden" id="loginLang" onchange="setLang(this.value)">
+     <option value="id">Indonesia</option><option value="en">English</option><option value="zh">中文</option>
+    </select>
+   </div>
+   <img src="Clime-X.png" alt="Clime-X Console" style="display:block;width:150px;height:auto;margin:0 auto;">
+   <div class="card" style="margin-top:24px">
+    <div class="form">
+     <label data-t="emailOrUser">Email atau User ID</label>
+     <input autocomplete="username" id="loginUser"/>
+    </div>
+    <div class="form">
+     <label data-t="password">Password</label>
+     <input autocomplete="current-password" id="pass" type="password"/>
+    </div>
+    <div class="forgot"><button data-t="forgotPassword" onclick="forgotPassword()" type="button">Lupa Password?</button></div>
+    <button class="btn primary full" data-t="login" onclick="loginAdmin()">MASUK</button>
+    <div class="login-register">
+     <span data-t="noAccount">Belum punya akun?</span>
+     <button data-t="register" onclick="openRegister()" type="button">Daftar</button>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="register-screen hidden" id="registerScreen">
+  <div class="registerbox">
+   <div class="register-top">
+    <button class="back-btn" onclick="closeRegister()" type="button">‹</button>
+    <div class="login-lang-wrap register-lang" id="registerLangWrap">
+     <button class="login-lang-button" id="registerLangButton" onclick="toggleRegisterLangMenu()" type="button">
+      <span class="flag-circle flag-id" id="registerCurrentFlag"></span>
+      <span id="registerCurrentLang">Indonesia</span>
+      <span class="arrow">▼</span>
+     </button>
+     <div class="login-lang-menu" id="registerLangMenu">
+      <button onclick="chooseLoginLang('id')" type="button"><span class="flag-circle flag-id"></span><span>Indonesia</span></button>
+      <button onclick="chooseLoginLang('en')" type="button"><span class="flag-circle flag-en"></span><span>English</span></button>
+      <button onclick="chooseLoginLang('zh')" type="button"><span class="flag-circle flag-zh"></span><span>中文</span></button>
+     </div>
+    </div>
+   </div>
+   <img src="Clime-X.png" alt="Clime-X Console"
+     style="display:block;width:150px !important;max-width:150px !important;height:auto !important;margin:0 auto 18px;">
+   <div class="card register-card">
+    <div class="form">
+     <input autocomplete="off" id="registerEmail" data-ph="registerEmailPlaceholder" placeholder="Enter your Email here" type="email"/>
+    </div>
+    <div class="form">
+     <input autocomplete="new-password" id="registerPassword" data-ph="registerPasswordPlaceholder" placeholder="Create Password here" type="password"/>
+    </div>
+    <div class="register-or" data-t="or">Or</div>
+    <button class="google-btn google-register" onclick="registerWithGoogle()" type="button">
+     <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"><span data-t="googleRegister">Sign in with Google</span>
+    </button>
+    <label class="terms">
+     <input id="termsCheck" type="checkbox"/>
+     <span data-t="termsText">Dengan melanjutkan, Anda menyetujui Terms &amp; Conditions dan Privacy Policy</span>
+    </label>
+    <button class="btn primary full" data-t="continue" onclick="continueRegister()" type="button">Continue</button>
+   </div>
+  </div>
+ </div>
+
+<!-- COMPANY PROFILE SETUP -->
+<div class="company-setup hidden" id="companySetup">
+
+    <div class="company-setup-card">
+
+        <div
+            class="company-setup-title"
+            data-t="companySetupTitle"
+        >
+            Selamat, Anda berhasil membuat akun Clime-X Console
+        </div>
+
+        <div
+            class="company-setup-subtitle"
+            data-t="companySetupSubtitle"
+        >
+            Silakan isi profil perusahaan di bawah ini:
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyName">
+                Nama perusahaan
+            </label>
+            <input
+                id="setupCompanyName"
+                type="text"
+                autocomplete="organization"
+            >
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyAddress">
+                Alamat
+            </label>
+            <input
+                id="setupCompanyAddress"
+                type="text"
+                autocomplete="street-address"
+            >
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyCity">
+                Kota
+            </label>
+            <input
+                id="setupCompanyCity"
+                type="text"
+                autocomplete="address-level2"
+            >
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyCountry">
+                Negara
+            </label>
+            <input
+                id="setupCompanyCountry"
+                type="text"
+                autocomplete="country-name"
+            >
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyPhone">
+                No. Tlp
+            </label>
+            <input
+                id="setupCompanyPhone"
+                type="tel"
+                autocomplete="tel"
+            >
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyEmail">
+                Email
+            </label>
+            <input
+                id="setupCompanyEmail"
+                type="email"
+                autocomplete="email"
+            >
+        </div>
+
+
+        <div class="company-setup-field">
+            <label data-t="companyWebsite">
+                Website
+                <span
+                    style="
+                        font-weight:400;
+                        color:#999;
+                    "
+                    data-t="optional"
+                >
+                    (Optional)
+                </span>
+            </label>
+
+            <input
+                id="setupCompanyWebsite"
+                type="url"
+                autocomplete="url"
+            >
+        </div>
+
+
+        <button
+            class="company-setup-continue"
+            type="button"
+            onclick="continueCompanySetup()"
+            data-t="companySetupContinue"
+        >
+            LANJUT
+        </button>
+
+    </div>
+
+</div>
+
+ <div class="app hidden" id="app">
+  <header class="top">
+   <div class="logo" style="color:#000;line-height:1.05;">
+    <div style="font-size:23px;font-weight:800;">Clime-X</div>
+    <div style="font-size:12px;font-weight:600;font-style:italic;margin-left:45px;">Console</div>
+</div>
+   <div class="row">
+    <span class="bell" onclick="toggleNotificationFloat()" style="display:none;">
+    <img src="notif.png" alt="Notifikasi" style="width:27px;height:27px;object-fit:contain;">
+</span>
+    <select class="lang" id="appLang" onchange="setLang(this.value)">
+     <option value="id">
+      🇮🇩 ID
+     </option>
+     <option value="en">
+      🇬🇧 EN
+     </option>
+     <option value="zh">
+      🇨🇳 中文
+     </option>
+    </select>
+   </div>
+  </header>
+
+  <div id="notificationFloat" class="notification-float hidden"></div>
+
+  <main class="page" id="content">
+  </main>
+  <nav class="bottom">
+   <button class="nav active" data-p="home" onclick="page('home')">
+    <span>
+     <img src="home.png" alt="Beranda">
+    </span>
+    <span data-t="home">
+     Beranda
+    </span>
+   </button>
+   <button class="nav" data-p="claims" onclick="page('claims')">
+    <span>
+     <img src="claim.png" alt="Klaim">
+    </span>
+    <span data-t="claims">
+     Klaim
+    </span>
+   </button>
+   <button class="nav" data-p="employees" onclick="page('employees')">
+    <span>
+     <img src="employee.png" alt="Karyawan">
+    </span>
+    <span data-t="employees">
+     Karyawan
+    </span>
+   </button>
+   <button class="nav" data-p="announce" onclick="page('announce')">
+    <span>
+     <img src="event.png" alt="Acara">
+    </span>
+    <span data-t="acaraNav">
+    Acara
+</span>
+   </button>
+   <button class="nav" data-p="more" onclick="page('more')">
+    <span>
+     <img src="profile.png" alt="Profil">
+    </span>
+    <span data-t="profileNav">
+    Profil
+</span>
+   </button>
+  </nav>
+ </div>
+ <div class="modal hidden" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modalbox" id="modalbox">
+  </div>
+ </div>
+</body>
+
+<script>
+
+//KAMUS//
+
+const D={
+
+language:{
+    id:"Bahasa",
+    en:"Language",
+    zh:"语言"
+},
+
+companyProfile:{
+    id:"Profil perusahaan",
+    en:"Company Profile",
+    zh:"公司资料"
+},
+
+profileEdit:{
+    id:"UBAH",
+    en:"EDIT",
+    zh:"修改"
+},
+
+profileSave:{
+    id:"SIMPAN",
+    en:"SAVE",
+    zh:"保存"
+},
+
+companySetupTitle:{
+    id:"Selamat, Anda berhasil membuat akun Clime-X Console",
+    en:"Congratulations, you have successfully created your Clime-X Console account",
+    zh:"恭喜您，您已成功创建 Clime-X Console 帐户"
+},
+
+companySetupSubtitle:{
+    id:"Silakan isi profil perusahaan di bawah ini:",
+    en:"Please complete your company profile below:",
+    zh:"请填写以下公司资料："
+},
+
+companyName:{
+    id:"Nama perusahaan",
+    en:"Company Name",
+    zh:"公司名称"
+},
+
+companyAddress:{
+    id:"Alamat",
+    en:"Address",
+    zh:"地址"
+},
+
+companyCity:{
+    id:"Kota",
+    en:"City",
+    zh:"城市"
+},
+
+companyCountry:{
+    id:"Negara",
+    en:"Country",
+    zh:"国家"
+},
+
+companyPhone:{
+    id:"No. Tlp",
+    en:"Phone Number",
+    zh:"电话号码"
+},
+
+companyEmail:{
+    id:"Email",
+    en:"Email",
+    zh:"电子邮箱"
+},
+
+companyWebsite:{
+    id:"Website",
+    en:"Website",
+    zh:"网站"
+},
+
+optional:{
+    id:"(Optional)",
+    en:"(Optional)",
+    zh:"（可选）"
+},
+
+companySetupContinue:{
+    id:"LANJUT",
+    en:"CONTINUE",
+    zh:"继续"
+},
+
+acaraNav:{
+    id:"Acara",
+    en:"Events",
+    zh:"活动"
+},
+
+profileNav:{
+    id:"Profil",
+    en:"Profile",
+    zh:"我的"
+},
+
+console:{id:"Console",en:"Console",zh:"控制台"},emailOrUser:{id:"Email atau User ID",en:"Email or User ID",zh:"邮箱或用户 ID"},password:{id:"Password",en:"Password",zh:"密码"},login:{id:"MASUK",en:"LOGIN",zh:"登录"},forgotPassword:{id:"Lupa Password?",en:"Forgot Password?",zh:"忘记密码？"},noAccount:{id:"Belum punya akun?",en:"Don’t have an account?",zh:"还没有账户？"},register:{id:"Daftar",en:"Register",zh:"注册"},or:{id:"Atau",en:"Or",zh:"或"},googleRegister:{id:"Masuk dengan Google",en:"Sign in with Google",zh:"使用 Google 登录"},termsText:{id:"Dengan melanjutkan, Anda menyetujui Terms & Conditions dan Privacy Policy",en:"By continuing, you agree to the Terms & Conditions and Privacy Policy",zh:"继续即表示您同意条款与隐私政策"},continue:{id:"Lanjutkan",en:"Continue",zh:"继续"},registerEmailPlaceholder:{id:"Masukkan Email Anda",en:"Enter your Email here",zh:"请输入您的邮箱"},registerPasswordPlaceholder:{id:"Buat Password di sini",en:"Create Password here",zh:"请创建密码"},
+home:{id:"Beranda",en:"Home",zh:"首页"},claims:{id:"Klaim",en:"Claims",zh:"报销"},employees:{id:"Karyawan",en:"Employees",zh:"员工"},announcements:{id:"Pengumuman",en:"Announcements",zh:"公告"},more:{id:"Lainnya",en:"More",zh:"更多"},
+welcome:{id:"Selamat datang",en:"Welcome",zh:"欢迎"},newClaims:{id:"KLAIM MASUK",en:"INCLAIMS",zh:"新报销"},pending:{id:"Menunggu Review",en:"Pending Review",zh:"待审核"},approved:{id:"Disetujui",en:"Approved",zh:"已批准"},waitingPay:{id:"Menunggu Bayar",en:"Waiting Payment",zh:"待付款"},paidToday:{id:"Dibayar Hari Ini",en:"Paid Today",zh:"今日已付款"},todayTotal:{id:"Total Hari Ini",en:"Today's Total",zh:"今日总额"},viewAll:{id:"Lihat Semua",en:"View All",zh:"查看全部"},
+all:{id:"Semua",en:"All",zh:"全部"},review:{id:"Periksa",en:"Review",zh:"审核"},approve:{id:"SETUJUI",en:"APPROVE",zh:"批准"},reject:{id:"TOLAK",en:"REJECT",zh:"拒绝"},markPaid:{id:"TANDAI SUDAH DIBAYAR",en:"MARK AS PAID",zh:"标记为已付款"},reason:{id:"Alasan",en:"Reason",zh:"原因"},reasonPlaceholder:{id:"Masukkan alasan penolakan...",en:"Enter rejection reason...",zh:"请输入拒绝原因..."},
+claimDetail:{id:"Detail Klaim",en:"Claim Detail",zh:"报销详情"},employee:{id:"Karyawan",en:"Employee",zh:"员工"},receipts:{id:"Receipt",en:"Receipts",zh:"收据"},amount:{id:"Nominal",en:"Amount",zh:"金额"},date:{id:"Tanggal",en:"Date",zh:"日期"},category:{id:"Kategori",en:"Category",zh:"类别"},payment:{id:"Pembayaran",en:"Payment",zh:"付款"},paid:{id:"Dibayar",en:"Paid",zh:"已支付"},notifications:{id:"Notifikasi",en:"Notifications",zh:"通知"},newClaimNotice:{id:"Klaim baru masuk",en:"New claim received",zh:"收到新的报销"},
+announcementTitle:{id:"Pengumuman Perusahaan",en:"Company Announcements",zh:"公司公告"},createAnnouncement:{id:"BUAT PENGUMUMAN",en:"CREATE ANNOUNCEMENT",zh:"创建公告"},general:{id:"SEMUA KARYAWAN",en:"ALL EMPLOYEES",zh:"全体员工"},group:{id:"GROUP",en:"GROUP",zh:"群组"},personal:{id:"PERSONAL",en:"PERSONAL",zh:"个人"},title:{id:"Judul",en:"Title",zh:"标题"},message:{id:"Isi Pengumuman",en:"Announcement",zh:"公告内容"},send:{id:"KIRIM",en:"SEND",zh:"发送"},response:{id:"Respons Karyawan",en:"Employee Responses",zh:"员工回应"},understood:{id:"FAHAM",en:"UNDERSTOOD",zh:"已了解"},ask:{id:"TANYA ADMIN",en:"ASK ADMIN",zh:"咨询管理员"},neutral:{id:"NETRAL",en:"NEUTRAL",zh:"中立"},read:{id:"Dibaca",en:"Read",zh:"已读"},question:{id:"Pertanyaan",en:"Question",zh:"问题"},adminReply:{id:"Jawaban Admin",en:"Admin Reply",zh:"管理员回复"},
+events:{id:"Event",en:"Events",zh:"活动"},createEvent:{id:"BUAT EVENT",en:"CREATE EVENT",zh:"创建活动"},location:{id:"Lokasi",en:"Location",zh:"地点"},time:{id:"Waktu",en:"Time",zh:"时间"},employeesCount:{id:"Jumlah Karyawan",en:"Employees",zh:"员工数量"},
+subscription:{id:"Langganan",en:"Subscription",zh:"订阅"},active:{id:"AKTIF",en:"ACTIVE",zh:"有效"},expires:{id:"Berlaku sampai",en:"Expires",zh:"到期"},plan:{id:"Paket",en:"Plan",zh:"套餐"},monthly:{id:"Bulanan",en:"Monthly",zh:"月度"},yearly:{id:"Tahunan",en:"Yearly",zh:"年度"},subscribe:{id:"BERLANGGANAN",en:"SUBSCRIBE",zh:"订阅"},settings:{id:"Pengaturan",en:"Settings",zh:"设置"},logout:{id:"Keluar",en:"Logout",zh:"退出"},employeeManagement:{id:"Manajemen Karyawan",en:"Employee Management",zh:"员工管理"},addEmployee:{id:"TAMBAH KARYAWAN",en:"ADD EMPLOYEE",zh:"添加员工"},department:{id:"Departemen",en:"Department",zh:"部门"},status:{id:"Status",en:"Status",zh:"状态"},active:{id:"Aktif",en:"Active",zh:"有效"},responseCount:{id:"respons",en:"responses",zh:"条回应"},new:{id:"BARU",en:"NEW",zh:"新"},email:{id:"Email",en:"Email",zh:"邮箱"},audience:{id:"Penerima",en:"Audience",zh:"对象"},pushNotifications:{id:"Notifikasi Push",en:"Push Notifications",zh:"推送通知"},claimPaymentAnnouncement:{id:"Klaim, pembayaran, pengumuman",en:"Claims, payments, announcements",zh:"报销、付款、公告"},claimActivity:{id:"Aktivitas Klaim",en:"Claim Activity",zh:"报销活动"},claimActivityMonth:{id:"Aktivitas klaim bulan ini",en:"Claim activity this month",zh:"本月报销活动"},viewDetail:{id:"LIHAT DETAIL",en:"VIEW DETAILS",zh:"查看详情"},noClaimsCreated:{id:"Belum ada klaim yang dibuat bulan ini.",en:"No claims have been created this month.",zh:"本月尚未创建报销。"},claimActivityAll:{id:"Semua Aktivitas Klaim",en:"All Claim Activity",zh:"全部报销活动"},company:{id:"Perusahaan",en:"Company",zh:"公司"}
+};
+
+let L=localStorage.getItem("climex_console_lang")||"id",current="home";
+let claims=[];
+
+async function loadClimexClaims(){
+
+    try{
+
+        if(!climexAuth.currentUser){
+            console.log("CLIME-X CLAIMS: user belum login");
+            return;
+        }
+
+        const uid = climexAuth.currentUser.uid;
+
+        const snapshot = await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .orderBy("createdAt", "desc")
+            .limit(20)
+            .get();
+
+        claims = [];
+
+        snapshot.forEach(function(doc){
+
+            const data = doc.data();
+
+            let date = "-";
+
+            if(data.createdAt && data.createdAt.toDate){
+                date = data.createdAt.toDate()
+                    .toLocaleDateString("id-ID", {
+                        day:"2-digit",
+                        month:"short",
+                        year:"numeric"
+                    });
+            }
+
+            claims.push({
+                id: data.id || doc.id,
+                name: data.employeeName || data.employee || "-",
+                dept: data.department || "-",
+                count: Number(data.count) || 0,
+                total: Number(data.total) || 0,
+                currency: data.currency || "IDR",
+                status: String(data.status || "pending").toLowerCase(),
+                date: date,
+                category: data.category || "-"
+            });
+
+        });
+
+        console.log(
+            "CLIME-X CLAIMS LOAD OK:",
+            claims.length
+        );
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CLAIMS LOAD ERROR:",
+            error
+        );
+
+    }
+}
+
+let employees=[
+{id:"EMP-00125",name:"John Smith",dept:"Operations",email:"john@company.com",status:"Active"},
+{id:"EMP-00126",name:"Rocky Tan",dept:"Sales",email:"rocky@company.com",status:"Active"},
+{id:"EMP-00127",name:"Aldo Chen",dept:"Finance",email:"aldo@company.com",status:"Active"},
+{id:"EMP-00128",name:"Maria Lee",dept:"HR",email:"maria@company.com",status:"Active"}
+];
+let announcements=[
+{id:1,title:"New Business Travel Policy",text:"Starting October 1, all employees travelling for business must follow the new travel procedure.",audience:"ALL",responses:[
+{name:"John Smith",r:"understood",read:"24 Sep 2026, 14:32"},
+{name:"Rocky Tan",r:"ask",q:"Is there any additional contribution?",reply:"No additional contribution.",read:"24 Sep 2026, 14:40"},
+{name:"Aldo Chen",r:"neutral",read:"24 Sep 2026, 15:07"}]},
+{id:2,title:"Company Information",text:"Please take note of the latest information from management.",audience:"ALL",responses:[
+{name:"John Smith",r:"understood",read:"23 Sep 2026, 10:15"}]}
+];
+let events=[{title:"Annual Company Dinner 2026",date:"20 Dec 2026",time:"19:00",location:"Grand Ballroom",audience:"ALL"}];
+let notifications=[
+{title:"New claim received",text:"John Smith submitted CLX-00125",time:"2 min ago",unread:true},
+{title:"New employee question",text:"Rocky Tan asked about an announcement",time:"18 min ago",unread:true},
+{title:"Payment completed",text:"CLX-00123 has been marked as paid",time:"1 hour ago",unread:false}
+];
+
+function t(k){return D[k]?.[L]||k}
+
+function updateLoginLanguageUI(){
+    const names={id:"Indonesia",en:"English",zh:"中文"};
+    const flags={id:"flag-id",en:"flag-en",zh:"flag-zh"};
+
+    const nameEl=document.getElementById("loginCurrentLang");
+    const flagEl=document.getElementById("loginCurrentFlag");
+    const hiddenSelect=document.getElementById("loginLang");
+
+    if(nameEl) nameEl.textContent=names[L]||names.id;
+    if(flagEl) flagEl.className="flag-circle "+(flags[L]||flags.id);
+    if(hiddenSelect) hiddenSelect.value=L;
+
+    document.querySelectorAll("#loginLangMenu button").forEach(function(btn){
+        btn.classList.toggle("selected",btn.dataset.lang===L);
+    });
+}
+
+function setupLoginLangHover(){
+    document.querySelectorAll("#loginLangMenu button").forEach(function(btn){
+        btn.addEventListener("mouseenter",function(){
+            document.querySelectorAll("#loginLangMenu button").forEach(function(b){
+                b.style.background="transparent";
+            });
+            btn.style.background="#ead8c5";
+        });
+        btn.addEventListener("mouseleave",function(){
+            btn.style.background="transparent";
+        });
+    });
+}
+
+function toggleLoginLangMenu(){
+
+    const menu = document.getElementById("loginLangMenu");
+
+    if(!menu) return;
+
+    menu.classList.toggle("open");
+
+    updateLoginLanguageUI();
+}
+
+function chooseLoginLang(lang){
+
+    setLang(lang);
+
+    const loginMenu = document.getElementById("loginLangMenu");
+    const registerMenu = document.getElementById("registerLangMenu");
+
+    if(loginMenu){
+        loginMenu.classList.remove("open");
+    }
+
+    if(registerMenu){
+        registerMenu.classList.remove("open");
+    }
+}
+
+document.addEventListener("click", function(event){
+
+    const wrap = document.getElementById("loginLangWrap");
+    const menu = document.getElementById("loginLangMenu");
+
+    if(wrap && menu && !wrap.contains(event.target)){
+        menu.classList.remove("open");
+    }
+
+});
+
+function setLang(v){
+    L=v;
+    localStorage.setItem("climex_console_lang",v);
+
+    const loginLangEl=document.getElementById("loginLang");
+    const appLangEl=document.getElementById("appLang");
+
+    if(loginLangEl)loginLangEl.value=v;
+    if(appLangEl)appLangEl.value=v;
+
+    updateLoginLanguageUI();
+    updateRegisterLanguageUI();
+    apply();
+    document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.dataset.ph)});
+
+    if(!app.classList.contains("hidden"))page(current);
+}
+
+function apply(){
+    document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=t(e.dataset.t)});
+    document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.dataset.ph)});
+    updateRegisterLanguageUI();
+}
+
+async function loginAdmin(){
+
+    const inputs = login.querySelectorAll("input");
+
+    const email = inputs[0].value.trim();
+    const password = inputs[1].value;
+
+    if(!email || !password){
+        alert("Email dan Password wajib diisi.");
+        return;
+    }
+
+    try{
+
+        const result =
+            await climexAuth.signInWithEmailAndPassword(
+                email,
+                password
+            );
+
+        console.log(
+            "CLIME-X LOGIN AUTH OK:",
+            result.user.uid
+        );
+
+        const isAdministrator =
+            await verifyConsoleAdministrator(result.user);
+
+        if(!isAdministrator){
+
+            await climexAuth.signOut();
+
+            alert(
+                "Akun Employee tidak dapat masuk ke CLIME-X Console."
+            );
+
+            return;
+        }
+
+        console.log(
+    "CLIME-X LOGIN ADMIN OK:",
+    result.user.uid
+);
+
+window.__googleRegistrationInProgress = false;
+
+login.classList.add("hidden");
+registerScreen.classList.add("hidden");
+app.classList.remove("hidden");
+
+page("home");
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X LOGIN ERROR:",
+            error
+        );
+
+        alert(
+            "Login gagal. Email atau Password salah."
+        );
+
+    }
+}
+
+function showCompanySetup(){
+
+    let setup = document.getElementById("companySetup");
+
+    if(!setup){
+
+        setup = document.createElement("div");
+
+        setup.id = "companySetup";
+
+        setup.style.position = "fixed";
+        setup.style.inset = "0";
+        setup.style.background = "#c9a77d";
+        setup.style.zIndex = "9999";
+        setup.style.boxSizing = "border-box";
+        setup.style.overflow = "hidden";
+        setup.style.padding = "14px 12px";
+
+        setup.innerHTML = `
+
+            <div style="
+                width:100%;
+                height:100%;
+                box-sizing:border-box;
+                overflow-y:auto;
+                padding:4px 8px 16px;
+            ">
+
+                <div style="
+                    width:100%;
+                    max-width:520px;
+                    margin:0 auto;
+                    background:#c9a77d;
+                    border:none;
+                    border-radius:12px;
+                    box-sizing:border-box;
+                    padding:4px 8px 10px;
+                ">
+
+                    <div style="
+                        font-size:21px;
+                        line-height:1.15;
+                        font-weight:900;
+                        color:#222;
+                        margin-bottom:8px;
+                    ">
+                        Congratulations, you have successfully created your Clime-X Console account
+                    </div>
+
+                    <div style="
+                        font-size:13px;
+                        color:#4b3828;
+                        margin-bottom:14px;
+                        line-height:1.35;
+                    ">
+                        Please complete your company profile below:
+                    </div>
+
+
+                    <div class="form">
+                        <label>Company Name</label>
+                        <input
+                            id="setupCompanyName"
+                            type="text"
+                            autocomplete="organization"
+                        >
+                    </div>
+
+
+                    <div class="form">
+                        <label>Address</label>
+                        <input
+                            id="setupCompanyAddress"
+                            type="text"
+                            autocomplete="street-address"
+                        >
+                    </div>
+
+
+                    <div class="form">
+                        <label>City</label>
+                        <input
+                            id="setupCompanyCity"
+                            type="text"
+                            autocomplete="address-level2"
+                        >
+                    </div>
+
+
+                    <div class="form">
+                        <label>Country</label>
+                        <input
+                            id="setupCompanyCountry"
+                            type="text"
+                            autocomplete="country-name"
+                        >
+                    </div>
+
+
+                    <div class="form">
+                        <label>Phone Number</label>
+                        <input
+                            id="setupCompanyPhone"
+                            type="tel"
+                            autocomplete="tel"
+                        >
+                    </div>
+
+
+                    <div class="form">
+                        <label>Email</label>
+                        <input
+                            id="setupCompanyEmail"
+                            type="email"
+                            autocomplete="off"
+                        >
+                    </div>
+
+
+                    <div class="form">
+                        <label>
+                            Website
+                            <span style="font-weight:400">
+                                (Optional)
+                            </span>
+                        </label>
+
+                        <input
+                            id="setupCompanyWebsite"
+                            type="text"
+                            autocomplete="off"
+                        >
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="continueCompanySetup()"
+                        style="
+                            width:100%;
+                            margin-top:10px;
+                            padding:11px 14px;
+                            border:none;
+                            border-radius:9px;
+                            background:#7a3f1d;
+                            color:#fff;
+                            font-size:14px;
+                            font-weight:800;
+                            cursor:pointer;
+                        "
+                    >
+                        CONTINUE
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        document.body.appendChild(setup);
+    }
+
+    setup.style.display = "block";
+}
+
+
+async function continueCompanySetup(){
+
+    const uid =
+        climexAuth.currentUser?.uid;
+
+    if(!uid){
+        alert("Akun Clime-X belum login.");
+        return;
+    }
+
+
+    const companyName =
+        document.getElementById("setupCompanyName").value.trim();
+
+    if(!companyName){
+
+        alert("Nama perusahaan wajib diisi.");
+        return;
+    }
+
+
+    try{
+
+        const companyData = {
+
+            companyName:
+                companyName,
+
+            companyAddress:
+                document.getElementById("setupCompanyAddress").value.trim(),
+
+            companyCity:
+                document.getElementById("setupCompanyCity").value.trim(),
+
+            companyCountry:
+                document.getElementById("setupCompanyCountry").value.trim(),
+
+            companyPhone:
+                document.getElementById("setupCompanyPhone").value.trim(),
+
+            companyEmail:
+                document.getElementById("setupCompanyEmail").value.trim(),
+
+            companyWebsite:
+                document.getElementById("setupCompanyWebsite").value.trim(),
+
+            updatedAt:
+                firebase.firestore
+                .FieldValue
+                .serverTimestamp()
+
+        };
+
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("profile")
+            .set(
+                companyData,
+                {merge:true}
+            );
+
+
+        window.climexCompanyProfile =
+            companyData;
+
+
+        const setup =
+            document.getElementById("companySetup");
+
+        if(setup){
+            setup.remove();
+        }
+
+
+        document
+            .getElementById("login")
+            .classList.add("hidden");
+
+        document
+            .getElementById("registerScreen")
+            .classList.add("hidden");
+
+        document
+            .getElementById("app")
+            .classList.remove("hidden");
+
+
+        await loadCompanyProfile();
+
+        page("home");
+
+
+        console.log(
+            "CLIME-X COMPANY PROFILE SETUP OK"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY PROFILE SETUP ERROR:",
+            error
+        );
+
+        alert(
+            "Company Profile gagal disimpan."
+        );
+
+    }
+
+}
+
+function forgotPassword(){
+    toast("✓ "+t("forgotPassword"));
+}
+
+function openRegister(){
+    login.classList.add("hidden");
+    registerScreen.classList.remove("hidden");
+    updateRegisterLanguageUI();
+}
+
+function closeRegister(){
+    registerScreen.classList.add("hidden");
+    login.classList.remove("hidden");
+}
+
+async function registerWithGoogle(){
+window.__googleRegistrationInProgress = true;
+    const terms =
+        document.getElementById("termsCheck").checked;
+
+    if(!terms){
+        alert(
+            L==="id"
+            ? "Silakan setujui Terms & Conditions dan Privacy Policy."
+            : L==="en"
+            ? "Please agree to the Terms & Conditions and Privacy Policy."
+            : "请同意条款与隐私政策。"
+        );
+        return;
+    }
+
+    try{
+
+        const provider =
+            new firebase.auth.GoogleAuthProvider();
+
+        const result =
+            await climexAuth.signInWithPopup(provider);
+
+        const user = result.user;
+
+        console.log(
+            "CLIME-X GOOGLE AUTH OK:",
+            user.uid
+        );
+
+        const profileRef =
+            climexDB
+                .collection("users")
+                .doc(user.uid)
+                .collection("climex")
+                .doc("profile");
+
+        const profileSnap =
+            await profileRef.get();
+
+        if(!profileSnap.exists){
+
+            const companyId =
+                "CLX-" +
+                user.uid
+                    .replace(/[^A-Z0-9]/gi,"")
+                    .substring(0,6)
+                    .toUpperCase();
+
+            await profileRef.set({
+
+                email: user.email || "",
+
+                companyId: companyId,
+
+                role: "Administrator",
+
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp(),
+
+                updatedAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            });
+
+            await climexDB
+                .collection("users")
+                .doc(user.uid)
+                .set({
+
+                    email: user.email || "",
+
+                    companyId: companyId,
+
+                    role: "Administrator",
+
+                    updatedAt:
+                        firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+                }, {
+                    merge:true
+                });
+
+        }
+
+        const isAdministrator =
+            await verifyConsoleAdministrator(user);
+
+        if(!isAdministrator){
+
+            await climexAuth.signOut();
+
+            alert(
+                "Akun Google tidak memiliki akses Administrator."
+            );
+
+            return;
+        }
+
+        login.classList.add("hidden");
+        registerScreen.classList.add("hidden");
+        app.classList.remove("hidden");
+
+        page("home");
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X GOOGLE LOGIN ERROR:",
+            error
+        );
+
+        alert(
+            "Login dengan Google gagal: " +
+            (error.message || "Unknown error")
+        );
+
+    }
+}
+
+async function continueRegister(){
+
+    const email =
+        document.getElementById("registerEmail").value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    const terms =
+        document.getElementById("termsCheck").checked;
+
+
+    if(!email || !password){
+
+        alert(
+            L==="id"
+            ? "Email dan Password wajib diisi."
+            : L==="en"
+            ? "Email and Password are required."
+            : "请输入邮箱和密码。"
+        );
+
+        return;
+    }
+
+
+    if(password.length < 6){
+
+        alert(
+            L==="id"
+            ? "Password minimal 6 karakter."
+            : L==="en"
+            ? "Password must be at least 6 characters."
+            : "密码至少需要 6 个字符。"
+        );
+
+        return;
+    }
+
+
+    if(!terms){
+
+        alert(
+            L==="id"
+            ? "Silakan setujui Terms & Conditions dan Privacy Policy."
+            : L==="en"
+            ? "Please agree to the Terms & Conditions and Privacy Policy."
+            : "请同意条款与隐私政策。"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const result =
+            await climexAuth
+                .createUserWithEmailAndPassword(
+                    email,
+                    password
+                );
+
+
+        const uid =
+            result.user.uid;
+
+
+        const companyId =
+            "CLX-" +
+            uid
+                .replace(/[^A-Z0-9]/gi,"")
+                .substring(0,6)
+                .toUpperCase();
+
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("profile")
+            .set({
+
+                email: email,
+
+                companyId: companyId,
+
+                role: "Administrator",
+
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp(),
+
+                updatedAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            });
+
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .set({
+
+                email: email,
+                companyId: companyId,
+                role: "Administrator",
+
+                updatedAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            },{
+                merge:true
+            });
+
+
+        console.log(
+            "CLIME-X REGISTRATION OK:",
+            uid,
+            companyId
+        );
+
+
+        // KOSONGKAN FORM REGISTER
+        document.getElementById("registerEmail").value = "";
+        document.getElementById("registerPassword").value = "";
+        document.getElementById("termsCheck").checked = false;
+
+
+        // TAMPILKAN COMPANY PROFILE
+        showCompanySetup();
+
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X REGISTRATION ERROR:",
+            error
+        );
+
+
+        let message =
+            error.message;
+
+
+        if(error.code === "auth/email-already-in-use"){
+
+            message =
+                L==="id"
+                ? "Email tersebut sudah terdaftar."
+                : L==="en"
+                ? "This email is already registered."
+                : "该邮箱已经注册。";
+        }
+
+
+        if(error.code === "auth/invalid-email"){
+
+            message =
+                L==="id"
+                ? "Format email tidak valid."
+                : L==="en"
+                ? "Invalid email format."
+                : "邮箱格式无效。";
+        }
+
+
+        alert(message);
+
+    }
+
+}
+
+function loginWithGoogle(){
+    toast("✓ "+t("googleRegister"));
+}
+
+function updateRegisterLanguageUI(){
+    const names={id:"Indonesia",en:"English",zh:"中文"};
+    const flags={id:"flag-id",en:"flag-en",zh:"flag-zh"};
+    const name=document.getElementById("registerCurrentLang");
+    const flag=document.getElementById("registerCurrentFlag");
+    if(name)name.textContent=names[L]||names.id;
+    if(flag)flag.className="flag-circle "+(flags[L]||flags.id);
+    document.querySelectorAll("#registerLangMenu button").forEach(function(btn){
+        btn.style.background="transparent";
+    });
+}
+
+function toggleRegisterLangMenu(){
+    const menu=document.getElementById("registerLangMenu");
+    if(menu)menu.classList.toggle("open");
+    updateRegisterLanguageUI();
+}
+
+document.addEventListener("click", function(event){
+
+    const wrap = document.getElementById("registerLangWrap");
+    const menu = document.getElementById("registerLangMenu");
+
+    if(wrap && menu && !wrap.contains(event.target)){
+        menu.classList.remove("open");
+    }
+
+});
+
+function page(p){
+    closeNotificationFloat();
+    current = p;
+
+    document.querySelectorAll(".nav").forEach(x => {
+        x.classList.toggle("active", x.dataset.p === p);
+    });
+
+    const top = document.querySelector(".top");
+    if (top) {
+        top.style.display = p === "home" ? "" : "none";
+    }
+
+    if(p === "home") home();
+    if(p === "claims") claimsPage();
+    if(p === "employees") employeesPage();
+    if(p === "announce") eventsPage();
+    if(p === "notifications") notificationsPage();
+    if(p === "more") morePage();
+    if(p === "companyProfile") companyProfilePage();
+    if(p === "claimActivity") claimActivityPage();
+    if(p === "leave") leavePage();
+    if(p === "contracts") contractsPage();
+
+    apply();
+}
+
+function statusBadge(s){let m={pending:["pending",t("pending")],approved:["approved",t("approved")],paid:["paid",t("paid")],rejected:["rejected",t("reject")]};return `<span class="badge ${m[s][0]}">${m[s][1]}</span>`}
+
+function claimRows(){return claims.map(x=>`<div class="listitem">
+<div class="between">
+<div>
+<b>${x.id}</b>
+<div class="muted">${x.name} · ${x.dept}</div>
+<div class="muted">${x.count} ${t("receipts")} · ${x.date}</div>
+</div>
+<div style="text-align:right">
+<b>${x.currency} ${x.total.toFixed(2)}</b>
+<br>${statusBadge(x.status)}<br>
+<button class="btn outline" style="margin-top:7px;padding:7px 9px;font-size:10px" onclick="openClaim('${x.id}')">${t("review")}</button>
+</div>
+</div>
+</div>`).join("")}
+
+async function loadMonthlyClaimActivity(){
+
+    if(!climexAuth.currentUser){
+        return {
+            days: [],
+            counts: [],
+            total: 0
+        };
+    }
+
+    try{
+
+        const now = new Date();
+
+        const year = now.getFullYear();
+        const month = now.getMonth();
+
+        const startDate = new Date(year, month, 1, 0, 0, 0, 0);
+        const endDate = new Date(year, month + 1, 1, 0, 0, 0, 0);
+
+        const dayCount =
+            new Date(year, month + 1, 0).getDate();
+
+        const counts =
+            Array(dayCount).fill(0);
+
+        const snapshot =
+            await climexDB
+                .collection("users")
+                .doc(climexAuth.currentUser.uid)
+                .collection("climex")
+                .doc("claims")
+                .collection("items")
+                .where(
+                    "createdAt",
+                    ">=",
+                    firebase.firestore.Timestamp.fromDate(startDate)
+                )
+                .where(
+                    "createdAt",
+                    "<",
+                    firebase.firestore.Timestamp.fromDate(endDate)
+                )
+                .get();
+
+        snapshot.forEach(function(doc){
+
+            const data = doc.data();
+
+            if(
+                data.createdAt &&
+                typeof data.createdAt.toDate === "function"
+            ){
+
+                const d = data.createdAt.toDate();
+
+                if(
+                    d.getFullYear() === year &&
+                    d.getMonth() === month
+                ){
+
+                    counts[d.getDate() - 1]++;
+
+                }
+
+            }
+
+        });
+
+        return {
+            days: dayCount,
+            counts: counts,
+            total: counts.reduce(
+                (sum, value) => sum + value,
+                0
+            )
+        };
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X MONTHLY CLAIM ACTIVITY ERROR:",
+            error
+        );
+
+        return {
+            days: 0,
+            counts: [],
+            total: 0,
+            error: true
+        };
+    }
+}
+
+
+function renderClaimActivityChart(activity){
+
+    const width = 360;
+    const height = 205;
+
+    const left = 28;
+    const right = 10;
+    const top = 14;
+    const bottom = 32;
+
+    const chartWidth = width - left - right;
+    const chartHeight = 132;
+
+    const counts = activity.counts || [];
+    const days = activity.days || counts.length;
+
+    const maxValue =
+        Math.max(
+            1,
+            ...(counts.length ? counts : [0])
+        );
+
+    const points = counts.map(function(value,index){
+
+        const x =
+            left +
+            (
+                days <= 1
+                    ? 0
+                    : (index / (days - 1)) * chartWidth
+            );
+
+        const y =
+            top +
+            chartHeight -
+            (value / maxValue) * chartHeight;
+
+        return {
+            x:x,
+            y:y,
+            value:value
+        };
+
+    });
+
+    const linePath =
+        points.length
+            ? points.map(function(p,index){
+                return (
+                    index === 0 ? "M " : "L "
+                ) +
+                p.x.toFixed(2) +
+                " " +
+                p.y.toFixed(2);
+            }).join(" ")
+            : "";
+
+    const baseY = top + chartHeight;
+
+    const areaPath =
+        points.length
+            ? linePath +
+              " L " +
+              points[points.length - 1].x.toFixed(2) +
+              " " +
+              baseY +
+              " L " +
+              points[0].x.toFixed(2) +
+              " " +
+              baseY +
+              " Z"
+            : "";
+
+    const gridValues = [
+        maxValue,
+        Math.ceil(maxValue / 2),
+        0
+    ];
+
+    const grid = gridValues.map(function(value){
+
+        const y =
+            top +
+            chartHeight -
+            (value / maxValue) * chartHeight;
+
+        return `
+            <line
+                x1="${left}"
+                y1="${y}"
+                x2="${width - right}"
+                y2="${y}"
+                stroke="#e8e3dd"
+                stroke-width="1"
+            />
+            <text
+                x="${left - 7}"
+                y="${y + 4}"
+                text-anchor="end"
+                font-size="9"
+                fill="#9a9188"
+            >${value}</text>
+        `;
+
+    }).join("");
+
+    const labelIndexes = [];
+
+    if(days > 0){
+        [0,4,9,14,19,24,29,days - 1]
+            .forEach(function(index){
+
+                if(
+                    index >= 0 &&
+                    index < days &&
+                    !labelIndexes.includes(index)
+                ){
+                    labelIndexes.push(index);
+                }
+
+            });
+    }
+
+    const labels = labelIndexes.map(function(index){
+
+        const x =
+            left +
+            (
+                days <= 1
+                    ? 0
+                    : (index / (days - 1)) * chartWidth
+            );
+
+        return `
+            <text
+                x="${x}"
+                y="${height - 8}"
+                text-anchor="middle"
+                font-size="9"
+                fill="#8e857d"
+            >${index + 1}</text>
+        `;
+
+    }).join("");
+
+    const monthLabel =
+        new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+        ).toLocaleDateString(
+            L === "zh"
+                ? "zh-CN"
+                : L === "en"
+                    ? "en-US"
+                    : "id-ID",
+            {
+                month:"long",
+                year:"numeric"
+            }
+        );
+
+    const emptyText =
+        activity.total === 0
+            ? `
+                <text
+                    x="${width / 2}"
+                    y="83"
+                    text-anchor="middle"
+                    font-size="11"
+                    fill="#9a9188"
+                >
+                    ${t("noClaimsCreated")}
+                </text>
+            `
+            : "";
+
+    return `
+        <div class="card claim-activity-card">
+
+            <div class="between" style="margin-bottom:2px">
+
+                <div>
+                    <h2>${t("claimActivity")}</h2>
+                    <div class="muted">
+                        ${t("claimActivityMonth")} · ${monthLabel}
+                    </div>
+                </div>
+
+                <span
+                    style="
+                        display:inline-flex;
+                        align-items:center;
+                        justify-content:center;
+                        min-width:34px;
+                        height:28px;
+                        padding:0 9px;
+                        border-radius:99px;
+                        background:#e6f3ed;
+                        color:#19764f;
+                        font-size:11px;
+                        font-weight:800;
+                    "
+                >
+                    ${activity.total}
+                </span>
+
+            </div>
+
+            <div
+                style="
+                    width:100%;
+                    margin-top:8px;
+                    overflow:hidden;
+                    border-radius:12px;
+                    background:#fff;
+                "
+            >
+
+                <svg
+                    viewBox="0 0 ${width} ${height}"
+                    width="100%"
+                    height="205"
+                    preserveAspectRatio="none"
+                    style="display:block;"
+                >
+
+                    <defs>
+
+                        <linearGradient
+                            id="claimAreaGradient"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+                            <stop
+                                offset="0%"
+                                stop-color="#22b879"
+                                stop-opacity=".28"
+                            />
+                            <stop
+                                offset="100%"
+                                stop-color="#22b879"
+                                stop-opacity=".03"
+                            />
+                        </linearGradient>
+
+                    </defs>
+
+                    ${grid}
+
+                    ${areaPath
+                        ? `<path
+                            d="${areaPath}"
+                            fill="url(#claimAreaGradient)"
+                            stroke="none"
+                        />`
+                        : ""
+                    }
+
+                    ${linePath
+                        ? `<path
+                            d="${linePath}"
+                            fill="none"
+                            stroke="#18a66d"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />`
+                        : ""
+                    }
+
+                    ${emptyText}
+
+                    ${labels}
+
+                </svg>
+
+            </div>
+
+            
+
+        </div>
+    `;
+}
+
+
+async function home(){
+
+    content.innerHTML = `
+
+        <h1 id="homeCompanyName">
+            ${(window.climexCompanyProfile?.companyName || "-")}
+        </h1>
+
+        <div
+            id="homeCompanyAddress"
+            style="
+                font-size:14px;
+                color:#000;
+                font-weight:500;
+            "
+        >
+            ${(window.climexCompanyProfile?.companyAddress || "")}
+        </div>
+
+        <div id="claimActivityHome" style="margin-top:15px;">
+
+            <div class="card claim-activity-card">
+
+                <div class="between">
+
+                    <div>
+                        <h2>${t("claimActivity")}</h2>
+                        <div class="muted">
+                            ${t("claimActivityMonth")}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div
+                    class="muted"
+                    style="
+                        text-align:center;
+                        padding:65px 10px;
+                    "
+                >
+                    Memuat aktivitas klaim...
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    const activity =
+        await loadMonthlyClaimActivity();
+
+    if(current !== "home"){
+        return;
+    }
+
+    const target =
+        document.getElementById("claimActivityHome");
+
+    if(!target){
+        return;
+    }
+
+    target.innerHTML =
+        renderClaimActivityChart(activity);
+
+    const quickCards = document.createElement("div");
+
+    quickCards.innerHTML = `
+        <div
+            style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:10px;
+                margin-top:10px;
+            "
+        >
+
+            <div
+                onclick="page('leave')"
+                style="
+                    background:#f7f7f7;
+                    border:1px solid #e8e1dc;
+                    border-radius:12px;
+                    padding:14px 13px;
+                    min-height:92px;
+                    box-sizing:border-box;
+                    cursor:pointer;
+                "
+            >
+                <div
+                    style="
+                        font-size:15px;
+                        font-weight:700;
+                        color:#222;
+                        margin-bottom:8px;
+                    "
+                >
+                    Cuti
+                </div>
+
+                <div
+                    id="homeLeaveCount"
+                    style="
+                        font-size:22px;
+                        font-weight:800;
+                        color:#222;
+                        line-height:1;
+                    "
+                >
+                    0
+                </div>
+
+                <div
+                    class="muted"
+                    style="
+                        margin-top:5px;
+                        font-size:12px;
+                    "
+                >
+                    pengajuan
+                </div>
+            </div>
+
+            <div
+                onclick="page('employees')"
+                style="
+                    background:#f7f7f7;
+                    border:1px solid #e8e1dc;
+                    border-radius:12px;
+                    padding:14px 13px;
+                    min-height:92px;
+                    box-sizing:border-box;
+                    cursor:pointer;
+                "
+            >
+                <div
+                    style="
+                        font-size:15px;
+                        font-weight:700;
+                        color:#222;
+                        margin-bottom:8px;
+                    "
+                >
+                    Kontrak
+                </div>
+
+                <div
+                    id="homeContractExpiringCount"
+                    style="
+                        font-size:22px;
+                        font-weight:800;
+                        color:#222;
+                        line-height:1;
+                    "
+                >
+                    0
+                </div>
+
+                <div
+                    class="muted"
+                    style="
+                        margin-top:5px;
+                        font-size:12px;
+                    "
+                >
+                    hampir habis
+                </div>
+            </div>
+
+        </div>
+    `;
+
+    content.appendChild(quickCards);
+
+    loadHomeLeaveCount();
+    loadContractExpiringCount();
+
+}
+
+
+async function loadHomeLeaveCount(){
+
+    const target = document.getElementById("homeLeaveCount");
+
+    if(!target || !climexAuth.currentUser){
+        return;
+    }
+
+    try{
+
+        const snapshot = await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("leave")
+            .collection("items")
+            .get();
+
+        let count = 0;
+
+        snapshot.forEach(function(doc){
+            const data = doc.data() || {};
+            if(String(data.status || "pending").toLowerCase() === "pending"){
+                count++;
+            }
+        });
+
+        if(current === "home" && target){
+            target.textContent = count;
+        }
+
+    }catch(error){
+        console.error("CLIME-X HOME LEAVE COUNT ERROR:",error);
+    }
+}
+
+
+async function loadContractExpiringCount(){
+
+    const target =
+        document.getElementById("homeContractExpiringCount");
+
+    if(!target || !climexAuth.currentUser){
+        return;
+    }
+
+    try{
+
+        const snapshot =
+            await climexDB
+                .collection("users")
+                .doc(climexAuth.currentUser.uid)
+                .collection("climex")
+                .doc("employees")
+                .collection("items")
+                .get();
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        let count = 0;
+
+        snapshot.forEach(function(doc){
+
+            const employee = doc.data() || {};
+            const contractEnd = employee.contractEnd || "";
+
+            if(!contractEnd){
+                return;
+            }
+
+            const endDate = new Date(contractEnd + "T00:00:00");
+
+            if(isNaN(endDate.getTime())){
+                return;
+            }
+
+            endDate.setHours(0,0,0,0);
+
+            const days = Math.ceil(
+                (endDate.getTime() - today.getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+
+            if(days <= 15){
+                count++;
+            }
+
+        });
+
+        if(current === "home" && target){
+            target.textContent = count;
+        }
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CONTRACT EXPIRING COUNT ERROR:",
+            error
+        );
+
+    }
+}
+
+
+async function leavePage(){
+
+    if(leaveRealtimeUnsubscribe){
+        leaveRealtimeUnsubscribe();
+        leaveRealtimeUnsubscribe = null;
+    }
+
+    content.innerHTML = `
+
+        <div
+            style="
+                background:#c9a77d;
+                margin:-18px -18px 18px -18px;
+                padding:16px 18px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+            "
+        >
+            <button
+                type="button"
+                onclick="page('home')"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div
+                style="
+                    font-size:18px;
+                    font-weight:400;
+                    color:#000;
+                    transform:translateY(4px);
+                "
+            >
+                Cuti
+            </div>
+        </div>
+
+        <div style="background:#fff;padding:0 2px 20px;">
+
+            <div
+                style="
+                    font-size:14px;
+                    font-weight:700;
+                    color:#222;
+                    margin:0 0 10px;
+                "
+            >
+                Pengajuan cuti
+            </div>
+
+            <div id="leaveHomeList"></div>
+
+        </div>
+    `;
+
+    await loadLeaveRequestsForHome();
+}
+
+
+async function loadLeaveRequestsForHome(){
+
+    const list = document.getElementById("leaveHomeList");
+
+    if(!list){
+        return;
+    }
+
+    if(!climexAuth.currentUser){
+        list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">Belum ada pengajuan cuti.</div>`;
+        return;
+    }
+
+    list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">Memuat pengajuan cuti...</div>`;
+
+    try{
+
+        const snapshot = await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("leave")
+            .collection("items")
+            .get();
+
+        mobileLeaveRequests = [];
+
+        snapshot.forEach(function(doc){
+            mobileLeaveRequests.push({
+                ...(doc.data() || {}),
+                _docId:doc.id
+            });
+        });
+
+        mobileLeaveRequests.sort(function(a,b){
+            const aValue = a.createdAt && a.createdAt.toMillis
+                ? a.createdAt.toMillis()
+                : 0;
+            const bValue = b.createdAt && b.createdAt.toMillis
+                ? b.createdAt.toMillis()
+                : 0;
+            return bValue - aValue;
+        });
+
+        if(!mobileLeaveRequests.length){
+            list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">Belum ada pengajuan cuti.</div>`;
+            return;
+        }
+
+        list.innerHTML = mobileLeaveRequests.map(function(item){
+
+            const name = leaveRequestName(item);
+            const start = formatLeaveDate(leaveRequestStart(item));
+            const days = leaveRequestDuration(item);
+            const status = String(item.status || "pending").toLowerCase();
+            const statusText =
+                status === "approved" ? "Disetujui" :
+                status === "rejected" ? "Ditolak" :
+                "Menunggu";
+
+            const statusColor =
+                status === "approved" ? "#347048" :
+                status === "rejected" ? "#a13d3d" :
+                "#7d5d00";
+
+            const docId = String(item._docId || "").replace(/'/g,"\\'");
+
+            return `
+                <div
+                    onclick="openLeaveRequest('${docId}')"
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:10px;
+                        padding:14px 0;
+                        border-bottom:1px solid #eee;
+                        cursor:pointer;
+                    "
+                >
+                    <div style="min-width:0;flex:1;">
+                        <div style="font-size:13px;font-weight:700;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
+                        <div style="font-size:11px;color:#777;margin-top:4px;">${start}</div>
+                    </div>
+                    <div style="text-align:right;flex:none;">
+                        <div style="font-size:13px;font-weight:700;color:#222;">${days || 0} Hari</div>
+                        <div style="font-size:10px;font-weight:700;color:${statusColor};margin-top:4px;">(${statusText})</div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    }catch(error){
+
+        console.error("CLIME-X LEAVE HOME LOAD ERROR:",error);
+
+        list.innerHTML = `<div style="padding:20px 0;text-align:center;color:#b85c55;font-size:12px;">Gagal memuat pengajuan cuti.</div>`;
+    }
+}
+
+
+function contractsPage(){
+
+    content.innerHTML = `
+
+        <div
+            style="
+                background:#c9a77d;
+                margin:-18px -18px 18px -18px;
+                padding:16px 18px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+            "
+        >
+            <button
+                type="button"
+                onclick="page('home')"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div
+                style="
+                    font-size:18px;
+                    font-weight:400;
+                    color:#000;
+                    transform:translateY(4px);
+                "
+            >
+                Kontrak
+            </div>
+        </div>
+
+        <div
+            style="
+                background:#fff;
+                min-height:220px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                text-align:center;
+            "
+        >
+            <div class="muted">
+                Belum ada data kontrak.
+            </div>
+        </div>
+    `;
+}
+
+
+async function loadClaimEmployeeNameMap(){
+
+    const result = {
+        masterByKey:new Map(),
+        accountByKey:new Map()
+    };
+
+    if(!climexAuth.currentUser){
+        return result;
+    }
+
+    const uid = climexAuth.currentUser.uid;
+
+    try{
+
+        const masterSnapshot =
+            await climexDB
+                .collection("users")
+                .doc(uid)
+                .collection("climex")
+                .doc("employees")
+                .collection("items")
+                .get();
+
+        masterSnapshot.forEach(function(doc){
+
+            const data = doc.data() || {};
+
+            const employee = {
+                name:String(data.name || "").trim(),
+                id:String(data.id || "").trim(),
+                climexEmployeeId:String(data.climexEmployeeId || "").trim(),
+                climexAuthUid:String(data.climexAuthUid || "").trim()
+            };
+
+            [
+                employee.id,
+                employee.climexEmployeeId,
+                employee.climexAuthUid,
+                employee.name
+            ].forEach(function(key){
+                if(key){
+                    result.masterByKey.set(key.toLowerCase(),employee);
+                }
+            });
+
+        });
+
+    }catch(error){
+        console.error("CLIME-X MASTER EMPLOYEE NAME LOAD ERROR:",error);
+    }
+
+    try{
+
+        const accountSnapshot =
+            await climexDB
+                .collection("users")
+                .doc(uid)
+                .collection("climex")
+                .doc("employeeAccounts")
+                .collection("items")
+                .get();
+
+        accountSnapshot.forEach(function(doc){
+
+            const data = doc.data() || {};
+
+            const employee = {
+                name:String(data.name || "").trim(),
+                employeeId:String(data.employeeId || doc.id || "").trim(),
+                authUid:String(data.authUid || "").trim()
+            };
+
+            [
+                employee.employeeId,
+                employee.authUid,
+                employee.name,
+                doc.id
+            ].forEach(function(key){
+                if(key){
+                    result.accountByKey.set(key.toLowerCase(),employee);
+                }
+            });
+
+        });
+
+    }catch(error){
+        console.error("CLIME-X EMPLOYEE ACCOUNT NAME LOAD ERROR:",error);
+    }
+
+    return result;
+}
+
+
+function resolveFullClaimEmployeeName(data,nameMaps){
+
+    const directKeys = [
+        data.climexEmployeeId,
+        data.employeeId,
+        data.employeeUid,
+        data.employee,
+        data.employeeName
+    ];
+
+    for(const value of directKeys){
+
+        const key = String(value || "").trim().toLowerCase();
+
+        if(!key){
+            continue;
+        }
+
+        const master = nameMaps.masterByKey.get(key);
+
+        if(master && master.name){
+            return master.name;
+        }
+    }
+
+    /*
+     * Claim lama kadang menyimpan employeeName seperti "nunung".
+     * Cocokkan dulu ke akun Employee Clime-X, lalu gunakan
+     * relationship climexEmployeeId pada Data Karyawan sebagai
+     * sumber nama lengkap resmi.
+     */
+    for(const value of directKeys){
+
+        const key = String(value || "").trim().toLowerCase();
+
+        if(!key){
+            continue;
+        }
+
+        const account = nameMaps.accountByKey.get(key);
+
+        if(account){
+
+            const masterKeys = [
+                account.employeeId,
+                account.authUid,
+                account.name
+            ];
+
+            for(const masterValue of masterKeys){
+
+                const masterKey =
+                    String(masterValue || "").trim().toLowerCase();
+
+                if(!masterKey){
+                    continue;
+                }
+
+                const master =
+                    nameMaps.masterByKey.get(masterKey);
+
+                if(master && master.name){
+                    return master.name;
+                }
+            }
+
+            if(account.name){
+                return account.name;
+            }
+        }
+    }
+
+    return String(
+        data.employeeName ||
+        data.employee ||
+        "-"
+    ).trim() || "-";
+}
+
+
+function formatLongIndonesianDate(value){
+
+    if(!value){
+        return "-";
+    }
+
+    let date = null;
+
+    if(value && typeof value.toDate === "function"){
+        date = value.toDate();
+    }else if(value instanceof Date){
+        date = value;
+    }else{
+        const parsed = new Date(value);
+        if(!Number.isNaN(parsed.getTime())){
+            date = parsed;
+        }
+    }
+
+    if(!date){
+        return String(value);
+    }
+
+    const months = [
+        "Januari","Februari","Maret","April","Mei","Juni",
+        "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    return String(date.getDate()).padStart(2,"0") +
+        " " +
+        months[date.getMonth()] +
+        " " +
+        date.getFullYear();
+}
+
+
+async function claimActivityPage(){
+
+    content.innerHTML = `
+
+        <div
+            style="
+                background:#c9a77d;
+                margin:-18px -18px 18px -18px;
+                padding:16px 18px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+            "
+        >
+
+            <button
+                type="button"
+                onclick="page('home')"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div
+                style="
+                    font-size:18px;
+                    font-weight:400;
+                    color:#000;
+                    transform:translateY(4px);
+                "
+            >
+                ${t("claimActivityAll")}
+            </div>
+
+        </div>
+
+        <div
+            id="claimActivityList"
+            style="background:#fff;"
+        >
+
+            <div
+                class="muted"
+                style="
+                    text-align:center;
+                    padding:35px 10px;
+                "
+            >
+                Memuat aktivitas klaim...
+            </div>
+
+        </div>
+
+    `;
+
+    try{
+
+        if(!climexAuth.currentUser){
+            return;
+        }
+
+        const nameMaps =
+            await loadClaimEmployeeNameMap();
+
+        const snapshot =
+            await climexDB
+                .collection("users")
+                .doc(climexAuth.currentUser.uid)
+                .collection("climex")
+                .doc("claims")
+                .collection("items")
+                .orderBy("createdAt","desc")
+                .get();
+
+        if(current !== "claimActivity"){
+            return;
+        }
+
+        const list =
+            document.getElementById("claimActivityList");
+
+        if(!list){
+            return;
+        }
+
+        if(snapshot.empty){
+
+            list.innerHTML = `
+                <div
+                    class="muted"
+                    style="
+                        text-align:center;
+                        padding:50px 10px;
+                    "
+                >
+                    ${t("noClaimsCreated")}
+                </div>
+            `;
+
+            return;
+        }
+
+        list.innerHTML = Array.from(
+            snapshot.docs
+        ).map(function(doc){
+
+            const data = doc.data() || {};
+
+            const id =
+                data.id || doc.id;
+
+            const name =
+                resolveFullClaimEmployeeName(data,nameMaps);
+
+            const total =
+                Number(data.total) || 0;
+
+            const currency =
+                data.currency || "IDR";
+
+            const date =
+                formatLongIndonesianDate(data.createdAt);
+
+            const status =
+                String(
+                    data.status || "pending"
+                ).toLowerCase();
+
+            let amountText =
+                currency === "IDR"
+                    ? "Rp. " + total.toLocaleString("id-ID",{
+                        minimumFractionDigits:0,
+                        maximumFractionDigits:0
+                    })
+                    : currency + " " + total.toLocaleString("en-US",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    });
+
+            const displayId =
+                String(id).replace(/^CLX-?/i,"CLX - ");
+
+            return `
+                <div
+                    class="listitem"
+                    style="
+                        padding:13px 2px;
+                        cursor:pointer;
+                    "
+                    onclick="openClaim('${String(id).replace(/'/g,"\\'")}')"
+                >
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:10px;
+                        "
+                    >
+                        <b
+                            style="
+                                font-size:14px;
+                                color:#222;
+                                font-weight:700;
+                            "
+                        >
+                            ${name}
+                        </b>
+
+                        <b
+                            style="
+                                font-size:14px;
+                                color:#222;
+                                white-space:nowrap;
+                                font-weight:700;
+                            "
+                        >
+                            ${amountText}
+                        </b>
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:5px;
+                            font-size:12px;
+                            color:#333;
+                            font-weight:500;
+                        "
+                    >
+                        ${displayId}
+                    </div>
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:10px;
+                            margin-top:3px;
+                        "
+                    >
+                        <span
+                            style="
+                                font-size:12px;
+                                color:#555;
+                            "
+                        >
+                            ${date}
+                        </span>
+
+                        ${statusBadge(status)}
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CLAIM ACTIVITY LOAD ERROR:",
+            error
+        );
+
+        const list =
+            document.getElementById("claimActivityList");
+
+        if(list && current === "claimActivity"){
+
+            list.innerHTML = `
+                <div
+                    class="muted"
+                    style="
+                        text-align:center;
+                        padding:35px 10px;
+                    "
+                >
+                    Gagal memuat aktivitas klaim.
+                </div>
+            `;
+
+        }
+
+    }
+
+}
+
+
+async function claimsPage(){
+
+    content.innerHTML = `
+
+        <div
+            style="
+                background:#c9a77d;
+                margin:-18px -18px 18px -18px;
+                padding:16px 18px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+            "
+        >
+
+            <button
+                type="button"
+                onclick="page('home')"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div
+                style="
+                    font-size:18px;
+                    font-weight:400;
+                    color:#000;
+                    transform:translateY(4px);
+                "
+            >
+                Klaim Masuk
+            </div>
+
+        </div>
+
+        <div
+            id="claimsList"
+            style="background:#fff;"
+        >
+
+            <div
+                class="muted"
+                style="
+                    text-align:center;
+                    padding:35px 10px;
+                "
+            >
+                Memuat klaim...
+            </div>
+
+        </div>
+
+    `;
+
+    try{
+
+        if(!climexAuth.currentUser){
+            return;
+        }
+
+        const nameMaps =
+            await loadClaimEmployeeNameMap();
+
+        const snapshot =
+            await climexDB
+                .collection("users")
+                .doc(climexAuth.currentUser.uid)
+                .collection("climex")
+                .doc("claims")
+                .collection("items")
+                .orderBy("createdAt","desc")
+                .get();
+
+        if(current !== "claims"){
+            return;
+        }
+
+        const list =
+            document.getElementById("claimsList");
+
+        if(!list){
+            return;
+        }
+
+        if(snapshot.empty){
+
+            list.innerHTML = `
+                <div
+                    class="muted"
+                    style="
+                        text-align:center;
+                        padding:50px 10px;
+                    "
+                >
+                    Belum ada klaim yang dibuat.
+                </div>
+            `;
+
+            return;
+        }
+
+        list.innerHTML = Array.from(
+            snapshot.docs
+        ).map(function(doc){
+
+            const data = doc.data() || {};
+
+            const id =
+                data.id || doc.id;
+
+            const name =
+                resolveFullClaimEmployeeName(data,nameMaps);
+
+            const total =
+                Number(data.total) || 0;
+
+            const currency =
+                data.currency || "IDR";
+
+            const date =
+                formatLongIndonesianDate(data.createdAt);
+
+            const status =
+                String(
+                    data.status || "pending"
+                ).toLowerCase();
+
+            let amountText =
+                currency === "IDR"
+                    ? "Rp. " + total.toLocaleString("id-ID",{
+                        minimumFractionDigits:0,
+                        maximumFractionDigits:0
+                    })
+                    : currency + " " + total.toLocaleString("en-US",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    });
+
+            const displayId =
+                String(id).replace(/^CLX-?/i,"CLX - ");
+
+            const safeId =
+                String(id).replace(/'/g,"\\'");
+
+            return `
+                <div
+                    class="listitem"
+                    style="
+                        padding:13px 2px;
+                        cursor:pointer;
+                    "
+                    onclick="openClaim('${safeId}')"
+                >
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:10px;
+                        "
+                    >
+                        <b
+                            style="
+                                font-size:14px;
+                                color:#222;
+                                font-weight:700;
+                            "
+                        >
+                            ${name}
+                        </b>
+
+                        <b
+                            style="
+                                font-size:14px;
+                                color:#222;
+                                white-space:nowrap;
+                                font-weight:700;
+                            "
+                        >
+                            ${amountText}
+                        </b>
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:5px;
+                            font-size:12px;
+                            color:#333;
+                            font-weight:500;
+                        "
+                    >
+                        ${displayId}
+                    </div>
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:10px;
+                            margin-top:3px;
+                        "
+                    >
+                        <span
+                            style="
+                                font-size:12px;
+                                color:#555;
+                            "
+                        >
+                            ${date}
+                        </span>
+
+                        ${statusBadge(status)}
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X CLAIMS PAGE LOAD ERROR:",
+            error
+        );
+
+        const list =
+            document.getElementById("claimsList");
+
+        if(list && current === "claims"){
+
+            list.innerHTML = `
+                <div
+                    class="muted"
+                    style="
+                        text-align:center;
+                        padding:35px 10px;
+                    "
+                >
+                    Gagal memuat klaim.
+                </div>
+            `;
+
+        }
+
+    }
+}
+
+async function openClaim(id){
+
+    try{
+
+        if(!climexAuth.currentUser){
+            alert("Sesi login tidak ditemukan.");
+            return;
+        }
+
+        const snap = await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .doc(id)
+            .get();
+
+        if(!snap.exists){
+            alert("Data klaim tidak ditemukan.");
+            return;
+        }
+
+        const x = snap.data();
+
+        const receipts =
+            Array.isArray(x.receipts)
+                ? x.receipts
+                : [];
+
+        window.__claimPhotos =
+            receipts.map(function(r){
+                return r.photo || "";
+            });
+
+
+        function money(amount,currency){
+
+            const n = Number(amount) || 0;
+
+            if(currency === "IDR"){
+                return "Rp " +
+                    n.toLocaleString("id-ID",{
+                        maximumFractionDigits:0
+                    });
+            }
+
+            if(currency === "USD"){
+                return "$" +
+                    n.toLocaleString("en-US",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    });
+            }
+
+            if(currency === "EUR"){
+                return "€" +
+                    n.toLocaleString("de-DE",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    });
+            }
+
+            if(currency === "SGD"){
+                return "S$" +
+                    n.toLocaleString("en-SG",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    });
+            }
+
+            if(currency === "CNY"){
+                return "¥" +
+                    n.toLocaleString("zh-CN",{
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    });
+            }
+
+            if(currency === "JPY"){
+                return "¥" +
+                    Math.round(n).toLocaleString("ja-JP");
+            }
+
+            return currency + " " +
+                n.toLocaleString("id-ID");
+        }
+
+
+        function claimDate(value){
+
+            if(!value){
+                return "-";
+            }
+
+            if(
+                typeof value === "object" &&
+                value.toDate
+            ){
+                return value.toDate().toLocaleDateString(
+                    "id-ID",
+                    {
+                        day:"2-digit",
+                        month:"2-digit",
+                        year:"numeric"
+                    }
+                );
+            }
+
+            const s = String(value);
+
+            const m =
+                s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+            if(m){
+                return m[3] + "/" + m[2] + "/" + m[1];
+            }
+
+            return s;
+        }
+
+
+        modalbox.innerHTML = `
+
+<div
+    style="
+        background:#c9a77d;
+        margin:-18px -18px 18px -18px;
+        padding:16px 18px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+    "
+>
+
+    <button
+        onclick="closeModal()"
+        style="
+            border:0;
+            background:none;
+            padding:0;
+            margin:0;
+            font-size:28px;
+            line-height:1;
+            cursor:pointer;
+            color:#000;
+        "
+    >‹</button>
+
+    <div
+        style="
+            font-size:18px;
+            font-weight:400;
+            color:#000;
+            transform:translateY(4px);
+        "
+    >
+        DETAIL KLAIM · ${x.employeeName || "Nunung"}
+    </div>
+
+</div>
+
+
+<div style="padding-top:4px">
+
+${
+    receipts.length
+    ?
+    receipts.map(function(r,i){
+
+        const photo = r.photo || "";
+
+        return `
+
+<div
+    style="
+        padding:0 0 20px 0;
+        margin-bottom:20px;
+        border-bottom:1px solid #eee;
+    "
+>
+
+    ${
+        photo
+        ?
+        `
+        <img
+            src="${photo}"
+            onclick="openClaimPhoto(${i})"
+            style="
+                width:113px;
+                height:113px;
+                object-fit:cover;
+                border-radius:8px;
+                display:block;
+                cursor:pointer;
+                background:#eee8e1;
+                margin-bottom:18px;
+            "
+        >
+        `
+        :
+        `
+        <div
+            style="
+                width:113px;
+                height:113px;
+                border-radius:8px;
+                background:#eee8e1;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#888;
+                font-size:11px;
+                margin-bottom:18px;
+            "
+        >
+            Tidak ada foto
+        </div>
+        `
+    }
+
+
+    <div
+        style="
+            font-size:14px;
+            line-height:1.8;
+        "
+    >
+
+        <div>
+            <span
+                style="
+                    display:inline-block;
+                    width:125px;
+                "
+            >Kode klaim</span>
+            :
+            <b>${x.id || id}</b>
+        </div>
+
+        <div>
+            <span
+                style="
+                    display:inline-block;
+                    width:125px;
+                "
+            >Tgl pengajuan</span>
+            :
+            <b>${claimDate(r.date)}</b>
+        </div>
+
+        <div>
+            <span
+                style="
+                    display:inline-block;
+                    width:125px;
+                "
+            >Kategori klaim</span>
+            :
+            <b>${r.category || "-"}</b>
+        </div>
+
+        <div>
+            <span
+                style="
+                    display:inline-block;
+                    width:125px;
+                "
+            >Total klaim</span>
+            :
+            <b>${money(
+                r.amount,
+                r.currency || x.currency || "IDR"
+            )}</b>
+        </div>
+
+        <div>
+            <span
+                style="
+                    display:inline-block;
+                    width:125px;
+                "
+            >Keterangan</span>
+            :
+            <i>${r.description || "-"}</i>
+        </div>
+
+    </div>
+
+</div>
+
+`;
+
+    }).join("")
+    :
+    `
+    <div class="muted">
+        Tidak ada receipt.
+    </div>
+    `
+}
+
+</div>
+
+
+<div
+    style="
+        position:sticky;
+        bottom:0;
+        background:#fff;
+        padding:12px 0 0 0;
+    "
+>
+
+${
+    String(x.status || "pending").toLowerCase() === "pending"
+    ?
+    `
+    <div class="row">
+
+        <button
+            class="btn danger"
+            style="flex:1"
+            onclick="rejectClaim('${id}')"
+        >
+            ${t("reject")}
+        </button>
+
+        <button
+            class="btn primary"
+            style="flex:1"
+            onclick="approveClaim('${id}')"
+        >
+            ${t("approve")}
+        </button>
+
+    </div>
+    `
+    :
+    ""
+}
+
+${
+    String(x.status || "").toLowerCase() === "approved"
+    ?
+    `
+    <div class="row">
+
+        <button
+            class="btn primary full"
+            onclick="payClaim('${id}')"
+        >
+            ${t("markPaid")}
+        </button>
+
+    </div>
+    `
+    :
+    ""
+}
+
+</div>
+
+`;
+
+        modal.classList.remove("hidden");
+
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X OPEN CLAIM ERROR:",
+            error
+        );
+
+        alert("Detail klaim gagal dibuka.");
+
+    }
+}
+
+
+let claimPhotoOpen = false;
+
+
+function openClaimPhoto(index){
+
+    const photo =
+        window.__claimPhotos &&
+        window.__claimPhotos[index]
+            ? window.__claimPhotos[index]
+            : "";
+
+    if(!photo){
+        return;
+    }
+
+
+    let viewer =
+        document.getElementById("claimPhotoViewer");
+
+
+    if(!viewer){
+
+        viewer =
+            document.createElement("div");
+
+        viewer.id =
+            "claimPhotoViewer";
+
+        viewer.innerHTML = `
+
+<div
+    id="claimPhotoViewerBg"
+    style="
+        position:fixed;
+        inset:0;
+        background:#000;
+        z-index:9999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:auto;
+        touch-action:none;
+    "
+>
+
+    <button
+        onclick="closeClaimPhoto()"
+        style="
+            position:fixed;
+            top:14px;
+            right:14px;
+            z-index:10001;
+            width:42px;
+            height:42px;
+            border:0;
+            border-radius:50%;
+            background:#ffffffdd;
+            color:#000;
+            font-size:25px;
+        "
+    >×</button>
+
+
+    <img
+        id="claimPhotoViewerImg"
+        style="
+            max-width:100%;
+            max-height:100%;
+            object-fit:contain;
+            user-select:none;
+            -webkit-user-select:none;
+            touch-action:pinch-zoom;
+        "
+    >
+
+</div>
+
+`;
+
+        document.body.appendChild(viewer);
+    }
+
+
+    const img =
+        document.getElementById(
+            "claimPhotoViewerImg"
+        );
+
+    img.src = photo;
+
+    viewer.style.display = "block";
+
+    claimPhotoOpen = true;
+
+
+    if(
+        !history.state ||
+        !history.state.claimPhoto
+    ){
+
+        history.pushState(
+            {claimPhoto:true},
+            ""
+        );
+
+    }
+
+}
+
+
+function closeClaimPhoto(){
+
+    const viewer =
+        document.getElementById(
+            "claimPhotoViewer"
+        );
+
+    if(viewer){
+        viewer.style.display = "none";
+    }
+
+    if(claimPhotoOpen){
+
+        claimPhotoOpen = false;
+
+        if(
+            history.state &&
+            history.state.claimPhoto
+        ){
+            history.back();
+        }
+    }
+
+}
+
+
+window.addEventListener(
+    "popstate",
+    function(){
+
+        if(claimPhotoOpen){
+
+            claimPhotoOpen = false;
+
+            const viewer =
+                document.getElementById(
+                    "claimPhotoViewer"
+                );
+
+            if(viewer){
+                viewer.style.display = "none";
+            }
+
+        }
+
+    }
+);
+
+async function approveClaim(id){
+
+    try{
+
+        if(!climexAuth.currentUser){
+            alert("Sesi login tidak ditemukan.");
+            return;
+        }
+
+        await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .doc(id)
+            .update({
+                status:"approved",
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        closeModal();
+
+        toast("✓ "+t("approve"));
+
+        await claimsPage();
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X APPROVE CLAIM ERROR:",
+            error
+        );
+
+        alert("Klaim gagal disetujui.");
+
+    }
+}
+
+
+async function rejectClaim(id){
+
+    const reason = prompt(t("reasonPlaceholder"));
+
+    if(reason===null){
+        return;
+    }
+
+    try{
+
+        if(!climexAuth.currentUser){
+            alert("Sesi login tidak ditemukan.");
+            return;
+        }
+
+        await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .doc(id)
+            .update({
+                status:"rejected",
+                reason:reason,
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        closeModal();
+
+        toast("✓ "+t("reject"));
+
+        await claimsPage();
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X REJECT CLAIM ERROR:",
+            error
+        );
+
+        alert("Klaim gagal ditolak.");
+
+    }
+}
+
+
+async function payClaim(id){
+
+    try{
+
+        if(!climexAuth.currentUser){
+            alert("Sesi login tidak ditemukan.");
+            return;
+        }
+
+        await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("claims")
+            .collection("items")
+            .doc(id)
+            .update({
+                status:"paid",
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        closeModal();
+
+        toast("✓ "+t("markPaid"));
+
+        await claimsPage();
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X PAY CLAIM ERROR:",
+            error
+        );
+
+        alert("Klaim gagal ditandai sebagai dibayar.");
+
+    }
+}
+
+let employeesRealtimeUnsubscribe = null;
+let mobileContractEmployees = [];
+let mobileContractSearchText = "";
+
+
+let employeeActiveTab = "contracts";
+
+
+function employeesPage(){
+
+    employeeActiveTab = "contracts";
+    renderEmployeesPage();
+
+}
+
+
+function switchEmployeeTab(tab){
+
+    employeeActiveTab = tab;
+    renderEmployeesPage();
+
+}
+
+
+function renderEmployeesPage(){
+
+    if(employeeActiveTab === "leave"){
+        renderLeaveEmployeeTab();
+        return;
+    }
+
+    mobileContractSearchText = "";
+
+    content.innerHTML = `
+
+    <div
+        style="
+            position:sticky;
+            top:0;
+            z-index:20;
+            background:#fff;
+        "
+    >
+
+        <div style="
+            background:#c9a77d;
+            margin:-18px -16px 0 -16px;
+            padding:16px 18px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        ">
+
+            <button
+                type="button"
+                onclick="page('home')"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div style="
+                font-size:18px;
+                font-weight:400;
+                color:#000;
+                transform:translateY(4px);
+            ">
+                Karyawan
+            </div>
+
+        </div>
+
+        <div style="
+            display:flex;
+            gap:0;
+            border-bottom:1px solid #ddd3ca;
+            background:#fff;
+        ">
+
+            <button
+                type="button"
+                onclick="switchEmployeeTab('contracts')"
+                style="
+                    flex:1;
+                    height:42px;
+                    border:0;
+                    border-bottom:3px solid #7A421F;
+                    background:#fff;
+                    color:#7A421F;
+                    font-size:13px;
+                    font-weight:700;
+                    cursor:pointer;
+                "
+            >
+                Kontrak
+            </button>
+
+            <button
+                type="button"
+                onclick="switchEmployeeTab('leave')"
+                style="
+                    flex:1;
+                    height:42px;
+                    border:0;
+                    border-bottom:3px solid transparent;
+                    background:#fff;
+                    color:#222;
+                    font-size:13px;
+                    font-weight:600;
+                    cursor:pointer;
+                "
+            >
+                Cuti
+            </button>
+
+        </div>
+
+        <div style="
+            background:#fff;
+            padding:10px 0 12px 0;
+        ">
+            <input
+                id="employeeContractSearch"
+                type="search"
+                placeholder="Cari nama karyawan..."
+                autocomplete="off"
+                oninput="filterContractEmployees(this.value)"
+                style="
+                    width:100%;
+                    height:40px;
+                    box-sizing:border-box;
+                    border:1px solid #ddd3ca;
+                    border-radius:9px;
+                    padding:0 12px;
+                    font-size:13px;
+                    outline:none;
+                    background:#fff;
+                    color:#222;
+                "
+            >
+        </div>
+
+    </div>
+
+    <div style="
+        background:#fff;
+        color:#222;
+        width:100%;
+        overflow:hidden;
+    ">
+
+        <div style="width:100%;overflow:visible;">
+
+            <table style="
+                width:calc(100% + 36px);
+                max-width:none;
+                margin-left:-18px;
+                margin-right:-18px;
+                table-layout:fixed;
+                border-collapse:collapse;
+                border-spacing:0;
+                font-size:11px;
+            ">
+
+                <thead>
+                    <tr>
+                        <th style="width:12%;background:#e5e5e5;padding:9px 10px 9px 14px;text-align:center;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">No.</th>
+                        <th style="width:38%;background:#e5e5e5;padding:9px 6px;text-align:left;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">Nama karyawan</th>
+                        <th style="width:27%;background:#e5e5e5;padding:9px 6px;text-align:left;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">Akhir kontrak</th>
+                        <th style="width:23%;background:#e5e5e5;padding:9px 6px;text-align:left;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">Sisa kontrak</th>
+                    </tr>
+                </thead>
+
+                <tbody id="mobileEmployeeBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    `;
+
+    startEmployeesRealtime();
+}
+
+
+let leaveRealtimeUnsubscribe = null;
+let mobileLeaveRequests = [];
+let mobileLeaveSearchText = "";
+let selectedLeaveRequest = null;
+
+
+function renderLeaveEmployeeTab(){
+
+    if(employeesRealtimeUnsubscribe){
+        employeesRealtimeUnsubscribe();
+        employeesRealtimeUnsubscribe = null;
+    }
+
+    mobileLeaveSearchText = "";
+    selectedLeaveRequest = null;
+
+    content.innerHTML = `
+
+    <div
+        style="
+            position:sticky;
+            top:0;
+            z-index:20;
+            background:#fff;
+        "
+    >
+
+        <div style="
+            background:#c9a77d;
+            margin:-18px -16px 0 -16px;
+            padding:16px 18px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        ">
+
+            <button
+                type="button"
+                onclick="page('home')"
+                style="border:0;background:none;padding:0;margin:0;font-size:28px;line-height:1;color:#5b351d;cursor:pointer;"
+            >‹</button>
+
+            <div style="font-size:18px;font-weight:400;color:#000;transform:translateY(4px);">Karyawan</div>
+
+        </div>
+
+        <div style="display:flex;gap:0;border-bottom:1px solid #ddd3ca;background:#fff;">
+
+            <button
+                type="button"
+                onclick="switchEmployeeTab('contracts')"
+                style="flex:1;height:42px;border:0;border-bottom:3px solid transparent;background:#fff;color:#222;font-size:13px;font-weight:600;cursor:pointer;"
+            >Kontrak</button>
+
+            <button
+                type="button"
+                onclick="switchEmployeeTab('leave')"
+                style="flex:1;height:42px;border:0;border-bottom:3px solid #7A421F;background:#fff;color:#7A421F;font-size:13px;font-weight:700;cursor:pointer;"
+            >Cuti</button>
+
+        </div>
+
+        <div style="background:#fff;padding:10px 0 12px 0;">
+            <input
+                id="employeeLeaveSearch"
+                type="search"
+                placeholder="Cari nama karyawan..."
+                autocomplete="off"
+                oninput="filterLeaveRequests(this.value)"
+                style="width:100%;height:40px;box-sizing:border-box;border:1px solid #ddd3ca;border-radius:9px;padding:0 12px;font-size:13px;outline:none;background:#fff;color:#222;"
+            >
+        </div>
+
+    </div>
+
+    <div style="background:#fff;color:#222;width:100%;overflow:hidden;">
+
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;border-spacing:0;font-size:11px;">
+            <thead>
+                <tr>
+                    <th style="width:10%;background:#e5e5e5;padding:9px 4px;text-align:center;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">No.</th>
+                    <th style="width:38%;background:#e5e5e5;padding:9px 6px;text-align:left;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">Nama karyawan</th>
+                    <th style="width:29%;background:#e5e5e5;padding:9px 6px;text-align:left;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">Tanggal cuti</th>
+                    <th style="width:23%;background:#e5e5e5;padding:9px 6px;text-align:left;font-weight:700;white-space:nowrap;border-bottom:1px solid #d0d0d0;">Lama cuti</th>
+                </tr>
+            </thead>
+            <tbody id="mobileLeaveBody"></tbody>
+        </table>
+
+    </div>
+
+    `;
+
+    startLeaveRealtime();
+}
+
+
+function startLeaveRealtime(){
+
+    if(leaveRealtimeUnsubscribe){
+        leaveRealtimeUnsubscribe();
+        leaveRealtimeUnsubscribe = null;
+    }
+
+    if(!climexAuth.currentUser){
+        renderLeaveRows();
+        return;
+    }
+
+    const uid = climexAuth.currentUser.uid;
+
+    const leaveRef =
+        climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("leave")
+            .collection("items");
+
+    leaveRealtimeUnsubscribe =
+        leaveRef.onSnapshot(
+            function(snapshot){
+
+                mobileLeaveRequests = [];
+
+                snapshot.forEach(function(doc){
+                    mobileLeaveRequests.push({
+                        ...(doc.data() || {}),
+                        _docId:doc.id
+                    });
+                });
+
+                renderLeaveRows();
+            },
+            function(error){
+                console.error("CLIME-X LEAVE REALTIME ERROR:",error);
+                mobileLeaveRequests = [];
+                renderLeaveRows();
+            }
+        );
+}
+
+
+function filterLeaveRequests(value){
+    mobileLeaveSearchText =
+        String(value || "").trim().toLowerCase();
+    renderLeaveRows();
+}
+
+
+function leaveRequestName(item){
+    return String(
+        item.employeeName ||
+        item.name ||
+        item.employee ||
+        "-"
+    ).trim() || "-";
+}
+
+
+function leaveRequestEmployeeId(item){
+    return String(
+        item.employeeId ||
+        item.idKaryawan ||
+        item.employeeNo ||
+        item.id ||
+        "-"
+    ).trim() || "-";
+}
+
+
+function leaveRequestStart(item){
+    return item.startDate || item.leaveDate || item.date || item.tanggalCuti || "";
+}
+
+
+function leaveRequestEnd(item){
+    return item.endDate || item.tanggalSelesai || "";
+}
+
+
+function leaveRequestDuration(item){
+
+    const direct =
+        Number(
+            item.durationDays ??
+            item.days ??
+            item.leaveDays ??
+            item.lamaCuti
+        );
+
+    if(Number.isFinite(direct) && direct > 0){
+        return direct;
+    }
+
+    const startValue = leaveRequestStart(item);
+    const endValue = leaveRequestEnd(item);
+
+    if(startValue && endValue){
+        const start = new Date(String(startValue).slice(0,10) + "T00:00:00");
+        const end = new Date(String(endValue).slice(0,10) + "T00:00:00");
+
+        if(!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())){
+            const diff = Math.floor((end.getTime() - start.getTime()) / 86400000) + 1;
+            if(diff > 0){
+                return diff;
+            }
+        }
+    }
+
+    return 0;
+}
+
+
+function formatLeaveDate(value){
+
+    if(!value){
+        return "-";
+    }
+
+    let date = null;
+
+    if(value && typeof value.toDate === "function"){
+        date = value.toDate();
+    }else{
+        const raw = String(value).slice(0,10);
+        const parsed = new Date(raw + (raw.length === 10 ? "T00:00:00" : ""));
+        if(!Number.isNaN(parsed.getTime())){
+            date = parsed;
+        }
+    }
+
+    if(!date){
+        return "-";
+    }
+
+    return date.toLocaleDateString("id-ID",{
+        day:"2-digit",
+        month:"long",
+        year:"numeric"
+    });
+}
+
+
+function renderLeaveRows(){
+
+    const body = document.getElementById("mobileLeaveBody");
+
+    if(!body){
+        return;
+    }
+
+    let requests = mobileLeaveRequests.slice();
+
+    if(mobileLeaveSearchText){
+        requests = requests.filter(function(item){
+            const name = leaveRequestName(item).toLowerCase();
+            const id = leaveRequestEmployeeId(item).toLowerCase();
+            return name.includes(mobileLeaveSearchText) || id.includes(mobileLeaveSearchText);
+        });
+    }
+
+    requests.sort(function(a,b){
+        const da = new Date(String(leaveRequestStart(a)).slice(0,10) + "T00:00:00").getTime();
+        const db = new Date(String(leaveRequestStart(b)).slice(0,10) + "T00:00:00").getTime();
+        return (isNaN(db) ? 0 : db) - (isNaN(da) ? 0 : da);
+    });
+
+    if(!requests.length){
+        body.innerHTML = `
+            <tr>
+                <td colspan="4" style="padding:22px 8px;text-align:center;color:#888;">
+                    ${mobileLeaveSearchText ? "Nama karyawan tidak ditemukan" : "Belum ada pengajuan cuti."}
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = requests.map(function(item,index){
+        const name = leaveRequestName(item);
+        const start = formatLeaveDate(leaveRequestStart(item));
+        const days = leaveRequestDuration(item);
+        const docId = String(item._docId || "").replace(/'/g,"\\'");
+
+        return `
+            <tr
+                onclick="openLeaveRequest('${docId}')"
+                style="cursor:pointer;"
+            >
+                <td style="padding:12px 4px;text-align:center;border-bottom:1px solid #eee;white-space:nowrap;">${index + 1}</td>
+                <td style="padding:12px 6px;border-bottom:1px solid #eee;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                    ${name}
+                </td>
+                <td style="padding:12px 6px;border-bottom:1px solid #eee;white-space:nowrap;">${start}</td>
+                <td style="padding:12px 6px;border-bottom:1px solid #eee;font-weight:700;white-space:nowrap;">${days || 0} Hari</td>
+            </tr>
+        `;
+    }).join("");
+}
+
+
+async function loadLeaveEmployeeDetail(request){
+
+    const detail = {
+        department: request.department || request.dept || request.departemen || "-",
+        position: request.position || request.jobTitle || request.jabatan || "-",
+        remainingLeave: request.remainingLeave ?? request.sisaCuti ?? request.leaveBalance ?? request.remainingLeaveDays ?? request.sisaCutiDays ?? null
+    };
+
+    if(
+        detail.department !== "-" &&
+        detail.position !== "-" &&
+        detail.remainingLeave !== null &&
+        detail.remainingLeave !== undefined
+    ){
+        return detail;
+    }
+
+    if(!climexAuth.currentUser){
+        return detail;
+    }
+
+    try{
+
+        const snapshot =
+            await climexDB
+                .collection("users")
+                .doc(climexAuth.currentUser.uid)
+                .collection("climex")
+                .doc("employees")
+                .collection("items")
+                .get();
+
+        const requestUid = String(
+            request.employeeUid || request.authUid || ""
+        ).trim().toLowerCase();
+
+        const requestId = leaveRequestEmployeeId(request).toLowerCase();
+        const requestName = leaveRequestName(request).toLowerCase();
+
+        let matched = null;
+
+        snapshot.forEach(function(doc){
+
+            if(matched){
+                return;
+            }
+
+            const employee = doc.data() || {};
+
+            const employeeUid = String(
+                employee.employeeUid || employee.authUid || employee.uid || ""
+            ).trim().toLowerCase();
+
+            const employeeId = String(
+                employee.employeeId || employee.id || employee.climexId || ""
+            ).trim().toLowerCase();
+
+            const employeeName = String(
+                employee.name || employee.employeeName || ""
+            ).trim().toLowerCase();
+
+            if(
+                (requestUid && employeeUid && requestUid === employeeUid) ||
+                (requestId && employeeId && requestId === employeeId) ||
+                (requestName && employeeName && requestName === employeeName)
+            ){
+                matched = employee;
+            }
+        });
+
+        if(matched){
+            detail.department =
+                detail.department !== "-"
+                    ? detail.department
+                    : String(
+                        matched.department ||
+                        matched.dept ||
+                        matched.departemen ||
+                        "-"
+                    );
+
+            detail.position =
+                detail.position !== "-"
+                    ? detail.position
+                    : String(
+                        matched.position ||
+                        matched.jobTitle ||
+                        matched.jabatan ||
+                        "-"
+                    );
+
+            if(detail.remainingLeave === null || detail.remainingLeave === undefined){
+                detail.remainingLeave =
+                    matched.remainingLeave ??
+                    matched.sisaCuti ??
+                    matched.leaveBalance ??
+                    matched.remainingLeaveDays ??
+                    matched.sisaCutiDays ??
+                    null;
+            }
+        }
+
+    }catch(error){
+        console.error("CLIME-X LEAVE EMPLOYEE DETAIL ERROR:",error);
+    }
+
+    return detail;
+}
+
+
+async function openLeaveRequest(docId){
+
+    const request =
+        mobileLeaveRequests.find(function(item){
+            return item._docId === docId;
+        });
+
+    if(!request){
+        return;
+    }
+
+    selectedLeaveRequest = request;
+
+    const name = leaveRequestName(request);
+    const employeeId = leaveRequestEmployeeId(request);
+    const start = formatLeaveDate(leaveRequestStart(request));
+    const end = leaveRequestEnd(request) ? formatLeaveDate(leaveRequestEnd(request)) : "-";
+    const days = leaveRequestDuration(request);
+    const reason = String(request.reason || request.alasan || request.description || "-").trim() || "-";
+    const additionalNote = String(request.note || request.notes || request.catatan || request.catatanTambahan || request.additionalNote || "-").trim() || "-";
+    const status = String(request.status || "pending").toLowerCase();
+
+    content.innerHTML = `
+
+        <div style="background:#c9a77d;margin:-18px -18px 18px -18px;padding:16px 18px;display:flex;align-items:center;gap:10px;">
+            <button type="button" onclick="renderLeaveEmployeeTab()" style="border:0;background:none;padding:0;margin:0;font-size:28px;line-height:1;color:#5b351d;cursor:pointer;">‹</button>
+            <div style="font-size:18px;font-weight:400;color:#000;transform:translateY(4px);">Permintaan cuti</div>
+        </div>
+
+        <div id="leaveRequestDetail" style="background:#fff;padding:2px 0 20px 0;">
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Nama karyawan</span>
+                <b style="flex:1;font-size:13px;color:#222;">${name}</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Sisa cuti</span>
+                <b id="leaveDetailRemainingLeave" style="flex:1;font-size:13px;color:#222;">Memuat...</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">ID karyawan</span>
+                <b style="flex:1;font-size:13px;color:#222;">${employeeId}</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Departemen</span>
+                <b id="leaveDetailDepartment" style="flex:1;font-size:13px;color:#222;">Memuat...</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Jabatan</span>
+                <b id="leaveDetailPosition" style="flex:1;font-size:13px;color:#222;">Memuat...</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Mulai cuti</span>
+                <b style="flex:1;font-size:13px;color:#222;">${start}</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Sampai tanggal</span>
+                <b style="flex:1;font-size:13px;color:#222;">${end}</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Lama cuti</span>
+                <b style="flex:1;font-size:13px;color:#222;">${days || 0} Hari</b>
+            </div>
+
+            <div style="padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Alasan</span>
+                <b style="flex:1;font-size:13px;color:#222;white-space:pre-wrap;">${reason}</b>
+            </div>
+
+            <div style="padding:12px 0;display:flex;gap:8px;">
+                <span style="width:125px;font-size:13px;color:#666;">Catatan tambahan</span>
+                <b style="flex:1;font-size:13px;color:#222;white-space:pre-wrap;">${additionalNote}</b>
+            </div>
+
+            ${status === "pending" ? `
+                <div style="display:flex;gap:9px;margin-top:18px;">
+                    <button type="button" onclick="updateLeaveRequestStatus('approved')" class="btn primary" style="flex:1;">SETUJUI</button>
+                    <button type="button" onclick="updateLeaveRequestStatus('rejected')" class="btn outline" style="flex:1;">TOLAK</button>
+                </div>
+            ` : ""}
+
+        </div>
+    `;
+
+    const detail = await loadLeaveEmployeeDetail(request);
+
+    const departmentEl = document.getElementById("leaveDetailDepartment");
+    const positionEl = document.getElementById("leaveDetailPosition");
+    const remainingEl = document.getElementById("leaveDetailRemainingLeave");
+
+    if(remainingEl){
+        remainingEl.textContent =
+            detail.remainingLeave !== null &&
+            detail.remainingLeave !== undefined &&
+            String(detail.remainingLeave).trim() !== ""
+                ? String(detail.remainingLeave) + " Hari"
+                : "-";
+    }
+
+    if(departmentEl){
+        departmentEl.textContent = detail.department || "-";
+    }
+
+    if(positionEl){
+        positionEl.textContent = detail.position || "-";
+    }
+}
+
+
+async function updateLeaveRequestStatus(newStatus){
+
+    if(!climexAuth.currentUser || !selectedLeaveRequest){
+        return;
+    }
+
+    const uid = climexAuth.currentUser.uid;
+    const docId = selectedLeaveRequest._docId;
+
+    try{
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("leave")
+            .collection("items")
+            .doc(docId)
+            .set({
+                status:newStatus,
+                reviewedAt:firebase.firestore.FieldValue.serverTimestamp()
+            },{merge:true});
+
+        selectedLeaveRequest.status = newStatus;
+        openLeaveRequest(docId);
+
+    }catch(error){
+        console.error("CLIME-X LEAVE STATUS UPDATE ERROR:",error);
+        alert("Status pengajuan cuti gagal diperbarui.");
+    }
+}
+
+
+function startEmployeesRealtime(){
+
+    if(employeesRealtimeUnsubscribe){
+        employeesRealtimeUnsubscribe();
+        employeesRealtimeUnsubscribe = null;
+    }
+
+    if(!climexAuth.currentUser){
+        return;
+    }
+
+    const uid = climexAuth.currentUser.uid;
+
+    const employeeRef =
+        climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("employees")
+            .collection("items");
+
+
+    employeesRealtimeUnsubscribe =
+        employeeRef.onSnapshot(
+
+            function(snapshot){
+
+                const body =
+                    document.getElementById("mobileEmployeeBody");
+
+                if(!body){
+                    return;
+                }
+
+                const employees = [];
+
+                snapshot.forEach(function(doc){
+
+                    const data = doc.data() || {};
+
+                    employees.push({
+                        ...data,
+                        _docId:doc.id
+                    });
+
+                });
+
+
+                mobileContractEmployees = employees;
+
+                renderContractEmployeeRows();
+
+            },
+
+            function(error){
+
+                console.error(
+                    "CLIME-X EMPLOYEE REALTIME ERROR:",
+                    error
+                );
+
+            }
+
+        );
+}
+
+function filterContractEmployees(value){
+
+    mobileContractSearchText =
+        String(value || "").trim().toLowerCase();
+
+    renderContractEmployeeRows();
+}
+
+
+function renderContractEmployeeRows(){
+
+    const body =
+        document.getElementById("mobileEmployeeBody");
+
+    if(!body){
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    let employees = mobileContractEmployees.slice();
+
+    if(mobileContractSearchText){
+        employees = employees.filter(function(employee){
+            const name = String(employee.name || "").toLowerCase();
+            const id = String(
+                employee.employeeId ||
+                employee.id ||
+                employee.climexId ||
+                ""
+            ).toLowerCase();
+
+            return name.includes(mobileContractSearchText) ||
+                   id.includes(mobileContractSearchText);
+        });
+    }
+
+    employees.sort(function(a,b){
+
+        function getDays(employee){
+
+            const contractEnd = employee.contractEnd || "";
+
+            if(!contractEnd){
+                return Number.POSITIVE_INFINITY;
+            }
+
+            const endDate = new Date(contractEnd + "T00:00:00");
+
+            if(isNaN(endDate.getTime())){
+                return Number.POSITIVE_INFINITY;
+            }
+
+            endDate.setHours(0,0,0,0);
+
+            return Math.ceil(
+                (endDate.getTime() - today.getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+        }
+
+        const daysA = getDays(a);
+        const daysB = getDays(b);
+
+        if(daysA !== daysB){
+            return daysA - daysB;
+        }
+
+        return String(a.name || "").localeCompare(
+            String(b.name || ""),
+            "id-ID",
+            {sensitivity:"base"}
+        );
+
+    });
+
+    if(!employees.length){
+
+        body.innerHTML = `
+            <tr>
+                <td
+                    colspan="4"
+                    style="
+                        padding:20px 8px;
+                        text-align:center;
+                        color:#888;
+                    "
+                >
+                    ${mobileContractSearchText
+                        ? "Nama karyawan tidak ditemukan"
+                        : "Belum ada data karyawan"}
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    body.innerHTML =
+        employees.map(function(employee,index){
+
+            const contractEnd =
+                employee.contractEnd || "";
+
+            let daysText = "-";
+            let daysValue = null;
+            let danger = false;
+
+            if(contractEnd){
+
+                const endDate =
+                    new Date(contractEnd + "T00:00:00");
+
+                if(!isNaN(endDate.getTime())){
+
+                    endDate.setHours(0,0,0,0);
+
+                    const diff =
+                        endDate.getTime() - today.getTime();
+
+                    daysValue = Math.ceil(
+                        diff /
+                        (1000 * 60 * 60 * 24)
+                    );
+
+                    if(daysValue > 0){
+
+                        daysText =
+                            daysValue + " Hari lagi";
+
+                        if(daysValue <= 14){
+                            danger = true;
+                        }
+
+                    }else if(daysValue === 0){
+
+                        daysText = "Hari ini";
+                        danger = true;
+
+                    }else{
+
+                        daysText =
+                            "Lewat " +
+                            Math.abs(daysValue) +
+                            " Hari";
+
+                        danger = true;
+
+                    }
+
+                }
+
+            }
+
+            let formattedDate = contractEnd;
+
+            if(contractEnd){
+
+                const parts = contractEnd.split("-");
+
+                if(parts.length === 3){
+
+                    const date = new Date(
+                        Number(parts[0]),
+                        Number(parts[1])-1,
+                        Number(parts[2])
+                    );
+
+                    if(!isNaN(date.getTime())){
+
+                        formattedDate = date.toLocaleDateString(
+                            "id-ID",
+                            {
+                                day:"2-digit",
+                                month:"long",
+                                year:"numeric"
+                            }
+                        );
+
+                    }
+
+                }
+
+            }
+
+            const textColor =
+                danger ? "#d32f2f" : "#222";
+
+            return `
+
+            <tr style="color:${textColor};">
+
+                <td style="
+                    padding:12px 8px;
+                    text-align:center;
+                    border-bottom:1px solid #eee;
+                    font-weight:${danger ? "700" : "400"};
+                    white-space:nowrap;
+                ">
+                    ${index + 1}
+                </td>
+
+                <td style="
+                    padding:12px 8px;
+                    border-bottom:1px solid #eee;
+                    font-weight:${danger ? "700" : "600"};
+                    white-space:nowrap;
+                ">
+                    ${employee.name || "-"}
+                </td>
+
+                <td style="
+                    padding:12px 8px;
+                    border-bottom:1px solid #eee;
+                    font-weight:${danger ? "700" : "400"};
+                    white-space:nowrap;
+                ">
+                    ${formattedDate || "-"}
+                </td>
+
+                <td style="
+                    padding:12px 8px;
+                    border-bottom:1px solid #eee;
+                    font-weight:700;
+                    white-space:nowrap;
+                ">
+                    ${daysText}
+                </td>
+
+            </tr>
+
+            `;
+
+        }).join("");
+}
+
+
+function addEmployee(){modalbox.innerHTML=`<h2>${t("addEmployee")}</h2>
+<div style="margin-top:14px">
+<div class="form">
+<label>${t("employee")}</label>
+<input placeholder="John Smith">
+</div>
+<div class="form">
+<label>${t("department")}</label>
+<input placeholder="Operations">
+</div>
+<div class="form">
+<label>${t("email")}</label>
+<input placeholder="employee@company.com">
+</div>
+<button class="btn primary full" onclick="closeModal();toast('✓')">${t("addEmployee")}</button>
+</div>`;modal.classList.remove("hidden")}
+
+function eventsPage(){
+
+content.innerHTML = `
+
+<div
+    style="
+        background:#c9a77d;
+        margin:-18px -18px 18px -18px;
+        padding:16px 18px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+    "
+>
+
+    <button
+        onclick="page('home')"
+        style="
+            border:0;
+            background:none;
+            padding:0;
+            margin:0;
+            font-size:28px;
+            line-height:1;
+            color:#5b351d;
+            cursor:pointer;
+        "
+    >‹</button>
+
+    <div
+        style="
+            font-size:18px;
+            font-weight:400;
+            color:#000;
+            transform:translateY(4px);
+        "
+    >
+        Acara
+    </div>
+
+</div>
+
+<div style="
+    background:#fff;
+    min-height:calc(100vh - 130px);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top:42px;
+    box-sizing:border-box;
+">
+    <div style="
+        font-size:14px;
+        color:#777;
+        text-align:center;
+    ">
+        Belum ada event yang dibuat
+    </div>
+</div>
+
+`;
+}
+
+function announcePage(){content.innerHTML=`<div class="between">
+<div>
+<div class="muted">${t("announcements")}</div>
+<h1>${t("announcementTitle")}</h1>
+</div>
+<button class="btn primary" onclick="createAnnouncement()">${t("createAnnouncement")}</button>
+</div>${announcements.map(a=>`<div class="card">
+<div class="between">
+<div>
+<h3>${a.title}</h3>
+<div class="muted">${t("general")} · 24 Sep 2026</div>
+</div>
+<span class="badge approved">${a.responses.length} ${t("responseCount")}</span>
+</div>
+<p class="muted" style="line-height:1.5">${a.text}</p>
+<button class="btn outline full" onclick="openAnnouncement(${a.id})">${t("response")}</button>
+</div>`).join("")}<div class="card">
+<div class="between">
+<h2>${t("events")}</h2>
+<button class="btn outline" onclick="createEvent()">${t("createEvent")}</button>
+</div>${events.map(e=>`<div class="listitem">
+<b>${e.title}</b>
+<div class="muted">${e.date} · ${e.time} · ${e.location}</div>
+</div>`).join("")}</div>`}
+
+function openAnnouncement(id){let a=announcements.find(x=>x.id===id);modalbox.innerHTML=`<div class="between">
+<h2>${a.title}</h2>
+<button class="btn outline" onclick="closeModal()">×</button>
+</div>
+<p class="muted" style="line-height:1.5">${a.text}</p>
+<div class="card">
+<h3>${t("response")}</h3>${a.responses.map(r=>`<div class="response">
+<div class="between">
+<b>${r.name}</b>
+<span class="badge ${r.r==="understood"?"approved":r.r==="ask"?"pending":"neutral"}">${r.r==="understood"?t("understood"):r.r==="ask"?t("ask"):t("neutral")}</span>
+</div>
+<div class="muted" style="margin-top:6px">${t("read")}: ${r.read}</div>${r.q?`<div style="margin-top:8px">
+<b>${t("question")}:</b> ${r.q}</div>
+<div style="margin-top:6px">
+<b>${t("adminReply")}:</b> ${r.reply||"—"}</div>`:""}</div>`).join("")}</div>`;modal.classList.remove("hidden")}
+
+function createAnnouncement(){modalbox.innerHTML=`<h2>${t("createAnnouncement")}</h2>
+<div style="margin-top:14px">
+<div class="form">
+<label>${t("title")}</label>
+<input>
+</div>
+<div class="form">
+<label>${t("message")}</label>
+<textarea>
+</textarea>
+</div>
+<div class="form">
+<label>${t("audience")}</label>
+<select>
+<option>${t("general")}</option>
+<option>${t("group")}</option>
+<option>${t("personal")}</option>
+</select>
+</div>
+<button class="btn primary full" onclick="closeModal();toast('✓ '+t('send'))">${t("send")}</button>
+</div>`;modal.classList.remove("hidden")}
+
+function createEvent(){modalbox.innerHTML=`<h2>${t("createEvent")}</h2>
+<div style="margin-top:14px">
+<div class="form">
+<label>${t("title")}</label>
+<input>
+</div>
+<div class="form">
+<label>${t("date")}</label>
+<input type="date">
+</div>
+<div class="form">
+<label>${t("time")}</label>
+<input type="time">
+</div>
+<div class="form">
+<label>${t("location")}</label>
+<input>
+</div>
+<button class="btn primary full" onclick="closeModal();toast('✓')">${t("createEvent")}</button>
+</div>`;modal.classList.remove("hidden")}
+
+function renderNotificationFloat(){
+    const panel = document.getElementById("notificationFloat");
+    if(!panel) return;
+
+    panel.innerHTML = `
+        <div class="notification-list">
+            ${notifications.map(n => `
+                <div class="notification-item">
+                    <div class="between">
+                        <div class="notification-title">${n.title}</div>
+                        ${n.unread ? `<span class="notification-new">${t("new")}</span>` : ""}
+                    </div>
+                    <div class="notification-text">${n.text}</div>
+                    <div class="notification-time">${n.time}</div>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+function toggleNotificationFloat(){
+    const panel = document.getElementById("notificationFloat");
+    if(!panel) return;
+
+    if(panel.classList.contains("hidden")){
+        renderNotificationFloat();
+        panel.classList.remove("hidden");
+    }else{
+        panel.classList.add("hidden");
+    }
+}
+
+function closeNotificationFloat(){
+    const panel = document.getElementById("notificationFloat");
+    if(panel) panel.classList.add("hidden");
+}
+
+function notificationsPage(){
+    renderNotificationFloat();
+    const panel = document.getElementById("notificationFloat");
+    if(panel) panel.classList.remove("hidden");
+}
+
+function morePage(){
+
+content.innerHTML = `
+
+<div style="
+    background:#c9a77d;
+    margin:-18px -16px 18px -16px;
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+">
+
+    <button
+        onclick="page('home')"
+        style="
+            border:0;
+            background:none;
+            padding:0;
+            margin:0;
+            font-size:28px;
+            line-height:1;
+            color:#5b351d;
+            cursor:pointer;
+        "
+    >‹</button>
+
+    <div style="
+        font-size:18px;
+        font-weight:400;
+        color:#000;
+        transform:translateY(4px);
+    ">
+        Profil
+    </div>
+
+</div>
+
+<div style="
+    background:#fff;
+">
+
+    <button
+        class="btn outline full"
+        onclick="companyProfilePage()"
+    >
+        🏢 ${t("companyProfile")}
+    </button>
+
+    <button
+        class="btn outline full"
+        style="margin-top:9px"
+        onclick="languagePage()"
+    >
+        🌐 ${t("language")}
+    </button>
+
+    <button
+        class="btn outline full"
+        style="margin-top:9px"
+        onclick="subscriptionPage()"
+    >
+        💳 ${t("subscription")}
+    </button>
+
+    <button
+        class="btn outline full"
+        style="margin-top:9px"
+        onclick="settingsPage()"
+    >
+        ⚙️ ${t("settings")}
+    </button>
+
+    <button
+        class="btn outline full"
+        style="margin-top:9px"
+        onclick="logoutClimeX()"
+    >
+        ${t("logout")}
+    </button>
+
+</div>
+
+`;
+}
+
+function languagePage(){
+
+content.innerHTML = `
+
+<div style="
+    background:#c9a77d;
+    margin:-18px -16px 18px -16px;
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+">
+
+    <button
+        onclick="page('more')"
+        style="
+            border:0;
+            background:none;
+            padding:0;
+            margin:0;
+            font-size:28px;
+            line-height:1;
+            color:#5b351d;
+            cursor:pointer;
+        "
+    >‹</button>
+
+    <div style="
+        font-size:18px;
+        font-weight:400;
+        color:#000;
+        transform:translateY(4px);
+    ">
+        Bahasa
+    </div>
+
+</div>
+
+
+<div style="
+    background:#fff;
+">
+
+    <button
+        type="button"
+        onclick="selectConsoleLanguage('id')"
+        style="
+            width:100%;
+            border:0;
+            border-bottom:1px solid #eee;
+            background:#fff;
+            padding:16px 4px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            text-align:left;
+            color:#222;
+            font-size:15px;
+        "
+    >
+        <span>Indonesia</span>
+        <span id="langRadioId"
+              style="font-size:20px;color:#7A421F;">
+            ${L === "id" ? "●" : "○"}
+        </span>
+    </button>
+
+
+    <button
+        type="button"
+        onclick="selectConsoleLanguage('en')"
+        style="
+            width:100%;
+            border:0;
+            border-bottom:1px solid #eee;
+            background:#fff;
+            padding:16px 4px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            text-align:left;
+            color:#222;
+            font-size:15px;
+        "
+    >
+        <span>English</span>
+        <span id="langRadioEn"
+              style="font-size:20px;color:#7A421F;">
+            ${L === "en" ? "●" : "○"}
+        </span>
+    </button>
+
+
+    <button
+        type="button"
+        onclick="selectConsoleLanguage('zh')"
+        style="
+            width:100%;
+            border:0;
+            background:#fff;
+            padding:16px 4px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            text-align:left;
+            color:#222;
+            font-size:15px;
+        "
+    >
+        <span>中文</span>
+        <span id="langRadioZh"
+              style="font-size:20px;color:#7A421F;">
+            ${L === "zh" ? "●" : "○"}
+        </span>
+    </button>
+
+</div>
+
+`;
+}
+
+
+function selectConsoleLanguage(lang){
+
+    setLang(lang);
+
+    if(lang === "id"){
+        toast("Bahasa Indonesia dipilih");
+    }
+
+    if(lang === "en"){
+        toast("English selected");
+    }
+
+    if(lang === "zh"){
+        toast("已选择中文");
+    }
+
+    languagePage();
+}
+
+async function companyProfilePage(){
+
+    let profile =
+        window.climexCompanyProfile || {};
+
+    try{
+
+        if(climexAuth.currentUser){
+
+            const snap =
+                await climexDB
+                    .collection("users")
+                    .doc(climexAuth.currentUser.uid)
+                    .collection("climex")
+                    .doc("profile")
+                    .get();
+
+            if(snap.exists){
+
+                profile =
+                    snap.data();
+
+                window.climexCompanyProfile =
+                    profile;
+            }
+        }
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY PROFILE LOAD ERROR:",
+            error
+        );
+    }
+
+
+    content.innerHTML=`
+
+        <div
+            style="
+                background:#c9a77d;
+                margin:-18px -18px 18px -18px;
+                padding:16px 18px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+            "
+        >
+
+            <button
+                onclick="page('home')"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div
+                style="
+                    font-size:18px;
+                    font-weight:400;
+                    color:#000;
+                    transform:translateY(4px);
+                "
+            >
+                ${t("companyProfile")}
+            </div>
+
+        </div>
+
+
+        <div id="companyProfileView">
+
+            <div style="
+                padding:4px 2px 0;
+            ">
+
+                <div class="company-profile-row">
+                    <span>${t("companyName")}</span>
+                    <b>${profile.companyName || "-"}</b>
+                </div>
+
+                <div class="company-profile-line"></div>
+
+                <div class="company-profile-row">
+                    <span>${t("companyAddress")}</span>
+                    <b>${profile.companyAddress || "-"}</b>
+                </div>
+
+                <div class="company-profile-line"></div>
+
+                <div class="company-profile-row">
+                    <span>${t("companyCity")}</span>
+                    <b>${profile.companyCity || "-"}</b>
+                </div>
+
+                <div class="company-profile-line"></div>
+
+                <div class="company-profile-row">
+                    <span>${t("companyCountry")}</span>
+                    <b>${profile.companyCountry || "-"}</b>
+                </div>
+
+                <div class="company-profile-line"></div>
+
+                <div class="company-profile-row">
+                    <span>${t("companyPhone")}</span>
+                    <b>${profile.companyPhone || "-"}</b>
+                </div>
+
+                <div class="company-profile-line"></div>
+
+                <div class="company-profile-row">
+                    <span>${t("companyEmail")}</span>
+                    <b>${profile.companyEmail || "-"}</b>
+                </div>
+
+                <div class="company-profile-line"></div>
+
+                <div class="company-profile-row">
+                    <span>${t("companyWebsite")}</span>
+                    <b>${profile.companyWebsite || "-"}</b>
+                </div>
+
+            </div>
+
+
+            <div style="
+                display:flex;
+                gap:9px;
+                margin-top:22px;
+            ">
+
+                <button
+                    class="btn outline"
+                    style="flex:1"
+                    onclick="editCompanyProfile()"
+                >
+                    ${t("profileEdit")}
+                </button>
+
+                <button
+                    class="btn primary"
+                    style="flex:1"
+                    onclick="saveEditedCompanyProfile()"
+                >
+                    ${t("profileSave")}
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+function editCompanyProfile(){
+
+    const profile =
+        window.climexCompanyProfile || {};
+
+    content.innerHTML=`
+
+        <div
+            style="
+                background:#c9a77d;
+                margin:-18px -18px 18px -18px;
+                padding:16px 18px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+            "
+        >
+
+            <button
+                onclick="companyProfilePage()"
+                style="
+                    border:0;
+                    background:none;
+                    padding:0;
+                    margin:0;
+                    font-size:28px;
+                    line-height:1;
+                    color:#5b351d;
+                    cursor:pointer;
+                "
+            >‹</button>
+
+            <div style="
+                font-size:18px;
+                font-weight:400;
+                color:#000;
+                transform:translateY(4px);
+            ">
+                ${t("companyProfile")}
+            </div>
+
+        </div>
+
+
+        <div class="company-profile-edit">
+
+            <label>${t("companyName")}</label>
+            <input id="editCompanyName" value="${profile.companyName || ""}">
+
+            <label>${t("companyAddress")}</label>
+            <input id="editCompanyAddress" value="${profile.companyAddress || ""}">
+
+            <label>${t("companyCity")}</label>
+            <input id="editCompanyCity" value="${profile.companyCity || ""}">
+
+            <label>${t("companyCountry")}</label>
+            <input id="editCompanyCountry" value="${profile.companyCountry || ""}">
+
+            <label>${t("companyPhone")}</label>
+            <input id="editCompanyPhone" value="${profile.companyPhone || ""}">
+
+            <label>${t("companyEmail")}</label>
+            <input id="editCompanyEmail" value="${profile.companyEmail || ""}">
+
+            <label>${t("companyWebsite")}</label>
+            <input id="editCompanyWebsite" value="${profile.companyWebsite || ""}">
+
+        </div>
+
+
+        <div style="
+            display:flex;
+            gap:9px;
+            margin-top:22px;
+        ">
+
+            <button
+                class="btn outline"
+                style="flex:1"
+                onclick="companyProfilePage()"
+            >
+                ${t("profileEdit")}
+            </button>
+
+            <button
+                class="btn primary"
+                style="flex:1"
+                onclick="saveEditedCompanyProfile()"
+            >
+                ${t("profileSave")}
+            </button>
+
+        </div>
+
+    `;
+}
+
+async function saveEditedCompanyProfile(){
+
+    if(!climexAuth.currentUser){
+        return;
+    }
+
+
+    const companyData = {
+
+        companyName:
+            document.getElementById("editCompanyName").value.trim(),
+
+        companyAddress:
+            document.getElementById("editCompanyAddress").value.trim(),
+
+        companyCity:
+            document.getElementById("editCompanyCity").value.trim(),
+
+        companyCountry:
+            document.getElementById("editCompanyCountry").value.trim(),
+
+        companyPhone:
+            document.getElementById("editCompanyPhone").value.trim(),
+
+        companyEmail:
+            document.getElementById("editCompanyEmail").value.trim(),
+
+        companyWebsite:
+            document.getElementById("editCompanyWebsite").value.trim(),
+
+        updatedAt:
+            firebase.firestore
+            .FieldValue
+            .serverTimestamp()
+
+    };
+
+
+    if(!companyData.companyName){
+
+        alert(
+            L === "en"
+                ? "Company Name is required."
+                : L === "zh"
+                    ? "公司名称为必填项。"
+                    : "Nama perusahaan wajib diisi."
+        );
+
+        return;
+    }
+
+
+    try{
+
+        await climexDB
+            .collection("users")
+            .doc(climexAuth.currentUser.uid)
+            .collection("climex")
+            .doc("profile")
+            .set(
+                companyData,
+                {merge:true}
+            );
+
+
+        window.climexCompanyProfile =
+            companyData;
+
+
+        await companyProfilePage();
+
+
+        console.log(
+            "CLIME-X COMPANY PROFILE UPDATED:",
+            companyData
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY PROFILE UPDATE ERROR:",
+            error
+        );
+
+        alert(
+            L === "en"
+                ? "Company Profile failed to save."
+                : L === "zh"
+                    ? "公司资料保存失败。"
+                    : "Company Profile gagal disimpan."
+        );
+
+    }
+}
+
+function subscriptionPage(){
+
+content.innerHTML = `
+
+<div style="
+    background:#c9a77d;
+    margin:-18px -16px 18px -16px;
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+">
+
+    <button
+        onclick="page('more')"
+        style="
+            border:0;
+            background:none;
+            padding:0;
+            margin:0;
+            font-size:28px;
+            line-height:1;
+            color:#5b351d;
+            cursor:pointer;
+        "
+    >‹</button>
+
+    <div style="
+        font-size:18px;
+        font-weight:400;
+        color:#000;
+        transform:translateY(4px);
+    ">
+        ${t("subscription")}
+    </div>
+
+</div>
+
+<div style="
+    background:#fff;
+    color:#222;
+">
+
+    <div style="
+        font-size:14px;
+        line-height:1.5;
+        margin-bottom:18px;
+    ">
+        Untuk terus menggunakan Clime-X anda harus berlanggan
+    </div>
+
+
+    <button
+        type="button"
+        style="
+            width:100%;
+            border:0;
+            border-radius:10px;
+            padding:15px;
+            margin-bottom:12px;
+            background:#c9a77d;
+            color:#fff;
+            text-align:left;
+            box-sizing:border-box;
+        "
+    >
+
+        <div style="
+            font-size:16px;
+            font-weight:700;
+        ">
+            Clime-X PRO 30 Hari
+        </div>
+
+        <div id="subscriptionPrice30"
+             style="
+                margin-top:8px;
+                font-size:15px;
+                font-weight:700;
+                color:#fff;
+             ">
+        </div>
+
+    </button>
+
+
+    <button
+        type="button"
+        style="
+            width:100%;
+            border:0;
+            border-radius:10px;
+            padding:15px;
+            margin-bottom:12px;
+            background:#c9a77d;
+            color:#fff;
+            text-align:left;
+            box-sizing:border-box;
+        "
+    >
+
+        <div style="
+            font-size:16px;
+            font-weight:700;
+        ">
+            Clime-X PRO 365 Hari
+        </div>
+
+        <div id="subscriptionPrice365"
+             style="
+                margin-top:8px;
+                font-size:15px;
+                font-weight:700;
+                color:#fff;
+             ">
+        </div>
+
+    </button>
+
+</div>
+
+`;
+}
+
+function settingsPage(){
+
+content.innerHTML = `
+
+<div style="
+    background:#c9a77d;
+    margin:-18px -16px 18px -16px;
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+">
+
+    <button
+        onclick="page('more')"
+        style="
+            border:0;
+            background:none;
+            padding:0;
+            margin:0;
+            font-size:28px;
+            line-height:1;
+            color:#5b351d;
+            cursor:pointer;
+        "
+    >‹</button>
+
+    <div style="
+        font-size:18px;
+        font-weight:400;
+        color:#000;
+        transform:translateY(4px);
+    ">
+        ${t("settings")}
+    </div>
+
+</div>
+
+
+<div style="
+    background:#fff;
+    color:#222;
+">
+
+
+    <!-- NOTIFIKASI PUSH -->
+
+    <div style="
+        padding:14px 0;
+        border-bottom:1px solid #eee;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+    ">
+
+        <div>
+
+            <div style="
+                font-size:15px;
+                font-weight:700;
+                color:#222;
+            ">
+                ${t("pushNotifications")}
+            </div>
+
+            <div style="
+                font-size:12px;
+                color:#777;
+                margin-top:3px;
+            ">
+                ${t("claimPaymentAnnouncement")}
+            </div>
+
+        </div>
+
+        <button
+            class="switch on"
+            onclick="this.classList.toggle('on')"
+            style="flex:none;"
+        >
+        </button>
+
+    </div>
+
+
+    <!-- COMPANY ID -->
+
+    <div style="
+        padding:14px 0;
+        border-bottom:1px solid #eee;
+    ">
+
+        <div style="
+            font-size:12px;
+            color:#888;
+            margin-bottom:4px;
+        ">
+            Company ID
+        </div>
+
+        <div style="
+            font-size:15px;
+            font-weight:700;
+            color:#222;
+        ">
+            ABC001
+        </div>
+
+    </div>
+
+
+    <!-- PERUSAHAAN -->
+
+    <div style="
+        padding:14px 0;
+        border-bottom:1px solid #eee;
+    ">
+
+        <div style="
+            font-size:12px;
+            color:#888;
+            margin-bottom:4px;
+        ">
+            ${t("company")}
+        </div>
+
+        <div style="
+            font-size:15px;
+            font-weight:700;
+            color:#222;
+        ">
+            Main Company
+        </div>
+
+    </div>
+
+
+</div>
+
+`;
+}
+
+function closeModal(){modal.classList.add("hidden")}
+
+function showCompanySetup(){
+
+    const setup =
+        document.getElementById("companySetup");
+
+    const app =
+        document.getElementById("app");
+
+    const login =
+        document.getElementById("login");
+
+    const registerScreen =
+        document.getElementById("registerScreen");
+
+    if(login){
+        login.classList.add("hidden");
+    }
+
+    if(registerScreen){
+        registerScreen.classList.add("hidden");
+    }
+
+    if(app){
+        app.classList.add("hidden");
+    }
+
+    if(setup){
+        setup.classList.remove("hidden");
+    }
+
+    apply();
+
+}
+
+
+async function continueCompanySetup(){
+
+    if(!climexAuth.currentUser){
+
+        alert("User CLIME-X belum login.");
+
+        return;
+    }
+
+    const companyName =
+        document
+            .getElementById("setupCompanyName")
+            .value
+            .trim();
+
+    if(!companyName){
+
+        alert(
+            L === "en"
+                ? "Company Name is required."
+                : L === "zh"
+                    ? "公司名称为必填项。"
+                    : "Nama perusahaan wajib diisi."
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const uid =
+            climexAuth.currentUser.uid;
+
+
+        const companyData = {
+
+            companyName:
+                companyName,
+
+            companyAddress:
+                document
+                    .getElementById("setupCompanyAddress")
+                    .value
+                    .trim(),
+
+            companyCity:
+                document
+                    .getElementById("setupCompanyCity")
+                    .value
+                    .trim(),
+
+            companyCountry:
+                document
+                    .getElementById("setupCompanyCountry")
+                    .value
+                    .trim(),
+
+            companyPhone:
+                document
+                    .getElementById("setupCompanyPhone")
+                    .value
+                    .trim(),
+
+            companyEmail:
+                document
+                    .getElementById("setupCompanyEmail")
+                    .value
+                    .trim(),
+
+            companyWebsite:
+                document
+                    .getElementById("setupCompanyWebsite")
+                    .value
+                    .trim(),
+
+            updatedAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+
+        };
+
+
+        await climexDB
+            .collection("users")
+            .doc(uid)
+            .collection("climex")
+            .doc("profile")
+            .set(
+                companyData,
+                {merge:true}
+            );
+
+
+        window.climexCompanyProfile =
+            Object.assign(
+                {},
+                window.climexCompanyProfile || {},
+                companyData
+            );
+
+
+        const setup =
+            document.getElementById("companySetup");
+
+        const app =
+            document.getElementById("app");
+
+
+        if(setup){
+            setup.classList.add("hidden");
+        }
+
+        if(app){
+            app.classList.remove("hidden");
+        }
+
+
+        page("home");
+
+
+        console.log(
+            "CLIME-X COMPANY SETUP SAVED:",
+            companyData
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CLIME-X COMPANY SETUP ERROR:",
+            error
+        );
+
+        alert(
+            L === "en"
+                ? "Company Profile failed to save."
+                : L === "zh"
+                    ? "公司资料保存失败。"
+                    : "Company Profile gagal disimpan."
+        );
+
+    }
+
+}
+
+function toast(s){let x=document.createElement("div");x.className="toast";x.textContent=s;document.body.appendChild(x);setTimeout(()=>x.remove(),1700)}
+setLang(L);apply();updateLoginLanguageUI();setupLoginLangHover();
+</script>
+</html>
