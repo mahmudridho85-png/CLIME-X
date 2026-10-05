@@ -2371,6 +2371,10 @@ if(typeof loadCompanyProfile === "function"){
 if(typeof loadCompanyLogo === "function"){
     loadCompanyLogo();
 }
+
+        // Pastikan notifikasi tetap aktif saat login dipulihkan otomatis.
+        startWebConsoleNotificationListener();
+
         console.log(
             "CLIME-X AUTO LOGIN OK:",
             window.climexCurrentUser
@@ -4285,6 +4289,9 @@ if(typeof loadCompanyProfile === "function"){
             loadClimexDashboard();
         }
         startWebConsoleNotificationListener();
+        if(typeof listenAnnouncementFeed === "function"){
+            listenAnnouncementFeed();
+        }
 
 if(document.readyState === "loading"){
 
