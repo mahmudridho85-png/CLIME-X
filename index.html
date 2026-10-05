@@ -5495,8 +5495,8 @@ async function saveClimexClaim(claim){
 
                 <div class="page-heading">
                     <div>
-                        <h1>Dashboard Perusahaan</h1>
-                        <p>Ringkasan aktivitas klaim dan pengeluaran perusahaan.</p>
+                        <h1 data-climex-lang-key="Dashboard Perusahaan">Dashboard Perusahaan</h1>
+                        <p data-climex-lang-key="Ringkasan aktivitas klaim dan pengeluaran perusahaan.">Ringkasan aktivitas klaim dan pengeluaran perusahaan.</p>
                     </div>
 
                     <div class="date-box">
@@ -5508,25 +5508,25 @@ async function saveClimexClaim(claim){
                 <div class="grid-4">
 
                     <div class="card">
-                        <div class="metric-label">Total Klaim</div>
+                        <div class="metric-label" data-climex-lang-key="Total Klaim">Total Klaim</div>
                         <div id="dashboardTotalClaims" class="metric-value">0</div>
                         <div id="dashboardTotalClaimsNote" class="metric-note up">Memuat...</div>
                     </div>
 
                     <div class="card">
-                        <div class="metric-label">Menunggu Review</div>
+                        <div class="metric-label" data-climex-lang-key="Menunggu Review">Menunggu Review</div>
                         <div id="dashboardPendingClaims" class="metric-value">0</div>
-                        <div class="metric-note">Perlu tindakan admin</div>
+                        <div class="metric-note" data-climex-lang-key="Perlu tindakan admin">Perlu tindakan admin</div>
                     </div>
 
                     <div class="card">
-                        <div class="metric-label">Disetujui</div>
+                        <div class="metric-label" data-climex-lang-key="Disetujui">Disetujui</div>
                         <div id="dashboardApprovedClaims" class="metric-value">0</div>
                         <div id="dashboardApprovedClaimsNote" class="metric-note up">Memuat...</div>
                     </div>
 
                     <div class="card">
-                        <div class="metric-label">Belum Dibayar</div>
+                        <div class="metric-label" data-climex-lang-key="Belum Dibayar">Belum Dibayar</div>
                         <div id="dashboardUnpaidClaims" class="metric-value">0</div>
                         <div id="dashboardUnpaidClaimsNote" class="metric-note down">Memuat...</div>
                     </div>
@@ -5537,7 +5537,7 @@ async function saveClimexClaim(claim){
                 <div class="grid-2">
 
                     <div class="card">
-                        <div class="card-title">Pengeluaran Klaim</div>
+                        <div class="card-title" data-climex-lang-key="Pengeluaran Klaim">Pengeluaran Klaim</div>
 
                         <div class="chart">
                             <div class="bar-wrap">
@@ -5574,21 +5574,21 @@ async function saveClimexClaim(claim){
 
 
                     <div class="card">
-                        <div class="card-title">Pengumuman Terbaru</div>
+                        <div class="card-title" data-climex-lang-key="Pengumuman Terbaru">Pengumuman Terbaru</div>
 
                         <div class="announcement">
-                            <strong>Kebijakan perjalanan dinas</strong>
-                            <p>Peraturan perjalanan dinas terbaru telah diterbitkan.</p>
+                            <strong data-climex-lang-key="Kebijakan perjalanan dinas">Kebijakan perjalanan dinas</strong>
+                            <p data-climex-lang-key="Peraturan perjalanan dinas terbaru telah diterbitkan.">Peraturan perjalanan dinas terbaru telah diterbitkan.</p>
                         </div>
 
                         <div class="announcement">
-                            <strong>Batas pengajuan klaim</strong>
-                            <p>Klaim bulan September dapat diajukan sampai tanggal 30.</p>
+                            <strong data-climex-lang-key="Batas pengajuan klaim">Batas pengajuan klaim</strong>
+                            <p data-climex-lang-key="Klaim bulan September dapat diajukan sampai tanggal 30.">Klaim bulan September dapat diajukan sampai tanggal 30.</p>
                         </div>
 
                         <div class="announcement">
-                            <strong>Sistem CLIME-X</strong>
-                            <p>Pemeliharaan sistem dijadwalkan pada akhir pekan.</p>
+                            <strong data-climex-lang-key="Sistem CLIME-X">Sistem CLIME-X</strong>
+                            <p data-climex-lang-key="Pemeliharaan sistem dijadwalkan pada akhir pekan.">Pemeliharaan sistem dijadwalkan pada akhir pekan.</p>
                         </div>
                     </div>
 
@@ -5597,7 +5597,7 @@ async function saveClimexClaim(claim){
 
                 <div class="card" style="margin-top:18px;">
 
-                    <div class="card-title">Klaim Terbaru</div>
+                    <div class="card-title" data-climex-lang-key="Klaim Terbaru">Klaim Terbaru</div>
 
                     <div class="table-wrap">
 
@@ -5605,17 +5605,17 @@ async function saveClimexClaim(claim){
 
                             <thead>
                                 <tr>
-                                    <th>Claim ID</th>
-                                    <th>Karyawan</th>
-                                    <th>Kategori</th>
-                                    <th>Total</th>
-                                    <th>Tanggal</th>
-                                    <th>Status</th>
+                                    <th data-climex-lang-key="Claim ID">Claim ID</th>
+                                    <th data-climex-lang-key="Karyawan">Karyawan</th>
+                                    <th data-climex-lang-key="Kategori">Kategori</th>
+                                    <th data-climex-lang-key="Total">Total</th>
+                                    <th data-climex-lang-key="Tanggal">Tanggal</th>
+                                    <th data-climex-lang-key="Status">Status</th>
                                 </tr>
                             </thead>
 
                             <tbody id="recentClaimsBody">
-                                <tr><td colspan="6" style="padding:30px;text-align:center;color:var(--muted);">Memuat klaim...</td></tr>
+                                <tr><td colspan="6" style="padding:30px;text-align:center;color:var(--muted);" data-climex-lang-key="Memuat klaim...">Memuat klaim...</td></tr>
                             </tbody>
 
                         </table>
@@ -5853,14 +5853,14 @@ async function saveClimexClaim(claim){
 
                 <div class="page-heading">
                     <div>
-                        <h1>Cuti</h1>
-                        <p>Kelola seluruh pengajuan cuti karyawan.</p>
+                        <h1 data-climex-lang-key="Cuti">Cuti</h1>
+                        <p data-climex-lang-key="Kelola seluruh pengajuan cuti karyawan.">Kelola seluruh pengajuan cuti karyawan.</p>
                     </div>
                 </div>
 
                 <div class="card">
 
-                    <div class="card-title">
+                    <div class="card-title" data-climex-lang-key="Cuti Masuk">
                         Cuti Masuk
                     </div>
 
@@ -5882,35 +5882,35 @@ async function saveClimexClaim(claim){
                                 ">
 
                                     <th style="padding:12px 10px;">
-                                        Cuti ID
+                                        <span data-climex-lang-key="Cuti ID">Cuti ID</span>
                                     </th>
 
                                     <th style="padding:12px 10px;">
-                                        Karyawan
+                                        <span data-climex-lang-key="Karyawan">Karyawan</span>
                                     </th>
 
                                     <th style="padding:12px 10px;">
-                                        Periode
+                                        <span data-climex-lang-key="Periode">Periode</span>
                                     </th>
 
                                     <th style="padding:12px 10px;text-align:center;">
-                                        Hari
+                                        <span data-climex-lang-key="Hari">Hari</span>
                                     </th>
 
                                     <th style="padding:12px 10px;">
-                                        Alasan
+                                        <span data-climex-lang-key="Alasan">Alasan</span>
                                     </th>
 
                                     <th style="padding:12px 10px;">
-                                        Tanggal Pengajuan
+                                        <span data-climex-lang-key="Tanggal Pengajuan">Tanggal Pengajuan</span>
                                     </th>
 
                                     <th style="padding:12px 10px;">
-                                        Status
+                                        <span data-climex-lang-key="Status">Status</span>
                                     </th>
 
                                     <th style="padding:12px 10px;text-align:center;">
-                                        Aksi
+                                        <span data-climex-lang-key="Aksi">Aksi</span>
                                     </th>
 
                                 </tr>
@@ -5923,7 +5923,7 @@ async function saveClimexClaim(claim){
                                         text-align:center;
                                         color:var(--muted);
                                     ">
-                                        Memuat pengajuan cuti...
+                                        <span data-climex-lang-key="Memuat pengajuan cuti...">Memuat pengajuan cuti...</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -6232,8 +6232,8 @@ async function saveClimexClaim(claim){
 
     <div class="page-heading">
         <div>
-            <h1>Company</h1>
-            <p>Informasi dan identitas perusahaan.</p>
+            <h1 data-climex-lang-key="Company">Company</h1>
+            <p data-climex-lang-key="Informasi dan identitas perusahaan.">Informasi dan identitas perusahaan.</p>
         </div>
     </div>
 
@@ -6249,13 +6249,13 @@ async function saveClimexClaim(claim){
 
             <div>
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Company Name
+                    <span data-climex-lang-key="Company Name">Company Name</span>
                 </div>
 
                 <input
                     id="companyName"
                     type="text"
-                    placeholder="Nama perusahaan"
+                    placeholder="Nama perusahaan" data-climex-placeholder-key="Nama perusahaan"
                     style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
                 >
             </div>
@@ -6263,7 +6263,7 @@ async function saveClimexClaim(claim){
 
             <div>
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Company ID
+                    <span data-climex-lang-key="Company ID">Company ID</span>
                 </div>
 
                 <input
@@ -6271,7 +6271,7 @@ async function saveClimexClaim(claim){
                     type="text"
                     value=""
                     readonly
-                    placeholder="Company ID"
+                    placeholder="Company ID" data-climex-placeholder-key="Company ID"
                     style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#f8f6f3;color:var(--text);font-size:13px;box-sizing:border-box;"
                 >
             </div>
@@ -6279,13 +6279,13 @@ async function saveClimexClaim(claim){
 
             <div style="grid-column:1 / -1;">
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Company Address
+                    <span data-climex-lang-key="Company Address">Company Address</span>
                 </div>
 
                 <input
                     id="companyAddress"
                     type="text"
-                    placeholder="Alamat perusahaan"
+                    placeholder="Alamat perusahaan" data-climex-placeholder-key="Alamat perusahaan"
                     style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
                 >
             </div>
@@ -6293,13 +6293,13 @@ async function saveClimexClaim(claim){
 
             <div>
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    City
+                    <span data-climex-lang-key="City">City</span>
                 </div>
 
                 <input
                     id="companyCity"
                     type="text"
-                    placeholder="Kota"
+                    placeholder="Kota" data-climex-placeholder-key="Kota"
                     style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
                 >
             </div>
@@ -6307,7 +6307,7 @@ async function saveClimexClaim(claim){
 
             <div>
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Country
+                    <span data-climex-lang-key="Country">Country</span>
                 </div>
 
                 <input
@@ -6321,13 +6321,13 @@ async function saveClimexClaim(claim){
 
             <div>
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Phone
+                    <span data-climex-lang-key="Phone">Phone</span>
                 </div>
 
                 <input
                     id="companyPhone"
                     type="text"
-                    placeholder="Nomor telepon"
+                    placeholder="Nomor telepon" data-climex-placeholder-key="Nomor telepon"
                     style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
                 >
             </div>
@@ -6335,13 +6335,13 @@ async function saveClimexClaim(claim){
 
             <div>
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Email
+                    <span data-climex-lang-key="Email">Email</span>
                 </div>
 
                 <input
                     id="companyEmail"
                     type="email"
-                    placeholder="Email perusahaan"
+                    placeholder="Email perusahaan" data-climex-placeholder-key="Email perusahaan"
                     style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:13px;box-sizing:border-box;"
                 >
             </div>
@@ -6349,7 +6349,7 @@ async function saveClimexClaim(claim){
 
             <div style="grid-column:1 / -1;">
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Website
+                    <span data-climex-lang-key="Website">Website</span>
                 </div>
 
                 <input
@@ -6364,7 +6364,7 @@ async function saveClimexClaim(claim){
             <div style="grid-column:1 / -1;">
 
                 <div style="font-size:13px;font-weight:700;margin-bottom:8px;">
-                    Company Logo
+                    <span data-climex-lang-key="Company Logo">Company Logo</span>
                 </div>
 
                 <div style="display:flex;align-items:center;gap:12px;">
@@ -6382,7 +6382,7 @@ async function saveClimexClaim(claim){
                         id="companyLogoBtn"
                         onclick="handleCompanyLogo()"
                     >
-                        UPLOAD LOGO
+                        <span data-climex-lang-key="UPLOAD LOGO">UPLOAD LOGO</span>
                     </button>
 
                 </div>
@@ -6403,7 +6403,7 @@ async function saveClimexClaim(claim){
                     type="button"
                     onclick="saveCompanyProfile()"
                 >
-                    SIMPAN
+                    <span data-climex-lang-key="SIMPAN">SIMPAN</span>
                 </button>
 
             </div>
@@ -16772,6 +16772,7 @@ setAppLanguage = function(lang){
    ========================================================= */
 (function(){
     const PATCH_TRANSLATIONS = {
+        "atau": {id:"atau", en:"or", zh:"或"},
         "Lihat foto & komentar": {id:"Lihat foto & komentar", en:"View photos & comments", zh:"查看照片和评论"},
         "Feedback aktif": {id:"Feedback aktif", en:"Feedback enabled", zh:"已启用反馈"},
         "Feedback dimatikan": {id:"Feedback dimatikan", en:"Feedback disabled", zh:"已关闭反馈"},
