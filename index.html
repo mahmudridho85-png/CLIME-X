@@ -2201,6 +2201,243 @@ td{
     .billing-ewallet-list{grid-template-columns:1fr;}
 }
 
+
+/* ===== Clime-X Reports tabs / User Reports ===== */
+.reports-tabs{
+    display:flex;
+    gap:28px;
+    margin:0 0 18px;
+    border-bottom:1px solid var(--line);
+}
+.reports-tab{
+    appearance:none;
+    border:0;
+    background:transparent;
+    padding:0 0 12px;
+    margin:0;
+    color:#777;
+    font:inherit;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+}
+.reports-tab.active{
+    color:var(--dark);
+    border-bottom-color:#b98f62;
+}
+.reports-panel{
+    display:none;
+}
+.reports-panel.active{
+    display:block;
+}
+.user-report-table-wrap{
+    overflow-x:auto;
+}
+.user-report-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:760px;
+}
+.user-report-table th{
+    text-align:left;
+    color:#81766c;
+    font-size:12px;
+    font-weight:800;
+    padding:0 10px 12px;
+    border-bottom:1px solid var(--line);
+}
+.user-report-table td{
+    padding:13px 10px;
+    border-bottom:1px solid #eee7e0;
+    font-size:13px;
+    color:var(--text);
+    vertical-align:middle;
+}
+.user-report-table td:first-child,
+.user-report-table th:first-child{
+    padding-left:0;
+}
+.user-report-table td:last-child,
+.user-report-table th:last-child{
+    text-align:right;
+    padding-right:0;
+}
+.user-report-name{
+    font-weight:800;
+}
+.user-report-reason{
+    color:#62584f;
+}
+.user-report-status{
+    display:inline-flex;
+    align-items:center;
+    min-height:25px;
+    padding:4px 9px;
+    border-radius:999px;
+    background:#f1eee9;
+    color:#665d55;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+.user-report-status.restricted{
+    background:#f7e8e5;
+    color:#9a3f32;
+}
+.user-report-status.resolved{
+    background:#e8f2ec;
+    color:#397455;
+}
+.user-report-arrow{
+    width:38px;
+    height:38px;
+    border:1px solid #dfd1c3;
+    border-radius:9px;
+    background:#fff;
+    color:#5f5145;
+    font-size:20px;
+    line-height:1;
+    cursor:pointer;
+}
+.user-report-arrow:hover{
+    background:#faf7f3;
+}
+.user-report-empty{
+    padding:38px 10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+.user-report-loading{
+    padding:28px 10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+.user-report-detail-grid{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    margin-top:4px;
+}
+.user-report-detail-item{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    align-items:baseline;
+    gap:18px;
+    padding:10px 0;
+    border-bottom:1px solid #f0e9e2;
+}
+.user-report-detail-item.full{
+    display:block;
+    border-bottom:0;
+}
+.user-report-detail-item.full .user-report-detail-label{
+    margin-bottom:6px;
+}
+.user-report-detail-label{
+    color:var(--dark);
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.35px;
+    margin-bottom:5px;
+}
+.user-report-detail-value{
+    color:var(--text);
+    font-size:13px;
+    line-height:1.55;
+    white-space:pre-wrap;
+    word-break:break-word;
+}
+.user-report-detail-note{
+    margin-top:18px;
+    padding:11px 13px;
+    border-radius:9px;
+    background:#faf7f3;
+    color:#75695f;
+    font-size:12px;
+    line-height:1.5;
+}
+.user-report-restrict-btn{
+    margin-top:18px;
+    min-height:40px;
+    padding:0 15px;
+    border:1px solid #d8b2aa;
+    border-radius:8px;
+    background:#fff7f5;
+    color:#9a3f32;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+}
+.user-report-restrict-btn:hover{
+    background:#fcefeb;
+}
+.user-report-account-note{
+    margin-top:14px;
+    padding:12px 13px;
+    border-radius:9px;
+    background:#fff8f1;
+    border:1px solid #ead8c5;
+    color:#6f6258;
+    font-size:12px;
+    line-height:1.5;
+}
+.user-report-account-title{
+    color:#8a5e36;
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.35px;
+    margin-bottom:5px;
+}
+.user-report-blocked-note{
+    margin-top:14px;
+    padding:12px 13px;
+    border-radius:9px;
+    background:#faf7f3;
+    border:1px solid var(--line);
+    color:#6f6258;
+    font-size:12px;
+    line-height:1.5;
+}
+.user-report-action-row{
+    display:flex;
+    justify-content:flex-end;
+    gap:9px;
+    margin-top:16px;
+}
+.user-report-open-btn,.user-report-block-btn{
+    min-height:40px;
+    padding:0 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+}
+.user-report-open-btn{
+    border:1px solid #d8c2aa;
+    background:#fff;
+    color:#6f5a45;
+}
+.user-report-block-btn{
+    border:1px solid #d8b2aa;
+    background:#fff7f5;
+    color:#9a3f32;
+}
+.user-report-status.blocked{
+    background:#eee6e3;
+    color:#6f4138;
+}
+@media(max-width:700px){
+    .reports-tabs{gap:18px;overflow-x:auto;}
+    .reports-tab{white-space:nowrap;}
+    .user-report-detail-item{grid-template-columns:1fr;gap:4px;}
+    .user-report-detail-item.full{grid-column:auto;}
+}
 </style>
 
 <!-- FIREBASE CLIME-X -->
@@ -4182,6 +4419,47 @@ const APP_TRANSLATIONS = {
     "Pilih sampai 5 foto sekaligus": {id:"Pilih sampai 5 foto sekaligus", en:"Select up to 5 photos at once", zh:"一次最多选择 5 张照片"},
     "Pengumuman": {id:"Pengumuman", en:"Announcements", zh:"公告"},
     "Laporan": {id:"Laporan", en:"Reports", zh:"报告"},
+    "Laporan pengeluaran, klaim, cuti, dan laporan pengguna.": {id:"Laporan pengeluaran, klaim, cuti, dan laporan pengguna.", en:"Expense, claim, leave, and user reports.", zh:"费用、报销、请假和用户举报报告。"},
+    "Klaim": {id:"Klaim", en:"Claims", zh:"报销"},
+    "Cuti": {id:"Cuti", en:"Leave", zh:"请假"},
+    "Belum ada konten laporan klaim.": {id:"Belum ada konten laporan klaim.", en:"No claim report content yet.", zh:"暂无报销报告内容。"},
+    "Belum ada konten laporan cuti.": {id:"Belum ada konten laporan cuti.", en:"No leave report content yet.", zh:"暂无请假报告内容。"},
+    "Pelanggaran": {id:"Pelanggaran", en:"Violations", zh:"违规"},
+    "Laporan pelanggaran karyawan": {id:"Laporan pelanggaran karyawan", en:"Employee Violation Reports", zh:"员工违规报告"},
+    "Pelapor": {id:"Pelapor", en:"Reporter", zh:"举报人"},
+    "Terlapor": {id:"Terlapor", en:"Reported Employee", zh:"被举报员工"},
+    "Terlapor": {id:"Terlapor", en:"Reported Employee", zh:"被举报员工"},
+    "Alasan": {id:"Alasan", en:"Reason", zh:"原因"},
+    "Tanggal": {id:"Tanggal", en:"Date", zh:"日期"},
+    "Status": {id:"Status", en:"Status", zh:"状态"},
+    "Aksi": {id:"Aksi", en:"Action", zh:"操作"},
+    "Belum ada laporan pengguna.": {id:"Belum ada laporan pengguna.", en:"No user reports yet.", zh:"暂无用户举报。"},
+    "Memuat laporan...": {id:"Memuat laporan...", en:"Loading reports...", zh:"正在加载报告..."},
+    "Detail laporan pelanggaran": {id:"Detail laporan pelanggaran", en:"Employee Violation Details", zh:"员工违规详情"},
+    "Detail Laporan": {id:"Detail Laporan", en:"Report Details", zh:"举报详情"},
+    "Detail": {id:"Detail", en:"Details", zh:"详情"},
+    "Detail laporan": {id:"Detail laporan", en:"Report details", zh:"举报详情"},
+    "Menunggu Tindakan": {id:"Menunggu Tindakan", en:"Pending Action", zh:"等待处理"},
+    "Tidak terbukti melanggar": {id:"Tidak terbukti melanggar", en:"No Violation Found", zh:"未发现违规"},
+    "Karyawan ini tidak terbukti melakukan pelanggaran sesuai dengan investigasi yang anda lakukan": {id:"Karyawan ini tidak terbukti melakukan pelanggaran sesuai dengan investigasi yang anda lakukan", en:"This employee was not found to have committed a violation based on your investigation.", zh:"根据您进行的调查，该员工未被发现存在违规行为。"},
+    "DIBATASI — READ ONLY": {id:"DIBATASI — READ ONLY", en:"RESTRICTED — READ ONLY", zh:"受限 — 只读"},
+    "Selesai": {id:"Selesai", en:"Resolved", zh:"已处理"},
+    "Buka Batasan": {id:"Buka Batasan", en:"Remove Restriction", zh:"解除限制"},
+    "Blokir Karyawan": {id:"Blokir Karyawan", en:"Block Employee", zh:"封锁员工"},
+    "DIBLOKIR": {id:"DIBLOKIR", en:"BLOCKED", zh:"已封锁"},
+    "Akun Saat Ini Dibatasi": {id:"Akun Saat Ini Dibatasi", en:"Account Currently Restricted", zh:"账户目前受限"},
+    "Akun karyawan ini saat ini dibatasi dan hanya dapat menggunakan fitur yang bersifat read-only.": {id:"Akun karyawan ini saat ini dibatasi dan hanya dapat menggunakan fitur yang bersifat read-only.", en:"This employee account is currently restricted and can only use read-only features.", zh:"此员工账户目前受到限制，只能使用只读功能。"},
+    "Silakan lakukan investigasi menyeluruh berkaitan dengan laporan terhadap karyawan ini. Jika hasil investigasi menunjukkan bahwa laporan tidak terbukti, Anda dapat membuka kembali akses karyawan ini dengan menekan tombol Buka Batasan.": {id:"Silakan lakukan investigasi menyeluruh berkaitan dengan laporan terhadap karyawan ini. Jika hasil investigasi menunjukkan bahwa laporan tidak terbukti, Anda dapat membuka kembali akses karyawan ini dengan menekan tombol Buka Batasan.", en:"Please conduct a thorough investigation regarding the report against this employee. If the investigation shows that the report is unsubstantiated, you can restore the employee's access by pressing Remove Restriction.", zh:"请对针对该员工的举报进行全面调查。如果调查结果显示举报未被证实，您可以点击“解除限制”按钮恢复该员工的访问权限。"},
+    "Namun, jika hasil investigasi menunjukkan adanya pelanggaran, Anda dapat memblokir karyawan ini dengan menekan tombol Blokir Karyawan di bawah ini.": {id:"Namun, jika hasil investigasi menunjukkan adanya pelanggaran, Anda dapat memblokir karyawan ini dengan menekan tombol Blokir Karyawan di bawah ini.", en:"However, if the investigation shows that a violation occurred, you can block this employee by pressing Block Employee below.", zh:"但是，如果调查结果显示存在违规行为，您可以点击下方的“封锁员工”按钮封锁该员工。"},
+    "Blokir akun karyawan ini?": {id:"Blokir akun karyawan ini?", en:"Block this employee account?", zh:"确定封锁此员工账户吗？"},
+    "Akun karyawan akan diblokir dan tidak dapat digunakan secara normal.": {id:"Akun karyawan akan diblokir dan tidak dapat digunakan secara normal.", en:"The employee account will be blocked and cannot be used normally.", zh:"员工账户将被封锁，无法正常使用。"},
+    "Akun karyawan berhasil diblokir.": {id:"Akun karyawan berhasil diblokir.", en:"The employee account has been blocked.", zh:"员工账户已成功封锁。"},
+    "Batasan akun berhasil dibuka. Karyawan dapat berinteraksi kembali.": {id:"Batasan akun berhasil dibuka. Karyawan dapat berinteraksi kembali.", en:"The account restriction has been removed. The employee can interact again.", zh:"账户限制已解除。员工可以再次进行互动。"},
+    "Batasan akun gagal dibuka.": {id:"Batasan akun gagal dibuka.", en:"The account restriction could not be removed.", zh:"无法解除账户限制。"},
+    "Pemblokiran akun gagal dilakukan.": {id:"Pemblokiran akun gagal dilakukan.", en:"The account could not be blocked.", zh:"无法封锁账户。"},
+    "Data dan bukti terkait akun ini tetap disimpan dalam sistem Clime-X untuk kebutuhan pemeriksaan dan penyelidikan, termasuk apabila di kemudian hari diperlukan oleh pihak lain yang berwenang.": {id:"Data dan bukti terkait akun ini tetap disimpan dalam sistem Clime-X untuk kebutuhan pemeriksaan dan penyelidikan, termasuk apabila di kemudian hari diperlukan oleh pihak lain yang berwenang.", en:"Data and evidence related to this account remain stored in Clime-X for examination and investigation purposes, including if they are later required by an authorized party.", zh:"与此账户相关的数据和证据仍将保存在 Clime-X 系统中，用于审查和调查，包括日后有权机构需要时使用。"},
+    "Data akan dihapus secara permanen setelah 5 (lima) tahun sejak tidak terdapat lagi kelanjutan pemeriksaan atau perkara, sepanjang tidak terdapat kewajiban hukum untuk menyimpannya lebih lama.": {id:"Data akan dihapus secara permanen setelah 5 (lima) tahun sejak tidak terdapat lagi kelanjutan pemeriksaan atau perkara, sepanjang tidak terdapat kewajiban hukum untuk menyimpannya lebih lama.", en:"Data will be permanently deleted after 5 (five) years from the point when there is no further examination or proceeding, unless there is a legal obligation to retain it longer.", zh:"如果不再有进一步的审查或案件进展，数据将在五（5）年后永久删除，但法律要求更长保存期限的除外。"},
+    "Laporan ini bukan berarti karyawan yang dilaporkan telah dinyatakan bersalah.": {id:"Laporan ini bukan berarti karyawan yang dilaporkan telah dinyatakan bersalah.", en:"This report does not mean that the reported employee has been found guilty.", zh:"举报并不意味着被举报员工已被认定有过错。"},
     "NOTIFIKASI": {id:"NOTIFIKASI", en:"NOTIFICATIONS", zh:"通知"},
     "CUTI": {id:"CUTI", en:"LEAVE", zh:"请假"},
 
@@ -6215,15 +6493,50 @@ async function saveClimexClaim(claim){
             <section id="reports" class="page" style="display:none;">
                 <div class="page-heading">
                     <div>
-                        <h1>Reports</h1>
-                        <p>Laporan pengeluaran dan klaim perusahaan.</p>
+                        <h1 data-climex-lang-key="Laporan">Laporan</h1>
+                        <p data-climex-lang-key="Laporan pengeluaran, klaim, cuti, dan laporan pengguna.">Laporan pengeluaran, klaim, cuti, dan laporan pengguna.</p>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-title">Reports</div>
-                    <p style="color:var(--muted);font-size:13px;">
-                        Daily · Weekly · Monthly · Employee · Department · Category
-                    </p>
+
+                <div class="reports-tabs" role="tablist" aria-label="Reports">
+                    <button type="button" class="reports-tab" id="reportsClaimsTab" onclick="switchReportsTab('claims')" data-climex-lang-key="Klaim">Klaim</button>
+                    <button type="button" class="reports-tab" id="reportsLeaveTab" onclick="switchReportsTab('cuti')" data-climex-lang-key="Cuti">Cuti</button>
+                    <button type="button" class="reports-tab active" id="reportsUserTab" onclick="switchReportsTab('userReports')" data-climex-lang-key="Pelanggaran">Pelanggaran</button>
+                </div>
+
+                <div id="reportsClaimsPanel" class="reports-panel">
+                    <div class="card" style="min-height:140px;display:flex;align-items:center;justify-content:center;color:var(--muted);">
+                        <span data-climex-lang-key="Belum ada konten laporan klaim.">Belum ada konten laporan klaim.</span>
+                    </div>
+                </div>
+
+                <div id="reportsLeavePanel" class="reports-panel">
+                    <div class="card" style="min-height:140px;display:flex;align-items:center;justify-content:center;color:var(--muted);">
+                        <span data-climex-lang-key="Belum ada konten laporan cuti.">Belum ada konten laporan cuti.</span>
+                    </div>
+                </div>
+
+                <div id="reportsUserPanel" class="reports-panel active">
+                    <div class="card">
+                        <div class="card-title" data-climex-lang-key="Laporan pelanggaran karyawan">Laporan pelanggaran karyawan</div>
+                        <div class="user-report-table-wrap">
+                            <div id="climexUserReportsLoading" class="user-report-loading" data-climex-lang-key="Memuat laporan...">Memuat laporan...</div>
+                            <table id="climexUserReportsTable" class="user-report-table" style="display:none;">
+                                <thead>
+                                    <tr>
+                                        <th data-climex-lang-key="Pelapor">Pelapor</th>
+                                        <th data-climex-lang-key="Terlapor">Terlapor</th>
+                                        <th data-climex-lang-key="Alasan">Alasan</th>
+                                        <th data-climex-lang-key="Tanggal">Tanggal</th>
+                                        <th data-climex-lang-key="Status">Status</th>
+                                        <th data-climex-lang-key="Aksi">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="climexUserReportsBody"></tbody>
+                            </table>
+                            <div id="climexUserReportsEmpty" class="user-report-empty" style="display:none;" data-climex-lang-key="Belum ada laporan pengguna.">Belum ada laporan pengguna.</div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -10905,7 +11218,7 @@ function renderAnnouncementConsolePhotoGallery(item,imageList,photoCaptionList){
     if(!expanded){
         const preview=imageList.slice(0,4);
         const thumbs=preview.map(function(src,index){
-            const more=(index===3 && imageList.length>4) ? '<div class="announcement-console-photo-gallery-more">+'+(imageList.length-3)+'</div>' : '';
+            const more=(index===3 && imageList.length>4) ? '<div class="announcement-console-photo-gallery-more"></div>' : '';
             return '<div class="announcement-console-photo-gallery-thumb"><img src="'+escapeAnnouncementHtml(src)+'" alt="">'+more+'</div>';
         }).join('');
         return '<div class="announcement-console-photo-gallery">'
@@ -12082,7 +12395,7 @@ async function openWebClaim(claimId){
                                 <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">${climexT("Tanggal")}</div><div class="claim-detail-value">${escapeClaimHtml(r.date || "-")}</div></div>
                                 <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">${climexT("Kategori")}</div><div class="claim-detail-value">${escapeClaimHtml(r.category || "-")}</div></div>
                                 <div class="claim-detail-field" style="margin-bottom:8px;"><div class="claim-detail-label">${climexT("Total")}</div><div class="claim-detail-value">${formatClaimMoney(r.amount,r.currency || claim.currency)}</div></div>
-                                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Keterangan")}</div><div class="claim-detail-value">${escapeClaimHtml(r.description || "-")}</div></div>
+                                <div class="claim-detail-field"><div class="claim-detail-label">${climexT("Detail laporan")}</div><div class="claim-detail-value">${escapeClaimHtml(r.description || "-")}</div></div>
                             </div>
                         </div>
                     </div>`;
@@ -17179,6 +17492,354 @@ setAppLanguage = function(lang){
             return result;
         };
     }
+})();
+/* ===== Clime-X User Reports page ===== */
+(function(){
+    let climexUserReportsCache=[];
+
+    function reportDate(value){
+        if(!value) return "-";
+        try{
+            const d=value.toDate ? value.toDate() : new Date(value);
+            if(Number.isNaN(d.getTime())) return "-";
+            return d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
+        }catch(e){
+            return "-";
+        }
+    }
+
+    function reportStatusInfo(data){
+        const status=String(data?.status || "pending").toLowerCase();
+        const accountStatus=String(data?.accountStatus || "").toLowerCase();
+        const blocked=Boolean(data?.blocked || accountStatus === "blocked" || status === "blocked");
+        // Keputusan investigasi memiliki prioritas tertinggi.
+        // Jika laporan sudah dinyatakan tidak terbukti, jangan tampilkan lagi
+        // status DIBATASI atau tombol tindakan apa pun walaupun ada field lama.
+        if(status === "not_violation" || status === "not_found" || data?.violationConfirmed === false || data?.resolution === "not_violation"){
+            return {text:climexT("Tidak terbukti melanggar"),cls:"resolved",restricted:false,blocked:false,notViolation:true};
+        }
+
+        // Laporan yang masih pending selalu dianggap sedang dalam tahap pembatasan.
+        // Ini memastikan laporan lama yang belum memiliki field restricted tetap
+        // menampilkan status DIBATASI dan tombol tindakan yang benar.
+        const restricted=Boolean(!blocked && (status === "pending" || data?.restricted || data?.restrictionStatus === "restricted" || accountStatus === "restricted" || status === "restricted"));
+        if(blocked){
+            return {text:climexT("DIBLOKIR"),cls:"blocked",restricted:false,blocked:true};
+        }
+        if(restricted){
+            return {text:climexT("DIBATASI — READ ONLY"),cls:"restricted",restricted:true,blocked:false};
+        }
+        if(status === "resolved" || status === "closed" || status === "done"){
+            return {text:climexT("Selesai"),cls:"resolved",restricted:false,blocked:false};
+        }
+        return {text:climexT("Menunggu Tindakan"),cls:"",restricted:false,blocked:false};
+    }
+
+    window.switchReportsTab=function(tab){
+        const panels={
+            claims:document.getElementById("reportsClaimsPanel"),
+            cuti:document.getElementById("reportsLeavePanel"),
+            userReports:document.getElementById("reportsUserPanel")
+        };
+        const tabs={
+            claims:document.getElementById("reportsClaimsTab"),
+            cuti:document.getElementById("reportsLeaveTab"),
+            userReports:document.getElementById("reportsUserTab")
+        };
+        Object.values(panels).forEach(function(el){ if(el) el.classList.remove("active"); });
+        Object.values(tabs).forEach(function(el){ if(el) el.classList.remove("active"); });
+        if(panels[tab]) panels[tab].classList.add("active");
+        if(tabs[tab]) tabs[tab].classList.add("active");
+        if(tab === "userReports") loadClimexUserReports();
+    };
+
+    window.loadClimexUserReports=async function(){
+        const loading=document.getElementById("climexUserReportsLoading");
+        const table=document.getElementById("climexUserReportsTable");
+        const body=document.getElementById("climexUserReportsBody");
+        const empty=document.getElementById("climexUserReportsEmpty");
+        if(!loading || !table || !body || !empty) return;
+
+        loading.style.display="block";
+        table.style.display="none";
+        empty.style.display="none";
+
+        try{
+            const auth=window.climexAuth;
+            const db=window.climexDB;
+            if(!auth?.currentUser || !db){
+                climexUserReportsCache=[];
+                loading.style.display="none";
+                empty.textContent=climexT("Belum ada laporan pengguna.");
+                empty.style.display="block";
+                return;
+            }
+
+            const adminUid=auth.currentUser.uid;
+            const snap=await db.collection("users").doc(adminUid).collection("climex").doc("reports").collection("items").orderBy("createdAt","desc").get();
+            climexUserReportsCache=[];
+            snap.forEach(function(doc){
+                climexUserReportsCache.push({id:doc.id,data:doc.data() || {}});
+            });
+
+            // Setiap laporan baru otomatis menempatkan akun terlapor ke READ ONLY.
+            // Hanya laporan yang masih pending yang diproses; akun yang sudah
+            // dibuka kembali atau diblokir tidak disentuh lagi.
+            for(const item of climexUserReportsCache){
+                const d=item.data || {};
+                const status=String(d.status || "pending").toLowerCase();
+                const alreadyBlocked=Boolean(d.blocked || String(d.accountStatus || "").toLowerCase()==="blocked" || String(d.restrictionStatus || "").toLowerCase()==="blocked");
+                const alreadyRestricted=Boolean(d.restricted || String(d.accountStatus || "").toLowerCase()==="restricted" || String(d.restrictionStatus || "").toLowerCase()==="restricted");
+                if(status !== "pending" || alreadyBlocked || alreadyRestricted || !d.reportedUid) continue;
+
+                try{
+                    await db.collection("employeeProfiles").doc(String(d.reportedUid)).set({
+                        accountStatus:"restricted",
+                        restrictionStatus:"restricted",
+                        restrictionUpdatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+                    },{merge:true});
+
+                    await db.collection("users").doc(adminUid).collection("climex").doc("reports").collection("items").doc(item.id).update({
+                        restricted:true,
+                        restrictionStatus:"restricted",
+                        accountStatus:"restricted",
+                        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    d.restricted=true;
+                    d.restrictionStatus="restricted";
+                    d.accountStatus="restricted";
+                }catch(restrictError){
+                    console.error("CLIME-X AUTO RESTRICTION ERROR:",restrictError);
+                }
+            }
+
+            body.innerHTML="";
+            if(!climexUserReportsCache.length){
+                loading.style.display="none";
+                empty.textContent=climexT("Belum ada laporan pengguna.");
+                empty.style.display="block";
+                return;
+            }
+
+            climexUserReportsCache.forEach(function(item,index){
+                const d=item.data;
+                const st=reportStatusInfo(d);
+                const tr=document.createElement("tr");
+                tr.innerHTML=`
+                    <td><span class="user-report-name">${escapeReportHtml(d.reporterName || "-")}</span></td>
+                    <td><span class="user-report-name">${escapeReportHtml(d.reportedName || "-")}</span></td>
+                    <td><span class="user-report-reason">${escapeReportHtml(d.reason || "-")}</span></td>
+                    <td>${escapeReportHtml(reportDate(d.createdAt))}</td>
+                    <td><span class="user-report-status ${st.cls}">${escapeReportHtml(st.text)}</span></td>
+                    <td><button type="button" class="user-report-arrow" aria-label="${escapeReportHtml(climexT("Detail"))}" onclick="openClimexUserReport(${index})">→</button></td>
+                `;
+                body.appendChild(tr);
+            });
+
+            loading.style.display="none";
+            table.style.display="table";
+        }catch(error){
+            console.error("Clime-X user reports:",error);
+            climexUserReportsCache=[];
+            loading.style.display="none";
+            empty.textContent=climexT("Belum ada laporan pengguna.");
+            empty.style.display="block";
+        }
+    };
+
+    function escapeReportHtml(value){
+        return String(value ?? "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+    }
+    window.escapeReportHtml=escapeReportHtml;
+
+    window.openClimexUserReport=function(index){
+        const item=climexUserReportsCache[index];
+        if(!item) return;
+        const d=item.data || {};
+        const st=reportStatusInfo(d);
+
+        const existing=document.getElementById("climexUserReportModal");
+        if(existing) existing.remove();
+
+        const modal=document.createElement("div");
+        modal.id="climexUserReportModal";
+        modal.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(35,28,22,.42);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;";
+        modal.innerHTML=`
+            <div style="width:min(820px,100%);max-height:none;overflow:visible;background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.18);padding:24px;box-sizing:border-box;">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px;">
+                    <div>
+                        <div style="font-size:19px;font-weight:900;color:var(--dark);">${escapeReportHtml(climexT("Detail laporan pelanggaran"))}</div>
+                    </div>
+                    <button type="button" onclick="document.getElementById('climexUserReportModal')?.remove()" style="width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#665a50;font-size:20px;cursor:pointer;">×</button>
+                </div>
+
+                <div class="user-report-detail-grid">
+                    <div class="user-report-detail-item">
+                        <div class="user-report-detail-label">${escapeReportHtml(climexT("Pelapor"))}</div>
+                        <div class="user-report-detail-value">${escapeReportHtml(d.reporterName || "-")}</div>
+                    </div>
+                    <div class="user-report-detail-item">
+                        <div class="user-report-detail-label">${escapeReportHtml(climexT("Terlapor"))}</div>
+                        <div class="user-report-detail-value">${escapeReportHtml(d.reportedName || "-")}</div>
+                    </div>
+                    <div class="user-report-detail-item">
+                        <div class="user-report-detail-label">${escapeReportHtml(climexT("Alasan"))}</div>
+                        <div class="user-report-detail-value">${escapeReportHtml(d.reason || "-")}</div>
+                    </div>
+                    <div class="user-report-detail-item">
+                        <div class="user-report-detail-label">${escapeReportHtml(climexT("Tanggal"))}</div>
+                        <div class="user-report-detail-value">${escapeReportHtml(reportDate(d.createdAt))}</div>
+                    </div>
+                    <div class="user-report-detail-item full">
+                        <div class="user-report-detail-label">${escapeReportHtml(climexT("Detail laporan"))}</div>
+                        <div class="user-report-detail-value">${escapeReportHtml(d.detail || "-")}</div>
+                    </div>
+                    <div class="user-report-detail-item full">
+                        <div class="user-report-detail-label">${escapeReportHtml(climexT("Status"))}</div>
+                        <div class="user-report-detail-value"><span class="user-report-status ${st.cls}">${escapeReportHtml(st.text)}</span></div>
+                    </div>
+                </div>
+
+                ${st.notViolation ? `
+                    <div class="user-report-account-note">
+                        <div class="user-report-account-title">${escapeReportHtml(climexT("Tidak terbukti melanggar"))}</div>
+                        <div>${escapeReportHtml(climexT("Karyawan ini tidak terbukti melakukan pelanggaran sesuai dengan investigasi yang anda lakukan"))}</div>
+                    </div>
+                ` : st.restricted ? `
+                    <div class="user-report-account-note">
+                        <div class="user-report-account-title">${escapeReportHtml(climexT("Akun Saat Ini Dibatasi"))}</div>
+                        <div>${escapeReportHtml(climexT("Akun karyawan ini saat ini dibatasi dan hanya dapat menggunakan fitur yang bersifat read-only."))}</div>
+                        <div style="margin-top:10px;line-height:1.6;">${escapeReportHtml(climexT("Silakan lakukan investigasi menyeluruh berkaitan dengan laporan terhadap karyawan ini. Jika hasil investigasi menunjukkan bahwa laporan tidak terbukti, Anda dapat membuka kembali akses karyawan ini dengan menekan tombol Buka Batasan."))}</div>
+                        <div style="margin-top:10px;line-height:1.6;">${escapeReportHtml(climexT("Namun, jika hasil investigasi menunjukkan adanya pelanggaran, Anda dapat memblokir karyawan ini dengan menekan tombol Blokir Karyawan di bawah ini."))}</div>
+                    </div>
+                    <div class="user-report-action-row">
+                        <button type="button" class="user-report-open-btn" onclick="climexRemoveUserRestriction(${index})">${escapeReportHtml(climexT("Buka Batasan"))}</button>
+                        <button type="button" class="user-report-block-btn" onclick="climexBlockReportedEmployee(${index})">${escapeReportHtml(climexT("Blokir Karyawan"))}</button>
+                    </div>
+                ` : (st.blocked ? `
+                    <div class="user-report-blocked-note">
+                        <div class="user-report-account-title">${escapeReportHtml(climexT("DIBLOKIR"))}</div>
+                        <div>${escapeReportHtml(climexT("Data dan bukti terkait akun ini tetap disimpan dalam sistem Clime-X untuk kebutuhan pemeriksaan dan penyelidikan, termasuk apabila di kemudian hari diperlukan oleh pihak lain yang berwenang."))}</div>
+                        <div style="margin-top:8px;">${escapeReportHtml(climexT("Data akan dihapus secara permanen setelah 5 (lima) tahun sejak tidak terdapat lagi kelanjutan pemeriksaan atau perkara, sepanjang tidak terdapat kewajiban hukum untuk menyimpannya lebih lama."))}</div>
+                    </div>
+                ` : `
+                    <div class="user-report-action-row">
+                        <button type="button" class="user-report-block-btn" onclick="climexBlockReportedEmployee(${index})">${escapeReportHtml(climexT("Blokir Karyawan"))}</button>
+                    </div>
+                `)}
+            </div>
+        `;
+
+        modal.addEventListener("click",function(e){
+            if(e.target===modal) modal.remove();
+        });
+        document.body.appendChild(modal);
+    };
+
+    window.climexRemoveUserRestriction=async function(index){
+        const item=climexUserReportsCache[index];
+        if(!item) return;
+        const d=item.data || {};
+        const auth=window.climexAuth;
+        const db=window.climexDB;
+        if(!auth?.currentUser || !db || !d.reportedUid) return;
+
+        try{
+            await db.collection("employeeProfiles").doc(String(d.reportedUid)).set({
+                accountStatus:"active",
+                restrictionStatus:"none",
+                restrictionUpdatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            },{merge:true});
+
+            await db.collection("users").doc(auth.currentUser.uid).collection("climex").doc("reports").collection("items").doc(item.id).set({
+                restricted:false,
+                restrictionStatus:"none",
+                accountStatus:"active",
+                violationConfirmed:false,
+                status:"not_violation",
+                resolution:"not_violation",
+                resolvedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            },{merge:true});
+
+            // Ubah cache langsung supaya detail dan list pasti berubah pada saat
+            // keputusan investigasi dibuat, tanpa menunggu state lama.
+            item.data.restricted=false;
+            item.data.restrictionStatus="none";
+            item.data.accountStatus="active";
+            item.data.violationConfirmed=false;
+            item.data.status="not_violation";
+            item.data.resolution="not_violation";
+
+            climexAlert(climexT("Batasan akun berhasil dibuka. Karyawan dapat berinteraksi kembali."));
+            const modal=document.getElementById("climexUserReportModal");
+            if(modal) modal.remove();
+            await loadClimexUserReports();
+        }catch(error){
+            console.error("CLIME-X REMOVE RESTRICTION ERROR:",error);
+            climexAlert(climexT("Batasan akun gagal dibuka."));
+        }
+    };
+
+    window.climexBlockReportedEmployee=async function(index){
+        const item=climexUserReportsCache[index];
+        if(!item) return;
+        const d=item.data || {};
+        const auth=window.climexAuth;
+        const db=window.climexDB;
+        if(!auth?.currentUser || !db || !d.reportedUid) return;
+
+        if(typeof climexConfirm === "function") {
+            if(!climexConfirm(climexT("Blokir akun karyawan ini?"))) return;
+        } else if(!window.confirm(climexT("Blokir akun karyawan ini?"))){
+            return;
+        }
+
+        try{
+            await db.collection("employeeProfiles").doc(String(d.reportedUid)).set({
+                accountStatus:"blocked",
+                restrictionStatus:"blocked",
+                blockedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                restrictionUpdatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            },{merge:true});
+
+            await db.collection("users").doc(auth.currentUser.uid).collection("climex").doc("reports").collection("items").doc(item.id).update({
+                blocked:true,
+                restricted:false,
+                restrictionStatus:"blocked",
+                accountStatus:"blocked",
+                status:"blocked",
+                blockedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            climexAlert(climexT("Akun karyawan berhasil diblokir."));
+            const modal=document.getElementById("climexUserReportModal");
+            if(modal) modal.remove();
+            await loadClimexUserReports();
+        }catch(error){
+            console.error("CLIME-X BLOCK EMPLOYEE ERROR:",error);
+            climexAlert(climexT("Pemblokiran akun gagal dilakukan."));
+        }
+    };
+
+    // Load when the Reports page becomes visible, without changing other pages.
+    document.addEventListener("click",function(e){
+        const node=e.target.closest?.("button");
+        const onclick=node ? (node.getAttribute("onclick") || "") : "";
+        if(onclick.indexOf("showPage('reports'") !== -1){
+            setTimeout(function(){switchReportsTab("userReports");},120);
+        }
+    });
 })();
 </script>
 </body>
