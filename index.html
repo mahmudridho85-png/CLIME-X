@@ -2480,9 +2480,116 @@ climexAuth.setPersistence(
 
 });
 
+// =========================================================
+/* LANGGANAN CLIME-X — TRIAL 14 HARI / PRO 30 / 365 HARI */
+let climexSubscriptionState = { status:"checking", plan:"", expiresAt:null };
+let climexSubscriptionUnsubscribe = null;
+
+function climexGetDate(value){
+    if(!value) return null;
+    if(value.toDate && typeof value.toDate === "function") return value.toDate();
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+}
+function climexGetSubscriptionView(profile){
+    profile = profile || {};
+    const expiry = climexGetDate(profile.subscriptionExpiresAt);
+    const now = Date.now();
+    const plan = String(profile.subscriptionPlan || "").toLowerCase();
+    let status = String(profile.subscriptionStatus || "").toLowerCase();
+
+    if(!expiry && profile.createdAt){
+        const created = climexGetDate(profile.createdAt);
+        if(created) {
+            const legacyExpiry = new Date(created.getTime() + 14*24*60*60*1000);
+            return {status:Date.now() >= legacyExpiry.getTime() ? "expired" : "trial",
+                plan:"trial14", expiresAt:legacyExpiry};
+        }
+    }
+    if(expiry && now >= expiry.getTime()) status = "expired";
+    else if(status !== "pro" && status !== "trial") status = expiry ? "trial" : "expired";
+    if(status === "pro" && !expiry) status = "expired";
+    return {status:status, plan:plan, expiresAt:expiry};
+}
+function climexSubscriptionDaysLeft(){
+    const expiry = climexSubscriptionState.expiresAt;
+    if(!expiry) return 0;
+    return Math.max(0, Math.ceil((expiry.getTime()-Date.now())/(24*60*60*1000)));
+}
+function updateClimexSubscriptionBadge(){
+    let badge = document.getElementById("climexSubscriptionBadge");
+    const headerRight = document.querySelector(".header-right");
+    if(!headerRight) return;
+    if(!badge){
+        badge = document.createElement("span");
+        badge.id = "climexSubscriptionBadge";
+        badge.style.cssText = "display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:999px;background:#fff;color:#5b3d29;font-size:11px;font-weight:800;white-space:nowrap;";
+        const anchor = headerRight.querySelector(".admin-user");
+        headerRight.insertBefore(badge, anchor || null);
+    }
+    const s = climexSubscriptionState;
+    if(s.status === "checking") badge.textContent = "MEMERIKSA...";
+    else if(s.status === "trial") badge.textContent = "TRIAL " + climexSubscriptionDaysLeft() + " HARI";
+    else if(s.status === "pro"){
+        badge.textContent = (s.plan === "go365" ? "PRO 365 HARI" : "PRO 30 HARI") + " • SISA " + climexSubscriptionDaysLeft() + " HARI";
+    }else badge.textContent = "MODE TERBATAS";
+}
+function startClimexSubscriptionListener(user){
+    if(climexSubscriptionUnsubscribe){try{climexSubscriptionUnsubscribe();}catch(e){}}
+    climexSubscriptionState = {status:"checking",plan:"",expiresAt:null};
+    updateClimexSubscriptionBadge();
+    if(!user) return;
+    const ref = climexDB.collection("users").doc(user.uid).collection("climex").doc("profile");
+    climexSubscriptionUnsubscribe = ref.onSnapshot(function(snap){
+        if(!snap.exists){
+            climexSubscriptionState = {status:"expired",plan:"",expiresAt:null};
+        }else{
+            climexSubscriptionState = climexGetSubscriptionView(snap.data() || {});
+        }
+        updateClimexSubscriptionBadge();
+        if(climexSubscriptionState.status === "expired"){
+            const activePage = document.querySelector(".page:not([style*='display: none'])");
+            if(activePage && !["dashboard","billing"].includes(activePage.id)){
+                showPage("dashboard");
+            }
+        }
+    },function(error){
+        console.warn("CLIME-X SUBSCRIPTION LISTENER ERROR:",error);
+    });
+}
+function climexCanOpenWebPage(pageId){
+    if(climexSubscriptionState.status !== "expired") return true;
+
+   if(["dashboard", "billing", "announcements", "account"].includes(pageId)) {
+    return true;
+}
+
+    const lang =
+        localStorage.getItem("climexLanguage") ||
+        currentLoginLang ||
+        "id";
+
+    const message =
+        lang === "en"
+            ? "Your subscription has expired. Please open Billing to renew CLIME-X PRO."
+            : lang === "zh"
+                ? "您的订阅已到期。请打开 Billing 续订 CLIME-X PRO。"
+                : "Masa langganan telah berakhir. Silakan buka Billing untuk memperpanjang Clime-X PRO.";
+
+    if(typeof climexAlert === "function") climexAlert(message);
+    else alert(message);
+
+    return false;
+}
+
 climexAuth.onAuthStateChanged(async function(user){
 
     if(!user){
+
+    if(climexSubscriptionUnsubscribe){try{climexSubscriptionUnsubscribe();}catch(e){}climexSubscriptionUnsubscribe=null;}
+    climexSubscriptionState = {status:"checking",plan:"",expiresAt:null};
+    const oldSubscriptionBadge = document.getElementById("climexSubscriptionBadge");
+    if(oldSubscriptionBadge) oldSubscriptionBadge.remove();
 
     if(webConsoleNotificationUnsubscribe){
         try{webConsoleNotificationUnsubscribe();}catch(e){}
@@ -2562,6 +2669,7 @@ climexAuth.onAuthStateChanged(async function(user){
         }
 
         updateAccountPasswordVisibility(user);
+        startClimexSubscriptionListener(user);
 
         window.climexCurrentUser = {
             uid: user.uid,
@@ -4148,13 +4256,25 @@ const APP_TRANSLATIONS = {
     "Akun": {
         id:"Akun", en:"Account", zh:"账户"
     },
-    "Kelola pembayaran langganan CLIME-X dan pilih metode pembayaran yang tersedia.": {
-        id:"Kelola pembayaran langganan CLIME-X dan pilih metode pembayaran yang tersedia.",
+    "Kelola pembayaran langganan Clime-X dan pilih metode pembayaran yang tersedia.": {
+        id:"Kelola pembayaran langganan Clime-X dan pilih metode pembayaran yang tersedia.",
         en:"Manage CLIME-X subscription payments and choose an available payment method.",
-        zh:"管理 CLIME-X 订阅付款并选择可用的付款方式。"
+        zh:"管理 Clime-X 订阅付款并选择可用的付款方式。"
     },
+    "Clime-X Payment": { id:"Clime-X Payment", en:"Clime-X Payment", zh:"Clime-X 付款" },
     "Metode Pembayaran": {
         id:"Metode Pembayaran", en:"Payment Methods", zh:"付款方式"
+    },
+    "Pembayaran melalui Midtrans": {
+        id:"Pembayaran melalui Midtrans", en:"Pay with Midtrans", zh:"通过 Midtrans 付款"
+    },
+    "Pilih QRIS, e-wallet, virtual account, atau kartu di halaman pembayaran Midtrans.": {
+        id:"Pilih QRIS, e-wallet, virtual account, atau kartu di halaman pembayaran Midtrans.",
+        en:"Choose QRIS, e-wallet, virtual account, or card on the Midtrans checkout page.",
+        zh:"在 Midtrans 付款页面选择 QRIS、电子钱包、虚拟账户或银行卡。"
+    },
+    "LANJUTKAN KE PEMBAYARAN →": {
+        id:"LANJUTKAN KE PEMBAYARAN →", en:"CONTINUE TO PAYMENT →", zh:"继续付款 →"
     },
     "Kartu Debit / Kredit": {
         id:"Kartu Debit / Kredit", en:"Debit / Credit Card", zh:"借记卡 / 信用卡"
@@ -4258,7 +4378,7 @@ const APP_TRANSLATIONS = {
         id:"Pembayaran Kartu", en:"Card Payment", zh:"银行卡付款"
     },
     "Pembayaran QRIS": {
-        id:"Pembayaran QRIS", en:"QRIS Payment", zh:"QRIS 付款"
+        id:"Pembayaran Clime-X", en:"Clime-X Payment", zh:"Clime-X 付款"
     },
     "Pembayaran E-Wallet": {
         id:"Pembayaran E-Wallet", en:"E-Wallet Payment", zh:"电子钱包付款"
@@ -4344,7 +4464,14 @@ const APP_TRANSLATIONS = {
     "SETTINGS TABS": {id:"TAB PENGATURAN", en:"SETTINGS TABS", zh:"设置选项卡"},
     "General": {id:"Umum", en:"General", zh:"常规"},
     "Clime-X ID User": {id:"ID Pengguna Clime-X", en:"Clime-X User ID", zh:"Clime-X 用户 ID"},
+    "CLIME-X PRO · 30 Hari": {id:"CLIME-X PRO · 30 Hari", en:"CLIME-X PRO · 30 Days", zh:"CLIME-X PRO · 30天"},
+    "CLIME-X PRO · 365 Hari": {id:"CLIME-X PRO · 365 Hari", en:"CLIME-X PRO · 365 Days", zh:"CLIME-X PRO · 365天"},
+    "Harga dasar: Rp110.000": {id:"Harga dasar: Rp110.000", en:"Base price: IDR 110,000", zh:"基础价格：IDR 110,000"},
+    "Harga dasar: Rp1.250.000": {id:"Harga dasar: Rp1.250.000", en:"Base price: IDR 1,250,000", zh:"基础价格：IDR 1,250,000"},
     "Currency": {id:"Mata Uang", en:"Currency", zh:"货币"},
+    "Harga Langganan CLIME-X PRO": {id:"Harga Langganan CLIME-X PRO", en:"CLIME-X PRO Subscription Prices", zh:"CLIME-X PRO 订阅价格"},
+    "Harga dasar tetap dalam Rupiah Indonesia (IDR).": {id:"Harga dasar tetap dalam Rupiah Indonesia (IDR).", en:"Base prices remain in Indonesian Rupiah (IDR).", zh:"基础价格仍以印度尼西亚卢比（IDR）计价。"},
+    "Tampilkan mata uang": {id:"Tampilkan mata uang", en:"Display currency", zh:"显示货币"},
     "IDR — Indonesian Rupiah": {id:"IDR — Rupiah Indonesia", en:"IDR — Indonesian Rupiah", zh:"IDR — 印度尼西亚卢比"},
     "Date Format": {id:"Format Tanggal", en:"Date Format", zh:"日期格式"},
     "DD/MM/YYYY": {id:"DD/MM/YYYY", en:"DD/MM/YYYY", zh:"日/月/年"},
@@ -5027,8 +5154,13 @@ async function loginClimexWithGoogle(){
         }else if(error && error.code === "auth/unauthorized-domain"){
             climexAlert("Domain website ini belum diizinkan di Firebase Authentication.");
         }else{
-            climexAlert("Login Google gagal. Silakan coba lagi.");
-        }
+    climexAlert(
+        "Login Google gagal: " +
+        (error && error.code ? error.code : "unknown") +
+        "\n" +
+        (error && error.message ? error.message : "Tidak ada detail error.")
+    );
+}
 
     }finally{
 
@@ -5243,6 +5375,12 @@ async function saveNewClimexProfile(user, companyName, adminName){
             companyName: companyName,
             companyEmail: user.email || "",
             adminName: adminName || user.displayName || "",
+            subscriptionStatus: "trial",
+            subscriptionPlan: "trial14",
+            subscriptionStartedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            subscriptionExpiresAt: firebase.firestore.Timestamp.fromDate(
+                new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+            ),
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge:true });
@@ -7435,6 +7573,41 @@ Nama / Jabatan                              {{nama_karyawan}}</div>
 
 </section>
 
+            <style id="climexBillingBrandStyles">
+              #billing .billing-method-card{min-height:205px;display:flex;flex-direction:column;}
+              /* Billing plan card: compact height so payment methods remain visible */
+              #climexPlanPricesCard{padding:14px 18px!important;margin-bottom:12px!important;}
+              #climexPlanPricesCard .grid-2>div{padding:10px 14px!important;}
+              #climexPlanPricesCard #climexPrice30,#climexPlanPricesCard #climexPrice365{font-size:22px!important;margin-top:3px!important;line-height:1.15;}
+              #climexPlanPricesCard #climexCurrencyRateNote{margin-top:8px!important;padding:8px 10px!important;font-size:10px!important;}
+              #climexPlanPricesCard .grid-2{gap:10px!important;}
+              #billing .billing-brand-row{gap:6px;margin:9px 0 6px;}
+              #billing .billing-brand{min-height:28px;padding:5px 9px;font-size:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+              #billing .billing-brand.visa{font-size:16px;font-weight:950;letter-spacing:-.6px;}
+              #billing .billing-brand.jcb{color:#174d9a;font-style:italic;}
+              #billing .billing-brand.amex{background:#1769aa;color:#fff;border-color:#1769aa;}
+              #billing .billing-brand.unionpay{color:#b3282d;}
+              #billing .billing-brand.qris{color:#14634b;font-weight:950;letter-spacing:.5px;}
+              #billing .billing-brand.gopay{color:#008ed3;}
+              #billing .billing-brand.ovo{color:#5b2c91;}
+              #billing .billing-brand.dana{color:#118bd0;}
+              #billing .billing-brand.shopeepay{color:#e65b25;}
+              #billing .billing-brand.linkaja{color:#d73332;}
+              #billing .billing-brand.isaku{color:#ed7b22;}
+              @media(max-height:800px){#billing .billing-method-card{min-height:185px;} #climexPlanPricesCard{padding:10px 16px!important;} #climexPlanPricesCard #climexCurrencyRateNote{display:none;}}
+              @media(max-width:700px){#billing .billing-method-card{min-height:0;} #billing .billing-brand{font-size:10px;padding:4px 6px;}}
+              #billing .billing-brand-row{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:14px 0 8px;}
+              #billing .billing-brand{display:inline-flex;align-items:center;justify-content:center;min-height:25px;padding:4px 8px;border:1px solid #eadfd3;border-radius:7px;background:#fff;color:#354b42;font-size:11px;font-weight:800;letter-spacing:.1px;white-space:nowrap;}
+              #billing .billing-brand.visa{color:#153b8a;font-size:15px;font-style:italic;}
+              #billing .billing-brand.mastercard{color:#302a25;gap:2px;}
+              #billing .billing-brand.mastercard i{display:inline-block;width:12px;height:12px;border-radius:50%;background:#e52b31;}
+              #billing .billing-brand.mastercard i+i{background:#f4a623;margin-left:-5px;opacity:.95;}
+              #billing .billing-method-arrow{margin-top:auto;padding-top:8px;}
+              @media(max-width:700px){#billing .billing-method-card{min-height:0;} #billing .billing-brand{font-size:10px;padding:4px 6px;}}
+            .climex-plan-radio{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:1px solid #b9c7be;border-radius:50%;font-size:17px;font-weight:900;color:#198754;flex:0 0 24px;}
+              .climex-plan-option:focus{outline:2px solid #198754;outline-offset:2px;}
+            </style>
+
             <!-- =====================================================
                  BILLING
                  Halaman baru — metode pembayaran CLIME-X
@@ -7444,40 +7617,152 @@ Nama / Jabatan                              {{nama_karyawan}}</div>
                 <div class="page-heading">
                     <div>
                         <h1 data-climex-lang-key="Billing">Billing</h1>
-                        <p data-climex-lang-key="Kelola pembayaran langganan CLIME-X dan pilih metode pembayaran yang tersedia.">Kelola pembayaran langganan CLIME-X dan pilih metode pembayaran yang tersedia.</p>
+                        <p data-climex-lang-key="Kelola pembayaran langganan Clime-X dan pilih metode pembayaran yang tersedia.">Kelola pembayaran langganan Clime-X dan pilih metode pembayaran yang tersedia.</p>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-title" data-climex-lang-key="Metode Pembayaran">Metode Pembayaran</div>
-
-                    <div class="billing-grid">
-
-                        <div class="billing-method-card" onclick="openBillingPayment('card')">
-                            <div class="billing-method-icon">💳</div>
-                            <h3 data-climex-lang-key="Kartu Debit / Kredit">Kartu Debit / Kredit</h3>
-                            <p data-climex-lang-key="Terima pembayaran dengan kartu berlogo Mastercard atau Visa.">Terima pembayaran dengan kartu berlogo Mastercard atau Visa.</p>
-                            <div class="billing-method-arrow" data-climex-lang-key="MASUKKAN DATA KARTU →">MASUKKAN DATA KARTU →</div>
+                        <div style="min-width:190px;">
+                            <label for="climexCurrencySelect" style="display:block;font-size:11px;font-weight:800;margin-bottom:6px;" data-climex-lang-key="Tampilkan mata uang">Tampilkan mata uang</label>
+                            <select id="climexCurrencySelect" onchange="climexUpdatePlanPrices(this.value)" style="width:100%;height:40px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--text);font:inherit;">
+                                <option value="IDR">🇮🇩 Indonesian Rupiah (IDR)</option>
+                                <option value="USD">🇺🇸 US Dollar (USD)</option>
+                                <option value="SGD">🇸🇬 Singapore Dollar (SGD)</option>
+                                <option value="MYR">🇲🇾 Malaysian Ringgit (MYR)</option>
+                                <option value="THB">🇹🇭 Thai Baht (THB)</option>
+                                <option value="PHP">🇵🇭 Philippine Peso (PHP)</option>
+                                <option value="VND">🇻🇳 Vietnamese Dong (VND)</option>
+                                <option value="BND">🇧🇳 Brunei Dollar (BND)</option>
+                                <option value="KHR">🇰🇭 Cambodian Riel (KHR)</option>
+                                <option value="LAK">🇱🇦 Lao Kip (LAK)</option>
+                                <option value="MMK">🇲🇲 Myanmar Kyat (MMK)</option>
+                                <option value="INR">🇮🇳 Indian Rupee (INR)</option>
+                                <option value="PKR">🇵🇰 Pakistani Rupee (PKR)</option>
+                                <option value="BDT">🇧🇩 Bangladeshi Taka (BDT)</option>
+                                <option value="NPR">🇳🇵 Nepalese Rupee (NPR)</option>
+                                <option value="KRW">🇰🇷 South Korean Won (KRW)</option>
+                                <option value="JPY">🇯🇵 Japanese Yen (JPY)</option>
+                                <option value="CNY">🇨🇳 Chinese Yuan (CNY)</option>
+                                <option value="HKD">🇭🇰 Hong Kong Dollar (HKD)</option>
+                                <option value="TWD">🇹🇼 New Taiwan Dollar (TWD)</option>
+                                <option value="MOP">🇲🇴 Macanese Pataca (MOP)</option>
+                                <option value="EUR">🇪🇺 Euro (EUR)</option>
+                                <option value="GBP">🇬🇧 Pound Sterling (GBP)</option>
+                                <option value="CHF">🇨🇭 Swiss Franc (CHF)</option>
+                                <option value="SEK">🇸🇪 Swedish Krona (SEK)</option>
+                                <option value="NOK">🇳🇴 Norwegian Krone (NOK)</option>
+                                <option value="DKK">🇩🇰 Danish Krone (DKK)</option>
+                                <option value="PLN">🇵🇱 Polish Zloty (PLN)</option>
+                                <option value="CZK">🇨🇿 Czech Koruna (CZK)</option>
+                                <option value="HUF">🇭🇺 Hungarian Forint (HUF)</option>
+                                <option value="RON">🇷🇴 Romanian Leu (RON)</option>
+                                <option value="BGN">🇧🇬 Bulgarian Lev (BGN)</option>
+                                <option value="ISK">🇮🇸 Icelandic Krona (ISK)</option>
+                                <option value="TRY">🇹🇷 Turkish Lira (TRY)</option>
+                                <option value="UAH">🇺🇦 Ukrainian Hryvnia (UAH)</option>
+                                <option value="RUB">🇷🇺 Russian Ruble (RUB)</option>
+                                <option value="ILS">🇮🇱 Israeli New Shekel (ILS)</option>
+                                <option value="SAR">🇸🇦 Saudi Riyal (SAR)</option>
+                                <option value="AED">🇦🇪 UAE Dirham (AED)</option>
+                                <option value="QAR">🇶🇦 Qatari Riyal (QAR)</option>
+                                <option value="KWD">🇰🇼 Kuwaiti Dinar (KWD)</option>
+                                <option value="BHD">🇧🇭 Bahraini Dinar (BHD)</option>
+                                <option value="OMR">🇴🇲 Omani Rial (OMR)</option>
+                                <option value="JOD">🇯🇴 Jordanian Dinar (JOD)</option>
+                                <option value="EGP">🇪🇬 Egyptian Pound (EGP)</option>
+                                <option value="ZAR">🇿🇦 South African Rand (ZAR)</option>
+                                <option value="NGN">🇳🇬 Nigerian Naira (NGN)</option>
+                                <option value="KES">🇰🇪 Kenyan Shilling (KES)</option>
+                                <option value="MAD">🇲🇦 Moroccan Dirham (MAD)</option>
+                                <option value="GHS">🇬🇭 Ghanaian Cedi (GHS)</option>
+                                <option value="TZS">🇹🇿 Tanzanian Shilling (TZS)</option>
+                                <option value="UGX">🇺🇬 Ugandan Shilling (UGX)</option>
+                                <option value="ETB">🇪🇹 Ethiopian Birr (ETB)</option>
+                                <option value="AUD">🇦🇺 Australian Dollar (AUD)</option>
+                                <option value="NZD">🇳🇿 New Zealand Dollar (NZD)</option>
+                                <option value="CAD">🇨🇦 Canadian Dollar (CAD)</option>
+                                <option value="MXN">🇲🇽 Mexican Peso (MXN)</option>
+                                <option value="BRL">🇧🇷 Brazilian Real (BRL)</option>
+                                <option value="ARS">🇦🇷 Argentine Peso (ARS)</option>
+                                <option value="CLP">🇨🇱 Chilean Peso (CLP)</option>
+                                <option value="COP">🇨🇴 Colombian Peso (COP)</option>
+                                <option value="PEN">🇵🇪 Peruvian Sol (PEN)</option>
+                                <option value="UYU">🇺🇾 Uruguayan Peso (UYU)</option>
+                                <option value="CRC">🇨🇷 Costa Rican Colon (CRC)</option>
+                                <option value="DOP">🇩🇴 Dominican Peso (DOP)</option>
+                                <option value="JMD">🇯🇲 Jamaican Dollar (JMD)</option>
+                                <option value="TTD">🇹🇹 Trinidad and Tobago Dollar (TTD)</option>
+                                <option value="XCD">🌎 East Caribbean Dollar (XCD)</option>
+                                <option value="BWP">🇧🇼 Botswana Pula (BWP)</option>
+                                <option value="MUR">🇲🇺 Mauritian Rupee (MUR)</option>
+                                <option value="NAD">🇳🇦 Namibian Dollar (NAD)</option>
+                                <option value="XOF">🌍 West African CFA Franc (XOF)</option>
+                                <option value="XAF">🌍 Central African CFA Franc (XAF)</option>
+                                <option value="XPF">🌊 CFP Franc (XPF)</option>
+                                <option value="FJD">🇫🇯 Fiji Dollar (FJD)</option>
+                                <option value="PGK">🇵🇬 Papua New Guinean Kina (PGK)</option>
+                                <option value="KZT">🇰🇿 Kazakhstani Tenge (KZT)</option>
+                                <option value="UZS">🇺🇿 Uzbekistani Som (UZS)</option>
+                                <option value="AZN">🇦🇿 Azerbaijani Manat (AZN)</option>
+                                <option value="GEL">🇬🇪 Georgian Lari (GEL)</option>
+                                <option value="AMD">🇦🇲 Armenian Dram (AMD)</option>
+                                <option value="AFN">🇦🇫 Afghan Afghani (AFN)</option>
+                                <option value="IRR">🇮🇷 Iranian Rial (IRR)</option>
+                                <option value="IQD">🇮🇶 Iraqi Dinar (IQD)</option>
+                                <option value="LBP">🇱🇧 Lebanese Pound (LBP)</option>
+                                <option value="YER">🇾🇪 Yemeni Rial (YER)</option>
+                                <option value="SDG">🇸🇩 Sudanese Pound (SDG)</option>
+                                <option value="DZD">🇩🇿 Algerian Dinar (DZD)</option>
+                                <option value="TND">🇹🇳 Tunisian Dinar (TND)</option>
+                                <option value="LYD">🇱🇾 Libyan Dinar (LYD)</option>
+                                <option value="AOA">🇦🇴 Angolan Kwanza (AOA)</option>
+                                <option value="MZN">🇲🇿 Mozambican Metical (MZN)</option>
+                                <option value="RWF">🇷🇼 Rwandan Franc (RWF)</option>
+                                <option value="XDR">🌐 Special Drawing Rights (XDR)</option>
+                            </select>
                         </div>
-
-                        <div class="billing-method-card" onclick="openBillingPayment('qris')">
-                            <div class="billing-method-icon">QR</div>
-                            <h3 data-climex-lang-key="QRIS">QRIS</h3>
-                            <p data-climex-lang-key="Pembayaran melalui QRIS dari aplikasi pembayaran yang mendukung QRIS.">Pembayaran melalui QRIS dari aplikasi pembayaran yang mendukung QRIS.</p>
-                            <div class="billing-method-arrow" data-climex-lang-key="BAYAR DENGAN QRIS →">BAYAR DENGAN QRIS →</div>
-                        </div>
-
-                        <div class="billing-method-card" onclick="openBillingPayment('ewallet')">
-                            <div class="billing-method-icon">e</div>
-                            <h3 data-climex-lang-key="E-Wallet">E-Wallet</h3>
-                            <p data-climex-lang-key="Pembayaran menggunakan dompet digital yang tersedia.">Pembayaran menggunakan dompet digital yang tersedia.</p>
-                            <div class="billing-method-arrow" data-climex-lang-key="PILIH E-WALLET →">PILIH E-WALLET →</div>
+                <div class="card" id="climexPlanPricesCard" style="margin-bottom:18px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px;">
+                        <div>
+                            <div class="card-title" style="margin-bottom:5px;" data-climex-lang-key="Harga Langganan CLIME-X PRO">Harga Langganan CLIME-X PRO</div>
+                            <div style="font-size:11px;color:var(--muted);" data-climex-lang-key="Harga dasar tetap dalam Rupiah Indonesia (IDR).">Harga dasar tetap dalam Rupiah Indonesia (IDR).</div>
                         </div>
 
                     </div>
+                    <div class="grid-2" style="margin-top:0;">
+                        <div class="climex-plan-option" id="climexPlan30Option" role="button" tabindex="0" onclick="selectClimexPlan(30)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectClimexPlan(30)}" style="border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;position:relative;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;"><div style="font-size:12px;color:var(--muted);" data-climex-lang-key="CLIME-X PRO · 30 Hari">CLIME-X PRO · 30 Hari</div><span class="climex-plan-radio" id="climexPlan30Radio" aria-hidden="true">○</span></div>
+                            <div id="climexPrice30" style="font-size:25px;font-weight:900;margin-top:8px;">Rp110.000</div>
+                            <div id="climexPrice30Idr" style="font-size:11px;color:var(--muted);margin-top:5px;" data-climex-lang-key="Harga dasar: Rp110.000">Harga dasar: Rp110.000</div>
+                        </div>
+                        <div class="climex-plan-option" id="climexPlan365Option" role="button" tabindex="0" onclick="selectClimexPlan(365)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectClimexPlan(365)}" style="border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;position:relative;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;"><div style="font-size:12px;color:var(--muted);" data-climex-lang-key="CLIME-X PRO · 365 Hari">CLIME-X PRO · 365 Hari</div><span class="climex-plan-radio" id="climexPlan365Radio" aria-hidden="true">○</span></div>
+                            <div id="climexPrice365" style="font-size:25px;font-weight:900;margin-top:8px;">Rp1.250.000</div>
+                            <div id="climexPrice365Idr" style="font-size:11px;color:var(--muted);margin-top:5px;" data-climex-lang-key="Harga dasar: Rp1.250.000">Harga dasar: Rp1.250.000</div>
+                        </div>
+                    </div>
+                    <div id="climexPlanSelectedNote" class="billing-note" style="margin-top:10px;">Pilih salah satu paket di atas untuk melanjutkan.</div>
+                    <div id="climexCurrencyStep" style="display:none;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;">
+                        <label for="climexCurrencySelect" style="display:block;font-size:12px;font-weight:800;margin-bottom:6px;" data-climex-lang-key="Pilih mata uang">Pilih mata uang</label>
+                        <div id="climexCurrencySelectMount"></div>
+                    </div>
+                    <div id="climexCurrencyRateNote" class="billing-note" style="margin-top:10px;">Memuat kurs terbaru…</div>
+                </div>
 
-                    <div class="billing-note" data-climex-lang-key="Pembayaran aktual memerlukan koneksi ke payment gateway. Halaman ini menyiapkan tampilan dan alur pembayaran tanpa mengubah halaman lain.">
-                        Pembayaran aktual memerlukan koneksi ke payment gateway. Halaman ini menyiapkan tampilan dan alur pembayaran tanpa mengubah halaman lain.
+                <div class="card" id="climexPaymentMethodsCard" style="display:none;">
+                    <div class="card-title" data-climex-lang-key="Clime-X Payment">Clime-X Payment</div>
+
+                    <div class="billing-grid" style="grid-template-columns:minmax(0,1fr);">
+                        <div class="billing-method-card" onclick="openBillingPayment('qris')" style="max-width:100%;min-height:0;">
+                            <div class="billing-method-icon">💳</div>
+                            <h3 data-climex-lang-key="Pembayaran melalui Midtrans">Pembayaran melalui Midtrans</h3>
+                            <p data-climex-lang-key="Pilih QRIS, e-wallet, virtual account, atau kartu di halaman pembayaran Midtrans.">Pilih QRIS, e-wallet, virtual account, atau kartu di halaman pembayaran Midtrans.</p>
+                            <div class="billing-brand-row" aria-label="Metode pembayaran yang tersedia"><span class="billing-brand qris">QRIS</span><span class="billing-brand gopay">GoPay</span><span class="billing-brand ovo">OVO</span><span class="billing-brand dana">DANA</span><span class="billing-brand shopeepay">ShopeePay</span><span class="billing-brand visa">VISA</span><span class="billing-brand mastercard"><i></i><i></i> Mastercard</span></div>
+                            <div class="billing-method-arrow" data-climex-lang-key="LANJUTKAN KE PEMBAYARAN →">LANJUTKAN KE PEMBAYARAN →</div>
+                        </div>
+                    </div>
+
+                    <div class="billing-note" >
+                        Pembayaran diproses dengan aman melalui Midtrans.
                     </div>
                 </div>
 
@@ -7554,98 +7839,33 @@ Nama / Jabatan                              {{nama_karyawan}}</div>
             </section>
 
 
-            <!-- BILLING PAYMENT POPUP -->
-            <div id="billingPaymentOverlay" class="billing-modal-overlay" onclick="if(event.target===this)closeBillingPayment()">
-                <div class="billing-modal">
+            
+<!-- BILLING PAYMENT CONFIRMATION -->
+<div id="billingPaymentOverlay" class="billing-modal-overlay" onclick="if(event.target===this)closeBillingPayment()">
+    <div class="billing-modal">
+        <div class="billing-modal-head">
+            <h3 id="billingModalTitle">Pembayaran Clime-X</h3>
+            <button type="button" class="billing-modal-close" onclick="closeBillingPayment()">×</button>
+        </div>
+        <div class="billing-modal-body" style="padding:24px;">
+            <p id="billingConfirmDescription" style="margin:0 0 12px;line-height:1.6;">Anda akan melakukan pembayaran paket Clime-X PRO.</p>
 
-                    <div class="billing-modal-head">
-                        <h3 id="billingModalTitle" data-climex-lang-key="Pembayaran">Pembayaran</h3>
-                        <button type="button" class="billing-modal-close" onclick="closeBillingPayment()">×</button>
-                    </div>
+            <div id="billingConfirmAmount" style="font-size:30px;font-weight:900;line-height:1.25;margin:8px 0 22px;color:var(--brown-dark);">Rp110.000</div>
 
-                    <div id="billingCardPaymentBody" class="billing-modal-body" style="display:none;">
+            <p id="billingAutoRenewNote" style="margin:0 0 22px;line-height:1.6;font-size:14px;color:var(--brown-dark);">
+                Paket Clime-X PRO dapat diperpanjang otomatis melalui metode pembayaran
+                <strong>Kartu Kredit dan GoPay</strong>.
+                Metode pembayaran lainnya memerlukan perpanjangan manual.
+            </p>
 
-                        <div class="billing-field">
-                            <label data-climex-lang-key="Jumlah Pembayaran">Jumlah Pembayaran</label>
-                            <input id="billingCardAmount" type="number" min="0" placeholder="0" data-climex-placeholder-key="0">
-                        </div>
-
-                        <div class="billing-field">
-                            <label data-climex-lang-key="Nomor Kartu">Nomor Kartu</label>
-                            <input id="billingCardNumber" type="text" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" data-climex-placeholder-key="0000 0000 0000 0000">
-                        </div>
-
-                        <div class="billing-field">
-                            <label data-climex-lang-key="Nama pada Kartu">Nama pada Kartu</label>
-                            <input id="billingCardName" type="text" placeholder="CARDHOLDER NAME" data-climex-placeholder-key="CARDHOLDER NAME">
-                        </div>
-
-                        <div class="billing-field-row">
-                            <div class="billing-field">
-                                <label data-climex-lang-key="Masa Berlaku">Masa Berlaku</label>
-                                <input id="billingCardExpiry" type="text" maxlength="5" placeholder="MM/YY" data-climex-placeholder-key="MM/YY">
-                            </div>
-
-                            <div class="billing-field">
-                                <label>CVV</label>
-                                <input id="billingCardCvv" type="password" inputmode="numeric" maxlength="4" placeholder="•••" data-climex-placeholder-key="•••">
-                            </div>
-                        </div>
-
-                        <div class="billing-modal-actions">
-                            <button type="button" class="billing-btn" onclick="closeBillingPayment()" data-climex-lang-key="BATAL">BATAL</button>
-                            <button type="button" class="billing-btn primary" onclick="submitBillingCardPayment()" data-climex-lang-key="LANJUTKAN PEMBAYARAN">LANJUTKAN PEMBAYARAN</button>
-                        </div>
-
-                    </div>
-
-                    <div id="billingQrisPaymentBody" class="billing-modal-body" style="display:none;">
-
-                        <div class="billing-field">
-                            <label data-climex-lang-key="Jumlah Pembayaran">Jumlah Pembayaran</label>
-                            <input id="billingQrisAmount" type="number" min="0" placeholder="0" data-climex-placeholder-key="0">
-                        </div>
-
-                        <div style="padding:18px;border:1px dashed #d8c8b8;border-radius:10px;text-align:center;background:#fbf7f2;">
-                            <div style="font-size:12px;font-weight:800;color:var(--brown-dark);" data-climex-lang-key="QRIS">QRIS</div>
-                            <div style="margin-top:7px;font-size:11px;color:var(--muted);" data-climex-lang-key="QRIS akan ditampilkan setelah payment gateway terhubung.">
-                                QRIS akan ditampilkan setelah payment gateway terhubung.
-                            </div>
-                        </div>
-
-                        <div class="billing-modal-actions">
-                            <button type="button" class="billing-btn" onclick="closeBillingPayment()" data-climex-lang-key="BATAL">BATAL</button>
-                            <button type="button" class="billing-btn primary" onclick="submitBillingGenericPayment('QRIS')" data-climex-lang-key="LANJUTKAN PEMBAYARAN">LANJUTKAN PEMBAYARAN</button>
-                        </div>
-
-                    </div>
-
-                    <div id="billingEwalletPaymentBody" class="billing-modal-body" style="display:none;">
-
-                        <div class="billing-field">
-                            <label data-climex-lang-key="Jumlah Pembayaran">Jumlah Pembayaran</label>
-                            <input id="billingEwalletAmount" type="number" min="0" placeholder="0" data-climex-placeholder-key="0">
-                        </div>
-
-                        <div class="billing-field">
-                            <label data-climex-lang-key="Pilih E-Wallet">Pilih E-Wallet</label>
-                            <div class="billing-ewallet-list">
-                                <button type="button" class="billing-ewallet-option active" data-ewallet="OVO" onclick="selectBillingEwallet(this)">OVO</button>
-                                <button type="button" class="billing-ewallet-option" data-ewallet="GoPay" onclick="selectBillingEwallet(this)">GoPay</button>
-                                <button type="button" class="billing-ewallet-option" data-ewallet="DANA" onclick="selectBillingEwallet(this)">DANA</button>
-                                <button type="button" class="billing-ewallet-option" data-ewallet="ShopeePay" onclick="selectBillingEwallet(this)">ShopeePay</button>
-                            </div>
-                        </div>
-
-                        <div class="billing-modal-actions">
-                            <button type="button" class="billing-btn" onclick="closeBillingPayment()" data-climex-lang-key="BATAL">BATAL</button>
-                            <button type="button" class="billing-btn primary" onclick="submitBillingEwalletPayment()" data-climex-lang-key="LANJUTKAN PEMBAYARAN">LANJUTKAN PEMBAYARAN</button>
-                        </div>
-
-                    </div>
-
-                </div>
+            <div class="billing-modal-actions">
+                <button type="button" class="billing-btn" onclick="closeBillingPayment()" id="billingCancelButton">BATAL</button>
+                <button type="button" class="billing-btn primary" onclick="startClimexProPayment('qris')" id="billingContinueButton">LANJUT KE PEMBAYARAN</button>
             </div>
+        </div>
+    </div>
+</div>
+
 
 
         </div>
@@ -11754,6 +11974,39 @@ document.addEventListener("DOMContentLoaded", function(){
    BILLING & ACCOUNT — HALAMAN TAMBAHAN
    ========================================================= */
 
+
+
+(function initClimexBillingSteps(){
+  function mountCurrency(){
+    const mount=document.getElementById('climexCurrencySelectMount');
+    const sel=document.getElementById('climexCurrencySelect');
+    if(mount && sel && sel.parentElement!==mount) mount.appendChild(sel.parentElement);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountCurrency);else mountCurrency();
+})();
+
+/* CLIME-X Billing steps: choose plan -> currency -> payment method -> payment popup. */
+let climexSelectedPlanDays = 0;
+let climexCurrencyChosen = false;
+function selectClimexPlan(days){
+  climexSelectedPlanDays = days;
+  document.querySelectorAll('.climex-plan-option').forEach(el=>{el.style.borderColor='var(--line)';el.style.background='#fff';});
+  const chosen=document.getElementById(days===30?'climexPlan30Option':'climexPlan365Option');
+  if(chosen){chosen.style.borderColor='#198754';chosen.style.background='#f2fbf5';}
+  const r30=document.getElementById('climexPlan30Radio'), r365=document.getElementById('climexPlan365Radio');
+  if(r30)r30.textContent=days===30?'●':'○'; if(r365)r365.textContent=days===365?'●':'○';
+  const note=document.getElementById('climexPlanSelectedNote');
+  if(note)note.textContent=days===30?'Anda memilih CLIME-X PRO · 30 Hari.':'Anda memilih CLIME-X PRO · 365 Hari.';
+  const step=document.getElementById('climexCurrencyStep'); if(step)step.style.display='block';
+  const mount=document.getElementById('climexCurrencySelectMount');
+  const sel=document.getElementById('climexCurrencySelect');
+  if(mount && sel && sel.parentElement!==mount){mount.appendChild(sel.parentElement);}
+  const methods=document.getElementById('climexPaymentMethodsCard'); if(methods)methods.style.display='block';
+  climexCurrencyChosen=true;
+  const amount=days===30?110000:1250000;
+  ['billingCardAmount','billingQrisAmount','billingEwalletAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=amount;});
+}
+
 let currentBillingMethod = "";
 let currentBillingEwallet = "OVO";
 
@@ -11774,41 +12027,57 @@ function updateBillingModalTitle(){
     title.textContent = climexT(key);
 }
 
+
 function openBillingPayment(method){
-
-    currentBillingMethod = method;
-
-    const overlay = document.getElementById("billingPaymentOverlay");
-    const title = document.getElementById("billingModalTitle");
-    const cardBody = document.getElementById("billingCardPaymentBody");
-    const qrisBody = document.getElementById("billingQrisPaymentBody");
-    const ewalletBody = document.getElementById("billingEwalletPaymentBody");
-
-    if(!overlay || !title || !cardBody || !qrisBody || !ewalletBody) return;
-
-    cardBody.style.display = "none";
-    qrisBody.style.display = "none";
-    ewalletBody.style.display = "none";
-
-    if(method === "card"){
-        title.textContent = climexT("Pembayaran Kartu");
-        cardBody.style.display = "block";
-        setBillingPlaceholderLanguage();
-        document.getElementById("billingCardAmount")?.focus();
-    }else if(method === "qris"){
-        title.textContent = climexT("Pembayaran QRIS");
-        qrisBody.style.display = "block";
-        setBillingPlaceholderLanguage();
-        document.getElementById("billingQrisAmount")?.focus();
-    }else{
-        title.textContent = climexT("Pembayaran E-Wallet");
-        ewalletBody.style.display = "block";
-        setBillingPlaceholderLanguage();
-        document.getElementById("billingEwalletAmount")?.focus();
+    if(!climexSelectedPlanDays){
+        const lang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+        const msg = {id:"Pilih paket Clime-X PRO terlebih dahulu.",en:"Please select a Clime-X PRO plan first.",zh:"请先选择 Clime-X PRO 套餐。"};
+        if(typeof climexAlert==='function')climexAlert(msg[lang] || msg.id);
+        else alert(msg[lang] || msg.id);
+        return;
     }
 
-    updateBillingModalTitle();
-    overlay.classList.add("show");
+    currentBillingMethod = method || "midtrans";
+    const days = climexSelectedPlanDays;
+    const lang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+    const translations = {
+        id:{
+            title:"Pembayaran Clime-X",
+            description:"Anda akan membeli paket Clime-X PRO " + days + " hari seharga IDR " + (days === 30 ? "110.000" : "1.250.000") + " atau sekitar:",
+            note:"Paket Clime-X PRO dapat diperpanjang otomatis melalui metode pembayaran Kartu Kredit dan GoPay. Metode pembayaran lainnya memerlukan perpanjangan manual.",
+            cancel:"BATAL", proceed:"LANJUT KE PEMBAYARAN"
+        },
+        en:{
+            title:"Clime-X Payment",
+            description:"You are purchasing a Clime-X PRO plan for " + days + " days at IDR " + (days === 30 ? "110,000" : "1,250,000") + ", approximately:",
+            note:"Automatic renewal is available for Credit Card and GoPay. Other payment methods require manual renewal.",
+            cancel:"CANCEL", proceed:"CONTINUE TO PAYMENT"
+        },
+        zh:{
+            title:"Clime-X 付款",
+            description:"您将购买 " + days + " 天的 Clime-X PRO 套餐，价格为 IDR " + (days === 30 ? "110,000" : "1,250,000") + "，约为：",
+            note:"信用卡和 GoPay 支持自动续订。其他付款方式需要手动续订。",
+            cancel:"取消", proceed:"继续付款"
+        }
+    };
+    const t = translations[lang] || translations.id;
+    const priceEl = document.getElementById(days === 30 ? "climexPrice30" : "climexPrice365");
+    const amountEl = document.getElementById("billingConfirmAmount");
+    const descriptionEl = document.getElementById("billingConfirmDescription");
+    const titleEl = document.getElementById("billingModalTitle");
+    const noteEl = document.getElementById("billingAutoRenewNote");
+    const cancelEl = document.getElementById("billingCancelButton");
+    const continueEl = document.getElementById("billingContinueButton");
+
+    if(titleEl) titleEl.textContent = t.title;
+    if(descriptionEl) descriptionEl.textContent = t.description;
+    if(noteEl) noteEl.textContent = t.note;
+    if(cancelEl) cancelEl.textContent = t.cancel;
+    if(continueEl) continueEl.textContent = t.proceed;
+    if(amountEl) amountEl.textContent = priceEl ? priceEl.textContent : (days === 30 ? "Rp110.000" : "Rp1.250.000");
+
+    const overlay = document.getElementById("billingPaymentOverlay");
+    if(overlay) overlay.classList.add("show");
 }
 
 function closeBillingPayment(){
@@ -11839,58 +12108,100 @@ function selectBillingEwallet(button){
     }
 }
 
+async function startClimexProPayment(method){
+    if(!climexAuth || !climexAuth.currentUser){
+        climexAlert(({
+            id:"Silakan login kembali sebelum melakukan pembayaran.",
+            en:"Please sign in again before making a payment.",
+            zh:"付款前请重新登录。"
+        })[localStorage.getItem("climexLanguage") || currentLoginLang || "id"] || "Please sign in again before making a payment.");
+        return;
+    }
+
+    if(!climexSelectedPlanDays){
+        climexAlert(({
+            id:"Pilih paket Clime-X PRO terlebih dahulu.",
+            en:"Please select a Clime-X PRO plan first.",
+            zh:"请先选择 Clime-X PRO 套餐。"
+        })[localStorage.getItem("climexLanguage") || currentLoginLang || "id"] || "Please select a Clime-X PRO plan first.");
+        return;
+    }
+
+    const lang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+    const loadingText = {
+        id:"Menyiapkan halaman pembayaran...",
+        en:"Preparing secure payment...",
+        zh:"正在准备安全付款页面..."
+    }[lang] || "Preparing secure payment...";
+    const packageId = climexSelectedPlanDays === 30 ? "go30" : "go365";
+    const buttons = document.querySelectorAll("#billingPaymentOverlay .billing-btn.primary");
+    buttons.forEach(function(button){ button.disabled = true; });
+
+    let loadingOverlay = document.getElementById("climexPaymentLoading");
+    if(!loadingOverlay){
+        loadingOverlay = document.createElement("div");
+        loadingOverlay.id = "climexPaymentLoading";
+        loadingOverlay.style.cssText = "position:fixed;inset:0;z-index:200000;display:flex;align-items:center;justify-content:center;background:rgba(35,29,24,.48);padding:20px;";
+        loadingOverlay.innerHTML = '<div style="background:#fff;border-radius:14px;padding:28px 34px;min-width:240px;max-width:90vw;text-align:center;box-shadow:0 15px 45px rgba(0,0,0,.22);color:#5b3d29;font-family:Arial,sans-serif;"><div style="width:42px;height:42px;border:4px solid #eadbc9;border-top-color:#b68b62;border-radius:50%;margin:0 auto 16px;animation:climexPaySpin .8s linear infinite;"></div><div id="climexPaymentLoadingText" style="font-size:14px;font-weight:700;line-height:1.5;"></div></div>';
+        const style = document.createElement("style");
+        style.id = "climexPaymentSpinnerStyle";
+        style.textContent = "@keyframes climexPaySpin{to{transform:rotate(360deg)}}";
+        document.head.appendChild(style);
+        document.body.appendChild(loadingOverlay);
+    }
+    const loadingLabel = document.getElementById("climexPaymentLoadingText");
+    if(loadingLabel) loadingLabel.textContent = loadingText;
+    loadingOverlay.style.display = "flex";
+
+    try{
+        const createSnapTransaction = firebase
+            .app("climexWebConsole")
+            .functions("us-central1")
+            .httpsCallable("createSnapTransaction");
+
+        const response = await createSnapTransaction({ packageId: packageId });
+        const data = response && response.data ? response.data : {};
+
+        if(!data.redirectUrl){
+            throw new Error("Payment link from Midtrans was not found.");
+        }
+
+        closeBillingPayment();
+        window.location.href = data.redirectUrl;
+
+    }catch(error){
+        console.error("Clime-X MIDTRANS CHECKOUT ERROR:", error);
+        if(loadingOverlay) loadingOverlay.style.display = "none";
+        let message = ({
+            id:"Pembayaran belum dapat dibuka. Periksa koneksi lalu coba lagi.",
+            en:"The payment page could not be opened. Check your connection and try again.",
+            zh:"无法打开付款页面。请检查网络连接后重试。"
+        })[lang] || "The payment page could not be opened. Check your connection and try again.";
+        if(error && error.code === "functions/unauthenticated"){
+            message = ({
+                id:"Sesi login berakhir. Silakan login kembali.",
+                en:"Your session has expired. Please sign in again.",
+                zh:"登录会话已过期，请重新登录。"
+            })[lang] || message;
+        }else if(error && error.message && error.message.indexOf("Transaksi belum dapat dibuat") !== -1){
+            message = error.message;
+        }
+        climexAlert(message);
+    }finally{
+        buttons.forEach(function(button){ button.disabled = false; });
+    }
+}
+
 function submitBillingCardPayment(){
-
-    const amount = Number(document.getElementById("billingCardAmount")?.value || 0);
-    const number = String(document.getElementById("billingCardNumber")?.value || "").replace(/\s+/g,"");
-    const name = String(document.getElementById("billingCardName")?.value || "").trim();
-    const expiry = String(document.getElementById("billingCardExpiry")?.value || "").trim();
-    const cvv = String(document.getElementById("billingCardCvv")?.value || "").trim();
-
-    if(!amount || amount <= 0){
-        climexAlert("Masukkan jumlah pembayaran.");
-        return;
-    }
-
-    if(number.length < 13 || number.length > 19){
-        climexAlert("Nomor kartu belum lengkap.");
-        return;
-    }
-
-    if(!name || !expiry || cvv.length < 3){
-        climexAlert("Lengkapi data kartu terlebih dahulu.");
-        return;
-    }
-
-    climexAlert("Data pembayaran kartu siap diproses oleh payment gateway.");
-    closeBillingPayment();
+    startClimexProPayment("card");
 }
 
 function submitBillingGenericPayment(method){
-
-    const input = document.getElementById("billingQrisAmount");
-    const amount = Number(input?.value || 0);
-
-    if(!amount || amount <= 0){
-        climexAlert("Masukkan jumlah pembayaran.");
-        return;
-    }
-
-    climexAlert("Pembayaran " + method + " siap diproses oleh payment gateway.");
-    closeBillingPayment();
+    startClimexProPayment(String(method || "qris").toLowerCase());
 }
 
 function submitBillingEwalletPayment(){
-
-    const amount = Number(document.getElementById("billingEwalletAmount")?.value || 0);
-
-    if(!amount || amount <= 0){
-        climexAlert("Masukkan jumlah pembayaran.");
-        return;
-    }
-
-    climexAlert("Pembayaran " + currentBillingEwallet + " siap diproses oleh payment gateway.");
-    closeBillingPayment();
+    startClimexProPayment("ewallet");
 }
 
 function loadClimexAccountPage(){
@@ -12209,6 +12520,8 @@ async function deleteClimexAccount(){
 }
 
 function showPage(pageId, button){
+
+    if(typeof climexCanOpenWebPage === "function" && !climexCanOpenWebPage(pageId)) return;
 
     if(pageId === "account" && typeof climexAuth !== "undefined" && climexAuth.currentUser){
         updateAccountPasswordVisibility(climexAuth.currentUser);
@@ -17842,5 +18155,102 @@ setAppLanguage = function(lang){
     });
 })();
 </script>
+
+
+<script>
+/* CLIME-X BILLING PRICE DISPLAY
+   Harga dasar tetap IDR. Mata uang lain hanya estimasi tampilan;
+   nominal pembayaran Midtrans tetap harus dibuat/ditagih dalam IDR.
+*/
+(function(){
+    const basePrices = {30:110000, 365:1250000};
+    let rates = {IDR:1};
+    let rateUpdatedAt = "";
+    const regionCurrency = {
+        US:"USD", SG:"SGD", MY:"MYR", GB:"GBP", IE:"EUR", DE:"EUR", FR:"EUR", ES:"EUR", IT:"EUR", NL:"EUR", PT:"EUR", BE:"EUR", AT:"EUR", FI:"EUR", LU:"EUR", GR:"EUR", SK:"EUR", SI:"EUR", HR:"EUR", CY:"EUR", EE:"EUR", LV:"EUR", LT:"EUR", MT:"EUR",
+        AU:"AUD", NZ:"NZD", JP:"JPY", CN:"CNY", PH:"PHP", TH:"THB", IN:"INR", CA:"CAD", HK:"HKD", KR:"KRW", CH:"CHF", AE:"AED", SA:"SAR", ID:"IDR", VN:"VND", BN:"BND", KH:"KHR", LA:"LAK", MM:"MMK", PK:"PKR", BD:"BDT", NP:"NPR", TW:"TWD", MO:"MOP", SE:"SEK", NO:"NOK", DK:"DKK", PL:"PLN", CZ:"CZK", HU:"HUF", RO:"RON", BG:"BGN", IS:"ISK", TR:"TRY", UA:"UAH", RU:"RUB", IL:"ILS", QA:"QAR", KW:"KWD", BH:"BHD", OM:"OMR", JO:"JOD", EG:"EGP", ZA:"ZAR", NG:"NGN", KE:"KES", MA:"MAD", GH:"GHS", TZ:"TZS", UG:"UGX", ET:"ETB", MX:"MXN", BR:"BRL", AR:"ARS", CL:"CLP", CO:"COP", PE:"PEN", UY:"UYU", CR:"CRC", DO:"DOP", JM:"JMD", TT:"TTD", BW:"BWP", MU:"MUR", NA:"NAD", FJ:"FJD", PG:"PGK", KZ:"KZT", UZ:"UZS", AZ:"AZN", GE:"GEL", AM:"AMD", AF:"AFN", IR:"IRR", IQ:"IQD", LB:"LBP", YE:"YER", SD:"SDG", DZ:"DZD", TN:"TND", LY:"LYD", AO:"AOA", MZ:"MZN", RW:"RWF"
+    };
+    function localeCurrency(){
+        try{
+            const locale = new Intl.Locale(navigator.language || "id-ID");
+            return regionCurrency[locale.region] || "IDR";
+        }catch(e){ return "IDR"; }
+    }
+    async function detectCountryCurrency(){
+        // Browser language is not the same as physical country. Try IP country, then use locale, and safely fall back to IDR.
+        try{
+            const response = await fetch("https://ipapi.co/json/", {cache:"no-store"});
+            if(response.ok){
+                const data = await response.json();
+                const code = regionCurrency[String(data.country_code || "").toUpperCase()];
+                if(code) return code;
+            }
+        }catch(e){}
+        return localeCurrency();
+    }
+    function money(amount, currency){
+        try{
+            return new Intl.NumberFormat(navigator.language || "en-US", {
+                style:"currency", currency:currency, maximumFractionDigits:
+                    ["IDR","JPY","KRW"].includes(currency) ? 0 : 2
+            }).format(amount);
+        }catch(e){ return currency+" "+Number(amount).toFixed(2); }
+    }
+    window.climexUpdatePlanPrices = function(currency){
+        currency = currency || "IDR";
+        const rate = Number(rates[currency] || 0);
+        const p30 = document.getElementById("climexPrice30");
+        const p365 = document.getElementById("climexPrice365");
+        const n30 = document.getElementById("climexPrice30Idr");
+        const n365 = document.getElementById("climexPrice365Idr");
+        const note = document.getElementById("climexCurrencyRateNote");
+        if(!p30 || !p365 || !note) return;
+        if(currency !== "IDR" && !rate){
+            p30.textContent = "Kurs belum tersedia";
+            p365.textContent = "Kurs belum tersedia";
+        }else{
+            p30.textContent = money(basePrices[30] * rate, currency);
+            p365.textContent = money(basePrices[365] * rate, currency);
+        }
+        n30.textContent = "Harga dasar: "+money(basePrices[30], "IDR");
+        n365.textContent = "Harga dasar: "+money(basePrices[365], "IDR");
+        if(currency === "IDR"){
+            note.textContent = "Harga ditampilkan dalam IDR. Pembayaran melalui Midtrans diproses dalam IDR.";
+        }else if(rate){
+            note.textContent = "Perkiraan berdasarkan kurs "+currency+" terbaru"+(rateUpdatedAt ? " ("+rateUpdatedAt+")" : "")+". Nilai akhir dapat berubah mengikuti kurs. Midtrans saat ini menerima nominal transaksi dalam IDR; angka mata uang lokal ini hanya untuk referensi.";
+        }else{
+            note.textContent = "Kurs untuk "+currency+" belum tersedia. Pilih IDR atau coba lagi saat koneksi tersedia.";
+        }
+    };
+    async function loadRates(){
+        const note = document.getElementById("climexCurrencyRateNote");
+        const select = document.getElementById("climexCurrencySelect");
+        if(!select) return;
+        select.value = "IDR";
+        window.climexUpdatePlanPrices(select.value);
+        const detectedCurrency = await detectCountryCurrency();
+        if(Array.from(select.options).some(option => option.value === detectedCurrency)) select.value = detectedCurrency;
+        try{
+            const response = await fetch("https://open.er-api.com/v6/latest/IDR", {cache:"no-store"});
+            if(!response.ok) throw new Error("HTTP "+response.status);
+            const data = await response.json();
+            if(data && data.result === "success" && data.rates){
+                rates = Object.assign({IDR:1}, data.rates);
+                rateUpdatedAt = data.time_last_update_utc ? new Date(data.time_last_update_utc).toLocaleDateString() : "";
+                window.climexUpdatePlanPrices(select.value);
+            }else throw new Error("Kurs tidak valid");
+        }catch(error){
+            console.warn("CLIME-X currency rates unavailable:", error);
+            rates = {IDR:1};
+            window.climexUpdatePlanPrices(select.value);
+            if(note && select.value !== "IDR") note.textContent = "Kurs otomatis belum dapat dimuat. Periksa koneksi internet atau pilih IDR.";
+        }
+    }
+    if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", loadRates, {once:true});
+    }else loadRates();
+})();
+</script>
+
 </body>
 </html>
