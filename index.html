@@ -2648,7 +2648,21 @@ climexAuth.onAuthStateChanged(async function(user){
         }
 
         const profile =
-            profileSnap.data();
+            profileSnap.data() || {};
+
+        // Nama di header harus berasal dari nama administrator saat registrasi,
+        // bukan email dan bukan nama perusahaan.
+        const registeredAdminName = String(profile.adminName || "").trim();
+        const adminNameElement = document.getElementById("climexAdminName");
+        const adminAvatarElement = document.getElementById("climexAdminAvatar");
+        if(adminNameElement){
+            adminNameElement.textContent = registeredAdminName || "Administrator";
+        }
+        if(adminAvatarElement){
+            adminAvatarElement.textContent = registeredAdminName
+                ? registeredAdminName.charAt(0).toLocaleUpperCase()
+                : "A";
+        }
 
         if(String(profile.role || "").trim() !== "Administrator"){
 
@@ -5817,9 +5831,9 @@ async function saveClimexClaim(claim){
             </div>
 
             <div class="admin-user">
-                <div class="admin-avatar">BS</div>
+                <div class="admin-avatar" id="climexAdminAvatar">A</div>
                 <div>
-                    <div class="admin-name">Budi Santoso</div>
+                    <div class="admin-name" id="climexAdminName">Administrator</div>
                     <div class="admin-role">Administrator</div>
                 </div>
             </div>
