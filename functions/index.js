@@ -366,7 +366,7 @@ exports.createSnapTransaction = onCall(
 
     try {
       const response = await fetch(
-        "https://app.sandbox.midtrans.com/snap/v1/transactions",
+        https://app.midtrans.com/snap/v1/transactions
         {
           method: "POST",
           headers: {
@@ -430,7 +430,7 @@ exports.midtransWebhook = onRequest(
       ).toString("base64");
 
       const response = await fetch(
-        `https://api.sandbox.midtrans.com/v2/${encodeURIComponent(orderId)}/status`,
+        `https://api.midtrans.com/v2/${encodeURIComponent(orderId)}/status`,
         {
           headers: {
             "Authorization": `Basic ${auth}`,
