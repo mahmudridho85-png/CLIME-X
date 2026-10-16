@@ -6291,6 +6291,13 @@ async function saveClimexClaim(claim){
                     <div>
                         <h1 data-climex-lang-key="Cuti">Cuti</h1>
                         <p data-climex-lang-key="Kelola seluruh pengajuan cuti karyawan.">Kelola seluruh pengajuan cuti karyawan.</p>
+                        <div id="climexGlobalLeaveQuotaBox" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:10px;max-width:680px;">
+                            <label for="climexGlobalLeaveQuota" style="font-size:13px;font-weight:700;color:var(--text);">Jatah Cuti Tahunan Global</label>
+                            <input id="climexGlobalLeaveQuota" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Isi jumlah hari" style="width:150px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--text);background:#fff;">
+                            <span style="font-size:12px;color:var(--muted);">hari per tahun</span>
+                            <button id="climexSaveGlobalLeaveQuota" type="button" onclick="saveClimexGlobalLeaveQuota()" style="height:38px;padding:0 16px;border:0;border-radius:8px;background:var(--brown);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">SIMPAN JATAH CUTI</button>
+                            <span id="climexGlobalLeaveQuotaMessage" role="status" style="font-size:12px;color:var(--muted);"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -12588,8 +12595,9 @@ if(pageId === "settings"){
 
 }
 
-    if(pageId === "cuti" && typeof loadClimexLeave === "function"){
-        loadClimexLeave();
+    if(pageId === "cuti"){
+        if(typeof loadClimexLeave === "function") loadClimexLeave();
+        if(typeof loadClimexGlobalLeaveQuota === "function") loadClimexGlobalLeaveQuota();
     }
 
     if(pageId === "announcements"){
@@ -18282,6 +18290,67 @@ setAppLanguage = function(lang){
         document.addEventListener("DOMContentLoaded", loadRates, {once:true});
     }else loadRates();
 })();
+</script>
+
+
+<script>
+// Jatah cuti tahunan global untuk perusahaan. Tidak menetapkan angka default.
+async function loadClimexGlobalLeaveQuota(){
+    const input = document.getElementById("climexGlobalLeaveQuota");
+    const message = document.getElementById("climexGlobalLeaveQuotaMessage");
+    if(!input || !message) return;
+    if(typeof climexAuth === "undefined" || !climexAuth.currentUser || typeof climexDB === "undefined"){
+        message.textContent = "Login diperlukan untuk memuat pengaturan.";
+        return;
+    }
+    try{
+        const uid = climexAuth.currentUser.uid;
+        const snap = await climexDB.collection("users").doc(uid).collection("climex").doc("profile").get();
+        const data = snap.exists ? (snap.data() || {}) : {};
+        input.value = data.globalAnnualLeaveQuota === undefined || data.globalAnnualLeaveQuota === null ? "" : data.globalAnnualLeaveQuota;
+        message.textContent = input.value === "" ? "Belum diatur." : "Jatah tersimpan.";
+    }catch(error){
+        console.error("LOAD GLOBAL ANNUAL LEAVE QUOTA ERROR:", error);
+        message.textContent = "Gagal memuat jatah cuti.";
+    }
+}
+
+async function saveClimexGlobalLeaveQuota(){
+    const input = document.getElementById("climexGlobalLeaveQuota");
+    const button = document.getElementById("climexSaveGlobalLeaveQuota");
+    const message = document.getElementById("climexGlobalLeaveQuotaMessage");
+    if(!input || !button || !message) return;
+    if(typeof climexAuth === "undefined" || !climexAuth.currentUser || typeof climexDB === "undefined"){
+        message.textContent = "Login diperlukan untuk menyimpan.";
+        return;
+    }
+    const raw = input.value.trim();
+    if(raw === "" || !Number.isFinite(Number(raw)) || Number(raw) < 0){
+        message.textContent = "Masukkan jatah hari yang valid.";
+        input.focus();
+        return;
+    }
+    const quota = Number(raw);
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = "MENYIMPAN...";
+    message.textContent = "";
+    try{
+        const uid = climexAuth.currentUser.uid;
+        await climexDB.collection("users").doc(uid).collection("climex").doc("profile").set({
+            globalAnnualLeaveQuota: quota,
+            globalAnnualLeaveQuotaUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, {merge:true});
+        input.value = String(quota);
+        message.textContent = "Jatah cuti global berhasil disimpan.";
+    }catch(error){
+        console.error("SAVE GLOBAL ANNUAL LEAVE QUOTA ERROR:", error);
+        message.textContent = "Gagal menyimpan. Silakan coba lagi.";
+    }finally{
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
 </script>
 
 </body>
