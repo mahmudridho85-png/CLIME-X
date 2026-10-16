@@ -862,6 +862,12 @@ td{
 .announcement-btn{height:38px;padding:0 18px;border:1px solid #d8c8b8;border-radius:8px;background:#fff;color:var(--brown-dark);font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;}
 .announcement-btn.primary{background:var(--brown);border-color:var(--brown);color:#fff;}
 .announcement-btn.primary:hover{background:var(--brown-dark);border-color:var(--brown-dark);}
+/* Payroll: tombol selalu berwarna agar jelas terlihat, tanpa mengubah tombol fitur lain */
+#payroll .announcement-btn{background:var(--brown);border-color:var(--brown);color:#fff;}
+#payroll .announcement-btn:hover{background:var(--brown-dark);border-color:var(--brown-dark);}
+#payroll .announcement-btn.primary{background:var(--brown-dark);border-color:var(--brown-dark);color:#fff;}
+#payroll .announcement-btn:focus-visible{outline:3px solid #d7b58f;outline-offset:2px;}
+@media(max-width:760px){#payroll .payroll-top-controls{grid-template-columns:1fr!important;}}
 .announcement-history-wrap{overflow-x:auto;}
 .announcement-history-table{min-width:900px;}
 .announcement-history-empty{text-align:center;color:var(--muted);padding:35px 20px !important;}
@@ -2903,7 +2909,19 @@ console.log("CLIME-X FIREBASE:", firebase.app().options.projectId);
     color:#b8793f !important;
 }
 </style>
-</head>
+<style id="payroll-deduction-card-styles">.payroll-deduction-card{border:1px solid #e8ddd0;border-radius:10px;padding:14px;background:#fffdfb;margin:4px 0 8px;font-size:14px;color:#493a2e}.payroll-deduction-card h4{font-size:14px;font-weight:600;margin:0 0 12px;color:#493a2e}.payroll-deduction-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.payroll-deduction-card .announcement-field label,.payroll-deduction-card .payroll-base-picker summary,.payroll-deduction-card .payroll-base-checks label{font-size:13px;font-weight:500}.payroll-deduction-card .announcement-field input{font-size:14px;font-weight:400}.payroll-deduction-card .payroll-base-picker{margin-top:0;border:1px solid #e8ddd0;border-radius:8px;padding:10px}.payroll-deduction-card .payroll-base-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.payroll-deduction-card .payroll-base-checks label{display:flex;align-items:center;gap:7px;font-weight:400}.payroll-deduction-card .payroll-base-checks input{width:auto;height:auto}@media(max-width:700px){.payroll-deduction-fields,.payroll-deduction-card .payroll-base-checks{grid-template-columns:1fr}}
+/* Payroll formula: grouped, predictable two-column layout */
+#payrollPanelFormula .announcement-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:14px}
+#payrollPanelFormula .payroll-deduction-card.full{grid-column:auto;width:auto;min-width:0;margin:0}
+#payrollPanelFormula .payroll-deduction-card{box-sizing:border-box;height:100%}
+#payrollPanelFormula .payroll-deduction-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#payrollPanelFormula .payroll-deduction-fields>.announcement-field.full{grid-column:1/-1}
+#payrollPanelFormula .payroll-deduction-card h4{font-size:14px;font-weight:600;line-height:1.4}
+#payrollPanelFormula .announcement-field label,#payrollPanelFormula .payroll-base-picker summary,#payrollPanelFormula .payroll-base-checks label{font-size:13px;font-weight:500;line-height:1.45}
+#payrollPanelFormula .announcement-field input,#payrollPanelFormula .payroll-base-picker{font-size:14px;font-weight:400}
+#payrollPanelFormula .payroll-base-checks label{font-weight:400}
+@media(max-width:700px){#payrollPanelFormula .announcement-form-grid{grid-template-columns:1fr}#payrollPanelFormula .payroll-deduction-fields{grid-template-columns:1fr}#payrollPanelFormula .payroll-deduction-fields>.announcement-field.full{grid-column:auto}}
+</style></head>
 
 <body>
 
@@ -3727,6 +3745,118 @@ document.addEventListener("click", function(event){
    ========================================================= */
 
 const APP_TRANSLATIONS = {
+    "Data Karyawan": {id:"Data Karyawan", en:"Employee Data", zh:"员工资料"},
+    "Gaji": {id:"Gaji", en:"Payroll", zh:"薪资"},
+    "Contoh: Tunjangan jabatan": {id:"Contoh: Tunjangan jabatan", en:"Example: Position allowance", zh:"例如：职位津贴"},
+    "Contoh: Tunjangan keluarga": {id:"Contoh: Tunjangan keluarga", en:"Example: Family allowance", zh:"例如：家庭津贴"},
+    "Contoh: Tunjangan komunikasi": {id:"Contoh: Tunjangan komunikasi", en:"Example: Communication allowance", zh:"例如：通讯津贴"},
+    "Contoh: Tunjangan transport tetap": {id:"Contoh: Tunjangan transport tetap", en:"Example: Fixed transport allowance", zh:"例如：固定交通津贴"},
+    "Contoh: THR": {id:"Contoh: THR", en:"Example: Holiday allowance", zh:"例如：节日津贴"},
+    "Contoh: Bonus / Incentive": {id:"Contoh: Bonus / Incentive", en:"Example: Bonus / incentive", zh:"例如：奖金／激励"},
+    "Contoh: denda keterlambatan": {id:"Contoh: denda keterlambatan", en:"Example: Late penalty", zh:"例如：迟到罚款"},
+    "Contoh: PPH 21": {id:"Contoh: PPH 21", en:"Example: Income tax", zh:"例如：所得税"},
+    "Contoh: BPJS": {id:"Contoh: BPJS", en:"Example: Health insurance", zh:"例如：医疗保险"},
+    "Contoh: JHT": {id:"Contoh: JHT", en:"Example: Pension insurance", zh:"例如：养老保险"},
+    "Contoh: Asuransi kecelakaan kerja": {id:"Contoh: Asuransi kecelakaan kerja", en:"Example: Work accident insurance", zh:"例如：工伤保险"},
+    "Ketik nama atau nomor": {id:"Ketik nama atau nomor", en:"Enter name or employee ID", zh:"输入姓名或员工编号"},
+    "Nama": {id:"Nama", en:"Name", zh:"姓名"},
+    "No. karyawan": {id:"No. karyawan", en:"Employee ID", zh:"员工编号"},
+    "Departemen/Jabatan": {id:"Departemen/Jabatan", en:"Department/Position", zh:"部门／职位"},
+    "Slip Gaji": {id:"Slip Gaji", en:"PAYSLIP", zh:"工资单"},
+    "SLIP GAJI": {id:"SLIP GAJI", en:"PAYSLIP", zh:"工资单"},
+    "Penghasilan": {id:"Penghasilan", en:"Earnings", zh:"收入"},
+    "Nilai": {id:"Nilai", en:"Amount", zh:"金额"},
+    "Gaji pokok": {id:"Gaji pokok", en:"Basic Salary", zh:"基本工资"},
+    "Pembayaran cuti": {id:"Pembayaran cuti", en:"Paid Leave", zh:"休假工资"},
+    "Lembur": {id:"Lembur", en:"Overtime", zh:"加班"},
+    "Total penghasilan": {id:"Total penghasilan", en:"Total Earnings", zh:"总收入"},
+    "Rincian lembur": {id:"Rincian lembur", en:"Overtime Details", zh:"加班明细"},
+    "Jenis": {id:"Jenis", en:"Type", zh:"类型"},
+    "Jam": {id:"Jam", en:"Hours", zh:"小时"},
+    "Potongan": {id:"Potongan", en:"Deductions", zh:"扣款"},
+    "Total potongan": {id:"Total potongan", en:"Total Deductions", zh:"扣款总额"},
+    "GAJI BERSIH": {id:"GAJI BERSIH", en:"TAKE HOME PAY", zh:"实发工资"},
+    "Tanggal cetak": {id:"Tanggal cetak", en:"Print Date", zh:"打印日期"},
+    "Tidak ada lembur": {id:"Tidak ada lembur", en:"No overtime", zh:"无加班记录"},
+    "Gaji Karyawan": {id:"Gaji Karyawan", en:"Employee Payroll", zh:"员工薪资"},
+    "Kelola komponen gaji, rumus perhitungan, dan riwayat penggajian.": {id:"Kelola komponen gaji, rumus perhitungan, dan riwayat penggajian.", en:"Manage salary components, payroll formulas, and payroll history.", zh:"管理薪资项目、计算公式和薪资记录。"},
+    "Rumus Perhitungan Gaji": {id:"Rumus Perhitungan Gaji", en:"Payroll Calculation Rules", zh:"薪资计算规则"},
+    "Riwayat Gaji Karyawan": {id:"Riwayat Gaji Karyawan", en:"Payroll History", zh:"薪资历史"},
+    "Periode": {id:"Periode", en:"Pay Period", zh:"薪资期间"},
+    "Cari nama / no. karyawan": {id:"Cari nama / no. karyawan", en:"Search employee name / ID", zh:"搜索员工姓名／编号"},
+    "Nama karyawan": {id:"Nama karyawan", en:"Employee Name", zh:"员工姓名"},
+    "Pilih karyawan...": {id:"Pilih karyawan...", en:"Select employee...", zh:"选择员工……"},
+    "Belum ada karyawan dipilih.": {id:"Belum ada karyawan dipilih.", en:"No employee selected yet.", zh:"尚未选择员工。"},
+    "Gaji pokok (diambil dari Data Karyawan)": {id:"Gaji pokok (diambil dari Data Karyawan)", en:"Basic Salary (from Employee Data)", zh:"基本工资（来自员工资料）"},
+    "Saldo cuti (diambil dari Data Karyawan)": {id:"Saldo cuti (diambil dari Data Karyawan)", en:"Leave Balance (from Employee Data)", zh:"休假余额（来自员工资料）"},
+    "Tunjangan tetap 1": {id:"Tunjangan tetap 1", en:"Fixed Allowance 1", zh:"固定津贴 1"},
+    "Tunjangan tetap 2": {id:"Tunjangan tetap 2", en:"Fixed Allowance 2", zh:"固定津贴 2"},
+    "Tunjangan tetap 3": {id:"Tunjangan tetap 3", en:"Fixed Allowance 3", zh:"固定津贴 3"},
+    "Tunjangan tetap 4": {id:"Tunjangan tetap 4", en:"Fixed Allowance 4", zh:"固定津贴 4"},
+    "Bonus / insentif 1": {id:"Bonus / insentif 1", en:"Bonus / Incentive 1", zh:"奖金／激励 1"},
+    "Bonus / insentif 2": {id:"Bonus / insentif 2", en:"Bonus / Incentive 2", zh:"奖金／激励 2"},
+    "Masuk dasar perhitungan asuransi.": {id:"Masuk dasar perhitungan asuransi.", en:"Included in the insurance calculation base.", zh:"计入保险计算基数。"},
+    "Tidak masuk dasar perhitungan asuransi.": {id:"Tidak masuk dasar perhitungan asuransi.", en:"Excluded from the insurance calculation base.", zh:"不计入保险计算基数。"},
+    "Pembayaran cuti (jika berlaku)": {id:"Pembayaran cuti (jika berlaku)", en:"Paid Leave (if applicable)", zh:"休假工资（如适用）"},
+    "Input Lembur": {id:"Input Lembur", en:"Overtime Entry", zh:"加班录入"},
+    "Masukkan lembur yang sudah diajukan/disetujui.": {id:"Masukkan lembur yang sudah diajukan/disetujui.", en:"Enter overtime that has been requested/approved.", zh:"输入已申请／批准的加班记录。"},
+    "Masukkan lembur yang sudah diajukan/disetujui. Lembur reguler dan lembur tanggal merah memakai perkalian terpisah yang diatur pada tab Rumus Perhitungan Gaji.": {id:"Masukkan lembur yang sudah diajukan/disetujui. Lembur reguler dan lembur tanggal merah memakai perkalian terpisah yang diatur pada tab Rumus Perhitungan Gaji.", en:"Enter overtime that has been requested/approved. Regular overtime and public-holiday overtime use separate multipliers configured in the Payroll Calculation Rules tab.", zh:"请输入已申请／批准的加班记录。普通加班和公共假日加班使用不同的倍数，需在薪资计算规则选项卡中设置。"},
+    "Tanggal lembur": {id:"Tanggal lembur", en:"Overtime Date", zh:"加班日期"},
+    "Jenis lembur": {id:"Jenis lembur", en:"Overtime Type", zh:"加班类型"},
+    "Lembur reguler": {id:"Lembur reguler", en:"Regular Overtime", zh:"普通加班"},
+    "Tanggal merah / Public Holiday": {id:"Tanggal merah / Public Holiday", en:"Public Holiday", zh:"公共假日"},
+    "Durasi lembur (jam)": {id:"Durasi lembur (jam)", en:"Overtime Duration (hours)", zh:"加班时长（小时）"},
+    "Tarif dasar per jam": {id:"Tarif dasar per jam", en:"Base Hourly Rate", zh:"基本时薪"},
+    "Otomatis dari gaji pokok ÷ jam kerja bulanan standar": {id:"Otomatis dari gaji pokok ÷ jam kerja bulanan standar", en:"Automatically calculated from basic salary ÷ standard monthly working hours.", zh:"自动按基本工资 ÷ 标准月工时计算。"},
+    "Tambah Lembur": {id:"Tambah Lembur", en:"Add Overtime", zh:"添加加班"},
+    "Tanggal": {id:"Tanggal", en:"Date", zh:"日期"},
+    "Jenis": {id:"Jenis", en:"Type", zh:"类型"},
+    "Jam": {id:"Jam", en:"Hours", zh:"小时"},
+    "Jam berbobot": {id:"Jam berbobot", en:"Weighted Hours", zh:"加权小时"},
+    "Nilai lembur": {id:"Nilai lembur", en:"Overtime Amount", zh:"加班金额"},
+    "Belum ada input lembur.": {id:"Belum ada input lembur.", en:"No overtime entries yet.", zh:"暂无加班记录。"},
+    "Total pembayaran lembur": {id:"Total pembayaran lembur", en:"Total Overtime Pay", zh:"加班费总额"},
+    "Pajak penghasilan (otomatis)": {id:"Pajak penghasilan (otomatis)", en:"Income Tax (automatic)", zh:"所得税（自动）"},
+    "Dihitung dari total penghasilan memakai tarif di Rumus Perhitungan Gaji.": {id:"Dihitung dari total penghasilan memakai tarif di Rumus Perhitungan Gaji.", en:"Calculated from total earnings using the rate in Payroll Calculation Rules.", zh:"按薪资计算规则中的税率从总收入计算。"},
+    "Asuransi kesehatan": {id:"Asuransi kesehatan", en:"Health Insurance", zh:"医疗保险"},
+    "Asuransi pensiun": {id:"Asuransi pensiun", en:"Pension Insurance", zh:"养老保险"},
+    "Dihitung otomatis berdasarkan persentase di Rumus Perhitungan Gaji.": {id:"Dihitung otomatis berdasarkan persentase di Rumus Perhitungan Gaji.", en:"Automatically calculated using the percentage in Payroll Calculation Rules.", zh:"根据薪资计算规则中的百分比自动计算。"},
+    "Kasbon / pinjaman": {id:"Kasbon / pinjaman", en:"Salary Advance / Loan", zh:"预支工资／贷款"},
+    "Keterangan potongan lainnya": {id:"Keterangan potongan lainnya", en:"Other Deduction Description", zh:"其他扣款说明"},
+    "Nominal potongan lainnya": {id:"Nominal potongan lainnya", en:"Other Deduction Amount", zh:"其他扣款金额"},
+    "Gaji Bersih": {id:"Gaji Bersih", en:"TAKE HOME PAY", zh:"实发工资"},
+    "Perkiraan gaji bersih": {id:"Perkiraan gaji bersih", en:"Estimated Take-Home Pay", zh:"预计实发工资"},
+    "Cetak": {id:"Cetak", en:"Print", zh:"打印"},
+    "Simpan": {id:"Simpan", en:"Save", zh:"保存"},
+    "Klik Simpan untuk memperbarui data karyawan pada periode ini. Daftar lembur tetap tampil di halaman ini dan diurutkan dari tanggal terbaru ke terlama. Riwayat menyimpan satu ringkasan per karyawan per periode.": {id:"Klik Simpan untuk memperbarui data karyawan pada periode ini. Daftar lembur tetap tampil di halaman ini dan diurutkan dari tanggal terbaru ke terlama. Riwayat menyimpan satu ringkasan per karyawan per periode.", en:"Click Save to update this employee's payroll for the selected period. Overtime entries remain on this page and are sorted from newest to oldest. History stores one summary per employee per period.", zh:"点击保存以更新该员工所选期间的薪资。加班记录会保留在此页面，并按日期从新到旧排序。每位员工每个期间仅保存一条汇总记录。"},
+    "Penghasilan": {id:"Penghasilan", en:"Earnings", zh:"收入"},
+    "Potongan": {id:"Potongan", en:"Deductions", zh:"扣款"},
+    "Tanggal Simpan": {id:"Tanggal Simpan", en:"Date Saved", zh:"保存日期"},
+    "Muat ulang": {id:"Muat ulang", en:"Reload", zh:"重新加载"},
+    "Belum ada riwayat yang dimuat.": {id:"Belum ada riwayat yang dimuat.", en:"No history loaded yet.", zh:"尚未加载历史记录。"},
+    "Pengaturan dasar disimpan pada perangkat browser ini untuk rancangan awal. Tarif dan aturan tidak dikunci oleh CLIME-X.": {id:"Pengaturan dasar disimpan pada perangkat browser ini untuk rancangan awal. Tarif dan aturan tidak dikunci oleh CLIME-X.", en:"Basic settings are stored in this browser for the initial design. CLIME-X does not lock rates or rules.", zh:"初始版本的基本设置保存在此浏览器中。CLIME-X 不会锁定费率或规则。"},
+    "Pajak penghasilan": {id:"Pajak penghasilan", en:"Income Tax", zh:"所得税"},
+    "Nama potongan": {id:"Nama potongan", en:"Deduction Name", zh:"扣款名称"},
+    "Persentase (%)": {id:"Persentase (%)", en:"Percentage (%)", zh:"百分比（%）"},
+    "Komponen penghasilan yang dipotong :": {id:"Komponen penghasilan yang dipotong :", en:"Earnings components included in the deduction base:", zh:"纳入扣款计算基数的收入项目："},
+    "Pilih komponen": {id:"Pilih komponen", en:"Select components", zh:"选择项目"},
+    "Asuransi kecelakaan kerja": {id:"Asuransi kecelakaan kerja", en:"Work Accident Insurance", zh:"工伤保险"},
+    "Jam kerja wajib per bulan (jam)": {id:"Jam kerja wajib per bulan (jam)", en:"Required Monthly Working Hours", zh:"每月规定工时"},
+    "Dipakai menghitung tarif dasar lembur: gaji pokok ÷ jam wajib bulanan.": {id:"Dipakai menghitung tarif dasar lembur: gaji pokok ÷ jam wajib bulanan.", en:"Used to calculate the base overtime rate: basic salary ÷ required monthly hours.", zh:"用于计算加班基本时薪：基本工资 ÷ 每月规定工时。"},
+    "PERKALIAN JAM LEMBUR REGULER :": {id:"PERKALIAN JAM LEMBUR REGULER :", en:"REGULAR OVERTIME MULTIPLIERS:", zh:"普通加班倍数："},
+    "PERKALIAN JAM LEMBUR HARI LIBUR :": {id:"PERKALIAN JAM LEMBUR HARI LIBUR :", en:"PUBLIC HOLIDAY OVERTIME MULTIPLIERS:", zh:"公共假日加班倍数："},
+    "Atur setiap jam secara terpisah sesuai aturan perusahaan/negara.": {id:"Atur setiap jam secara terpisah sesuai aturan perusahaan/negara.", en:"Configure each hour separately according to company/country rules.", zh:"根据公司／国家规则分别设置每个小时的倍数。"},
+    "Lembur hari libur dipisahkan dari lembur reguler.": {id:"Lembur hari libur dipisahkan dari lembur reguler.", en:"Public holiday overtime is configured separately from regular overtime.", zh:"公共假日加班与普通加班分开设置。"},
+    "Tidak ada pembayaran tertunda": {id:"Tidak ada pembayaran tertunda", en:"No pending payments", zh:"没有待付款项"},
+    "Perlu proses pembayaran": {id:"Perlu proses pembayaran", en:"Payment processing required", zh:"需要处理付款"},
+    "Belum ada input lembur untuk periode ini.": {id:"Belum ada input lembur untuk periode ini.", en:"No overtime entries for this period yet.", zh:"此期间尚无加班记录。"},
+    "Slip Gaji": {id:"Slip Gaji", en:"Payslip", zh:"工资单"},
+    "SLIP GAJI": {id:"SLIP GAJI", en:"PAYSLIP", zh:"工资单"},
+    "Jam Kerja & Istirahat Lembur": {id:"Jam Kerja & Istirahat Lembur", en:"Working Hours & Overtime Breaks", zh:"工作时间与加班休息"},
+    "Jam kerja wajib per bulan (jam)": {id:"Jam kerja wajib per bulan (jam)", en:"Required Monthly Working Hours", zh:"每月规定工时"},
+    "Wajib istirahat saat lembur": {id:"Wajib istirahat saat lembur", en:"Require Break During Overtime", zh:"加班时必须休息"},
+    "Istirahat setelah (jam)": {id:"Istirahat setelah (jam)", en:"Break After (hours)", zh:"工作多少小时后休息"},
+    "Durasi istirahat (menit)": {id:"Durasi istirahat (menit)", en:"Break Duration (minutes)", zh:"休息时长（分钟）"},
     "UBAH PWD": {id:"UBAH PWD", en:"EDIT PASSWORD", zh:"修改密码"},
     "SIMPAN PWD": {id:"SIMPAN PWD", en:"SAVE PASSWORD", zh:"保存密码"},
     "Pilih salah satu paket di atas untuk melanjutkan.": {id:"Pilih salah satu paket di atas untuk melanjutkan.", en:"Select one of the plans above to continue.", zh:"请选择上方的一个套餐以继续。"},
@@ -4061,9 +4191,9 @@ const APP_TRANSLATIONS = {
         en:"Search employee / ID",
         zh:"搜索员工 / 编号"
     },
-    "DATA KARYAWAN": {
-        id:"DATA KARYAWAN",
-        en:"EMPLOYEE DATA",
+    "Data Karyawan": {
+        id:"Data Karyawan",
+        en:"Employee Data",
         zh:"员工资料"
     },
     "RIWAYAT KONTRAK": {
@@ -4845,6 +4975,14 @@ function prepareAppTranslations(){
     if(!root) return;
 
     root.querySelectorAll("*").forEach(function(el){
+
+        // Company name is live profile data, not a translatable UI label.
+        // Never tag or translate it, otherwise the language observer can replace
+        // the real company name with the initial loading placeholder.
+        if(el.id === "headerCompanyName"){
+            el.removeAttribute("data-climex-lang-key");
+            return;
+        }
 
         if(el.children.length === 0){
             const original = el.textContent.trim();
@@ -6031,6 +6169,10 @@ async function saveClimexClaim(claim){
                 Beranda
             </button>
 
+            <button onclick="showPage('employees', this)">
+                Data Karyawan
+            </button>
+
             <button onclick="showPage('claims', this)">
                 Klaim
             </button>
@@ -6039,11 +6181,9 @@ async function saveClimexClaim(claim){
                 Cuti
             </button>
 
-            <button onclick="showPage('employees', this)">
-                Karyawan
+            <button onclick="showPage('payroll', this)">
+                Gaji
             </button>
-
-            
 
             <button onclick="showPage('events', this)">
                 Pengumuman
@@ -6663,6 +6803,8 @@ async function saveClimexClaim(claim){
                             <th data-climex-lang-key="Mulai Kontrak">Mulai Kontrak</th>
                             <th data-climex-lang-key="Berakhir Kontrak">Berakhir Kontrak</th>
                             <th data-climex-lang-key="Sisa Kontrak">Sisa Kontrak</th>
+                            <th>Gaji Pokok</th>
+                            <th>Saldo Cuti</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -6731,6 +6873,87 @@ async function saveClimexClaim(claim){
 
 </section>
 
+
+            <section id="payroll" class="page" style="display:none;">
+                <div class="page-heading"><div><h1>Gaji Karyawan</h1><p>Kelola komponen gaji, rumus perhitungan, dan riwayat penggajian.</p></div></div>
+                <div class="settings-tabs" role="tablist">
+                    <button type="button" class="settings-tab active" data-payroll-tab="employees" onclick="showPayrollTab('employees',this)">Gaji Karyawan</button>
+                    <button type="button" class="settings-tab" data-payroll-tab="formula" onclick="showPayrollTab('formula',this)">Rumus Perhitungan Gaji</button>
+                    <button type="button" class="settings-tab" data-payroll-tab="history" onclick="showPayrollTab('history',this)">Riwayat Gaji Karyawan</button>
+                </div>
+                <div id="payrollPanelEmployees" class="card" style="box-shadow:none;">
+                    <div class="announcement-form-grid payroll-top-controls" style="grid-template-columns: minmax(170px,.75fr) minmax(220px,1fr) minmax(240px,1.2fr);gap:12px;margin-bottom:14px;padding:12px 14px;border:1px solid #e8ddd0;border-radius:9px;background:#fbf8f4;align-items:end;">
+                        <div class="announcement-field"><label for="payrollPeriod" style="font-weight:700;">Periode</label><input id="payrollPeriod" type="month" style="margin-top:6px;"></div>
+                        <div class="announcement-field"><label for="payrollEmployeeSearch">Cari nama / no. karyawan</label><input id="payrollEmployeeSearch" type="text" placeholder="Ketik nama atau nomor" oninput="renderPayrollEmployeeOptions()"></div>
+                        <div class="announcement-field"><label for="payrollEmployeeSelect">Nama karyawan</label><select id="payrollEmployeeSelect" onchange="loadPayrollEmployeeForm()"><option value="">Pilih karyawan...</option></select></div>
+                        <div id="payrollEmployeeIdentity" class="announcement-field full" style="grid-column:1/-1;padding:10px 12px;border:1px solid #e8ddd0;border-radius:8px;background:#fff;color:#493a2e;">Belum ada karyawan dipilih.</div>
+                    </div>
+                    <div class="announcement-form-grid">
+                        <div class="announcement-field"><label>Gaji pokok (diambil dari Data Karyawan)</label><input id="payrollBaseSalary" type="number" min="0" disabled></div>
+                        <div class="announcement-field"><label>Saldo cuti (diambil dari Data Karyawan)</label><input id="payrollLeaveBalance" type="number" min="0" disabled></div>
+                        <div class="announcement-field"><label for="payrollFixedAllowance1Name">Tunjangan tetap 1</label><input id="payrollFixedAllowance1Name" type="text" maxlength="100" value="" placeholder="Contoh: Tunjangan jabatan"><input id="payrollFixedAllowance1Amount" type="text" inputmode="decimal" min="0" value="0" autocomplete="off" aria-label="Nominal tunjangan tetap 1"><small style="color:var(--muted);">Masuk dasar perhitungan asuransi.</small></div>
+                        <div class="announcement-field"><label for="payrollFixedAllowance2Name">Tunjangan tetap 2</label><input id="payrollFixedAllowance2Name" type="text" maxlength="100" value="" placeholder="Contoh: Tunjangan keluarga"><input id="payrollFixedAllowance2Amount" type="text" inputmode="decimal" min="0" value="0" autocomplete="off" aria-label="Nominal tunjangan tetap 2"><small style="color:var(--muted);">Masuk dasar perhitungan asuransi.</small></div>
+                        <div class="announcement-field"><label for="payrollFixedAllowance3Name">Tunjangan tetap 3</label><input id="payrollFixedAllowance3Name" type="text" maxlength="100" value="" placeholder="Contoh: Tunjangan komunikasi"><input id="payrollFixedAllowance3Amount" type="text" inputmode="decimal" min="0" value="0" autocomplete="off" aria-label="Nominal tunjangan tetap 3"><small style="color:var(--muted);">Masuk dasar perhitungan asuransi.</small></div>
+                        <div class="announcement-field"><label for="payrollFixedAllowance4Name">Tunjangan tetap 4</label><input id="payrollFixedAllowance4Name" type="text" maxlength="100" value="" placeholder="Contoh: Tunjangan transport tetap"><input id="payrollFixedAllowance4Amount" type="text" inputmode="decimal" min="0" value="0" autocomplete="off" aria-label="Nominal tunjangan tetap 4"><small style="color:var(--muted);">Masuk dasar perhitungan asuransi.</small></div>
+                        <div class="announcement-field"><label for="payrollBonus1Name">Bonus / insentif 1</label><input id="payrollBonus1Name" type="text" maxlength="100" value="" placeholder="Contoh: THR"><input id="payrollBonus1Amount" type="text" inputmode="decimal" min="0" value="0" autocomplete="off" aria-label="Nominal bonus / insentif 1"><small style="color:var(--muted);">Tidak masuk dasar perhitungan asuransi.</small></div>
+                        <div class="announcement-field"><label for="payrollBonus2Name">Bonus / insentif 2</label><input id="payrollBonus2Name" type="text" maxlength="100" value="" placeholder="Contoh: Bonus / Incentive"><input id="payrollBonus2Amount" type="text" inputmode="decimal" min="0" value="0" autocomplete="off" aria-label="Nominal bonus / insentif 2"><small style="color:var(--muted);">Tidak masuk dasar perhitungan asuransi.</small></div>
+                        <div class="announcement-field"><label for="payrollLeavePay">Pembayaran cuti (jika berlaku)</label><input id="payrollLeavePay" type="text" inputmode="decimal" min="0" value="0" autocomplete="off"></div>
+                        <div class="announcement-field full" style="border:1px solid #e8ddd0;border-radius:10px;padding:14px;margin-top:4px;"><h3 style="margin:0 0 8px;">Input Lembur</h3><p data-climex-lang-key="Masukkan lembur yang sudah diajukan/disetujui. Lembur reguler dan lembur tanggal merah memakai perkalian terpisah yang diatur pada tab Rumus Perhitungan Gaji." style="font-size:12px;color:var(--muted);margin:0 0 12px;">Masukkan lembur yang sudah diajukan/disetujui. Lembur reguler dan lembur tanggal merah memakai perkalian terpisah yang diatur pada tab Rumus Perhitungan Gaji.</p><div class="announcement-form-grid"><div class="announcement-field"><label for="payrollOvertimeDate">Tanggal lembur</label><input id="payrollOvertimeDate" type="date"></div><div class="announcement-field"><label for="payrollOvertimeType">Jenis lembur</label><select id="payrollOvertimeType"><option value="regular">Lembur reguler</option><option value="holiday">Tanggal merah / Public Holiday</option></select></div><div class="announcement-field"><label for="payrollOvertimeHours">Durasi lembur (jam)</label><input id="payrollOvertimeHours" type="number" min="0.01" max="24" step="0.25" placeholder="Contoh: 3.5"></div><div class="announcement-field"><label>Tarif dasar per jam</label><div id="payrollHourlyRateDisplay" style="padding:11px 12px;border:1px solid #e8ddd0;border-radius:8px;background:#f5f1eb;min-height:20px;">Otomatis dari gaji pokok ÷ jam kerja bulanan standar</div></div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;"><button type="button" class="announcement-btn" onclick="addPayrollOvertimeEntry()">Tambah Lembur</button></div><div class="table-wrap" style="margin-top:12px;"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Jam</th><th>Jam berbobot</th><th>Nilai lembur</th><th></th></tr></thead><tbody id="payrollOvertimeEntriesBody"><tr><td colspan="6" class="announcement-history-empty">Belum ada input lembur.</td></tr></tbody></table></div><div style="display:flex;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap;"><strong>Total pembayaran lembur</strong><strong id="payrollOvertimeTotal">0</strong></div></div>
+                        <div class="announcement-field"><label id="payrollTaxLabel" for="payrollTax">Pajak penghasilan (otomatis)</label><input id="payrollTax" type="text" inputmode="decimal" value="0" readonly aria-readonly="true" style="background:#f5f1eb;cursor:not-allowed;"><small style="color:var(--muted);">Dihitung dari total penghasilan memakai tarif di Rumus Perhitungan Gaji.</small></div>
+                        <div class="announcement-field"><label id="payrollHealthInsuranceLabel" for="payrollHealthInsurance">Asuransi kesehatan</label><input id="payrollHealthInsurance" type="text" inputmode="decimal" value="0" readonly aria-readonly="true" style="background:#f5f1eb;cursor:not-allowed;"><small style="color:var(--muted);">Dihitung otomatis berdasarkan persentase di Rumus Perhitungan Gaji.</small></div>
+                        <div class="announcement-field"><label id="payrollPensionInsuranceLabel" for="payrollPensionInsurance">Asuransi pensiun</label><input id="payrollPensionInsurance" type="text" inputmode="decimal" value="0" readonly aria-readonly="true" style="background:#f5f1eb;cursor:not-allowed;"><small style="color:var(--muted);">Dihitung otomatis berdasarkan persentase di Rumus Perhitungan Gaji.</small></div>
+                        <div class="announcement-field"><label for="payrollLoan">Kasbon / pinjaman</label><input id="payrollLoan" type="text" inputmode="decimal" min="0" value="0" autocomplete="off"></div>
+                        <div class="announcement-field"><label for="payrollOtherDeductionDescription">Keterangan potongan lainnya</label><input id="payrollOtherDeductionDescription" type="text" maxlength="120" placeholder="Contoh: denda keterlambatan" value=""></div>
+                        <div class="announcement-field"><label for="payrollOtherDeduction">Nominal potongan lainnya</label><input id="payrollOtherDeduction" type="text" inputmode="decimal" min="0" value="0" autocomplete="off"></div>
+                    </div>
+                    <div style="margin-top:18px;padding:15px;border-radius:9px;background:#f7f2eb;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;"><strong>Perkiraan gaji bersih</strong><strong id="payrollNetPreview">0</strong></div>
+                    <div class="announcement-actions"><button type="button" class="announcement-btn" onclick="printPayrollSlip()">Cetak</button><button type="button" class="announcement-btn primary" onclick="savePayrollRecord()">Simpan</button></div>
+                    <p style="font-size:11px;color:var(--muted);">Klik Simpan untuk memperbarui data karyawan pada periode ini. Daftar lembur tetap tampil di halaman ini dan diurutkan dari tanggal terbaru ke terlama. Riwayat menyimpan satu ringkasan per karyawan per periode.</p>
+                </div>
+                <div id="payrollPanelFormula" class="card" style="display:none;box-shadow:none;">
+                    <h3 style="margin-top:0;">Rumus Perhitungan Gaji</h3>
+                    <p style="font-size:12px;color:var(--muted);">Pengaturan dasar disimpan pada perangkat browser ini untuk rancangan awal. Tarif dan aturan tidak dikunci oleh CLIME-X.</p>
+                    <div class="announcement-form-grid">
+                        <div class="payroll-deduction-card full" data-deduction-card="tax"><h4>Pajak penghasilan</h4><div class="payroll-deduction-fields"><div class="announcement-field"><label for="payrollTaxName">Nama potongan</label><input id="payrollTaxName" type="text" maxlength="100" value="Pajak penghasilan" placeholder="Contoh: PPH 21"></div><div class="announcement-field"><label for="payrollTaxRatePercent">Persentase (%)</label><input id="payrollTaxRatePercent" type="number" min="0" max="100" step="0.01" value="0"></div><div class="announcement-field full"><label>Komponen penghasilan yang dipotong :</label><details class="payroll-base-picker"><summary>Pilih komponen</summary><div class="payroll-base-checks" data-payroll-base="tax"></div></details></div></div></div>
+                        <div class="payroll-deduction-card full" data-deduction-card="health"><h4>Asuransi kesehatan</h4><div class="payroll-deduction-fields"><div class="announcement-field"><label for="payrollHealthInsuranceName">Nama potongan</label><input id="payrollHealthInsuranceName" type="text" maxlength="100" value="Asuransi kesehatan" placeholder="Contoh: BPJS"></div><div class="announcement-field"><label for="payrollHealthInsuranceRatePercent">Persentase (%)</label><input id="payrollHealthInsuranceRatePercent" type="number" min="0" max="100" step="0.01" value="0"></div><div class="announcement-field full"><label>Komponen penghasilan yang dipotong :</label><details class="payroll-base-picker"><summary>Pilih komponen</summary><div class="payroll-base-checks" data-payroll-base="health"></div></details></div></div></div>
+                        <div class="payroll-deduction-card full" data-deduction-card="accident"><h4>Asuransi kecelakaan kerja</h4><div class="payroll-deduction-fields"><div class="announcement-field"><label for="payrollAccidentInsuranceName">Nama potongan</label><input id="payrollAccidentInsuranceName" type="text" maxlength="100" value="Asuransi kecelakaan kerja" placeholder="Contoh: Asuransi kecelakaan kerja"></div><div class="announcement-field"><label for="payrollAccidentInsuranceRatePercent">Persentase (%)</label><input id="payrollAccidentInsuranceRatePercent" type="number" min="0" max="100" step="0.01" value="0"></div><div class="announcement-field full"><label>Komponen penghasilan yang dipotong :</label><details class="payroll-base-picker"><summary>Pilih komponen</summary><div class="payroll-base-checks" data-payroll-base="accident"></div></details></div></div></div>
+                        <div class="payroll-deduction-card full" data-deduction-card="pension"><h4>Asuransi pensiun</h4><div class="payroll-deduction-fields"><div class="announcement-field"><label for="payrollPensionInsuranceName">Nama potongan</label><input id="payrollPensionInsuranceName" type="text" maxlength="100" value="Asuransi pensiun" placeholder="Contoh: JHT"></div><div class="announcement-field"><label for="payrollPensionInsuranceRatePercent">Persentase (%)</label><input id="payrollPensionInsuranceRatePercent" type="number" min="0" max="100" step="0.01" value="0"></div><div class="announcement-field full"><label>Komponen penghasilan yang dipotong :</label><details class="payroll-base-picker"><summary>Pilih komponen</summary><div class="payroll-base-checks" data-payroll-base="pension"></div></details></div></div></div>
+                        <div class="payroll-deduction-card full" style="grid-column:1 / -1;">
+                          <h4>Jam Kerja &amp; Istirahat Lembur</h4>
+                          <div class="payroll-deduction-fields">
+                            <div class="announcement-field"><label for="payrollMonthlyHours">Jam kerja wajib per bulan (jam)</label><input id="payrollMonthlyHours" type="number" min="1" value="173"><small style="color:var(--muted);">Dipakai menghitung tarif dasar lembur: gaji pokok ÷ jam wajib bulanan.</small></div>
+                            <div class="announcement-field"><label for="payrollBreakEnabled"><input id="payrollBreakEnabled" type="checkbox" checked style="width:auto;height:auto;"> Wajib istirahat saat lembur</label></div>
+                            <div class="announcement-field"><label for="payrollBreakAfter">Istirahat setelah (jam)</label><input id="payrollBreakAfter" type="number" min="1" value="4"></div>
+                            <div class="announcement-field"><label for="payrollBreakMinutes">Durasi istirahat (menit)</label><input id="payrollBreakMinutes" type="number" min="0" value="30"></div>
+                          </div>
+                        </div>
+                        
+                        
+<div class="announcement-field full">
+  <label style="font-weight:bold;">PERKALIAN JAM LEMBUR REGULER :</label>
+  <p style="margin:0 0 8px;font-size:12px;color:var(--muted);">
+    Atur setiap jam secara terpisah sesuai aturan perusahaan/negara.
+  </p>
+  <div id="payrollOvertimeRatesGrid" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;"></div>
+</div>
+
+<div class="announcement-field full">
+  <label style="font-weight:bold;">PERKALIAN JAM LEMBUR HARI LIBUR :</label>
+  <p style="margin:0 0 8px;font-size:12px;color:var(--muted);">
+    Lembur hari libur dipisahkan dari lembur reguler. Karena setiap jam dapat memiliki nilai yang berbeda
+  </p>
+  <div id="payrollHolidayOvertimeRatesGrid" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;"></div>
+</div>
+
+                    </div>
+                    <div class="announcement-actions"><button type="button" class="announcement-btn primary" onclick="savePayrollFormula()">Simpan Rumus</button></div>
+                    <p style="font-size:11px;color:var(--muted);">Catatan: jam lembur tetap harus diajukan manual. Durasi istirahat dikurangi dari jam lembur mentah sebelum pengali diterapkan.</p>
+                </div>
+                <div id="payrollPanelHistory" class="card" style="display:none;box-shadow:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;"><h3 style="margin:0;">Riwayat Gaji Karyawan</h3><button class="announcement-btn" type="button" onclick="loadPayrollHistory()">Muat ulang</button></div>
+                    <style>.payroll-history-clickable{cursor:pointer}.payroll-history-clickable:hover{background:#f8f0e7}.payroll-history-clickable:focus{outline:2px solid #b88a5e;outline-offset:-2px}</style><div class="table-wrap" style="margin-top:14px;"><table><thead><tr><th>Periode</th><th>ID Karyawan</th><th>Nama Karyawan</th><th>Penghasilan</th><th>Potongan</th><th>Gaji Bersih</th><th>Tanggal Simpan</th></tr></thead><tbody id="payrollHistoryBody"><tr><td colspan="7" class="announcement-history-empty">Belum ada riwayat yang dimuat.</td></tr></tbody></table></div>
+                </div>
+            </section>
 
             <section id="announcements" class="page" style="display:none;">
                 <div class="page-heading">
@@ -7919,12 +8142,12 @@ Nama / Jabatan                              {{nama_karyawan}}</div>
 
                     </div>
                     <div class="grid-2" style="margin-top:0;">
-                        <div class="climex-plan-option" id="climexPlan30Option" role="button" tabindex="0" onclick="selectClimexPlan(30)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectClimexPlan(30)}" style="border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;position:relative;">
+                        <div class="climex-plan-option" id="climexPlan30Option" role="button" tabindex="0" onclick="selectClimexPlan(30)" onkeydown="if(event.key===&quot;Enter&quot;||event.key===&quot; &quot;){event.preventDefault();selectClimexPlan(30)}" style="border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;position:relative;">
                             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;"><div style="font-size:12px;color:var(--muted);" data-climex-lang-key="CLIME-X PRO · 30 Hari">CLIME-X PRO · 30 Hari</div><span class="climex-plan-radio" id="climexPlan30Radio" aria-hidden="true">○</span></div>
                             <div id="climexPrice30" style="font-size:25px;font-weight:900;margin-top:8px;">Rp110.000</div>
                             <div id="climexPrice30Idr" style="font-size:11px;color:var(--muted);margin-top:5px;" data-climex-lang-key="Harga dasar: Rp110.000">Harga dasar: Rp110.000</div>
                         </div>
-                        <div class="climex-plan-option" id="climexPlan365Option" role="button" tabindex="0" onclick="selectClimexPlan(365)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectClimexPlan(365)}" style="border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;position:relative;">
+                        <div class="climex-plan-option" id="climexPlan365Option" role="button" tabindex="0" onclick="selectClimexPlan(365)" onkeydown="if(event.key===&quot;Enter&quot;||event.key===&quot; &quot;){event.preventDefault();selectClimexPlan(365)}" style="border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;position:relative;">
                             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;"><div style="font-size:12px;color:var(--muted);" data-climex-lang-key="CLIME-X PRO · 365 Hari">CLIME-X PRO · 365 Hari</div><span class="climex-plan-radio" id="climexPlan365Radio" aria-hidden="true">○</span></div>
                             <div id="climexPrice365" style="font-size:25px;font-weight:900;margin-top:8px;">Rp1.250.000</div>
                             <div id="climexPrice365Idr" style="font-size:11px;color:var(--muted);margin-top:5px;" data-climex-lang-key="Harga dasar: Rp1.250.000">Harga dasar: Rp1.250.000</div>
@@ -10252,7 +10475,7 @@ async function loadClimexDashboard(){
         const unpaidNote=document.getElementById("dashboardUnpaidClaimsNote");
         if(totalNote) totalNote.textContent="+"+thisMonthCount+" bulan ini";
         if(approvedNote) approvedNote.textContent=approvalRate+"% dari total klaim";
-        if(unpaidNote) unpaidNote.textContent=unpaid?"Perlu proses pembayaran":"Tidak ada pembayaran tertunda";
+        if(unpaidNote){const lang=localStorage.getItem("climexLanguage")||currentLoginLang||"id";unpaidNote.textContent=unpaid?(lang==="en"?"Payment processing required":lang==="zh"?"需要处理付款":"Perlu proses pembayaran"):(lang==="en"?"No pending payments":lang==="zh"?"没有待付款项":"Tidak ada pembayaran tertunda");}
 
         const recentBody=document.getElementById("recentClaimsBody");
         if(recentBody){
@@ -12773,6 +12996,154 @@ async function deleteClimexAccount(){
     }
 }
 
+// PAYROLL CLIME-X — terisolasi dari fitur lain
+let payrollSelectedEmployee = null;
+let payrollOvertimeEntries = [];
+let payrollLoadedRecordKey = '';
+let payrollLoadingRecord = false;
+function showPayrollTab(tab,button){
+ ['employees','formula','history'].forEach(function(key){const panel=document.getElementById('payrollPanel'+key.charAt(0).toUpperCase()+key.slice(1));if(panel)panel.style.display=key===tab?'block':'none';});
+ document.querySelectorAll('[data-payroll-tab]').forEach(function(b){b.classList.toggle('active',b===button || b.dataset.payrollTab===tab);});
+ if(tab==='employees')renderPayrollEmployeeOptions(); if(tab==='history')loadPayrollHistory();
+}
+function renderPayrollEmployeeOptions(){
+ const select=document.getElementById('payrollEmployeeSelect');if(!select)return;const q=String(document.getElementById('payrollEmployeeSearch')?.value||'').toLowerCase().trim();const old=select.value;const list=(Array.isArray(masterEmployees)?masterEmployees:[]).filter(e=>String(e.name||'').trim()&&!e._blank&&(!q||(String(e.name||'')+' '+String(e.id||'')).toLowerCase().includes(q)));select.innerHTML='<option value="">Pilih karyawan...</option>'+list.map(e=>'<option value="'+employeeInputValue(e.id)+'">'+employeeInputValue(e.name)+' — '+employeeInputValue(e.id)+'</option>').join('');if(list.some(e=>String(e.id)===old))select.value=old;loadPayrollEmployeeForm();
+}
+async function loadPayrollEmployeeForm(){
+ const id=document.getElementById('payrollEmployeeSelect')?.value||'';
+ const nextEmployee=(masterEmployees||[]).find(e=>String(e.id||'')===String(id)&&!e._blank)||null;
+ const previousId=payrollSelectedEmployee?String(payrollSelectedEmployee.id||''):'';
+ payrollSelectedEmployee=nextEmployee;const e=payrollSelectedEmployee;
+ const base=document.getElementById('payrollBaseSalary');const leave=document.getElementById('payrollLeaveBalance');
+ if(base)base.value=e?(Number(e.baseSalary)||0):'';if(leave)leave.value=e?(Number(e.leaveBalance)||0):'';
+ const ident=document.getElementById('payrollEmployeeIdentity');
+ if(ident)ident.innerHTML=e?'<strong>'+employeeInputValue(e.name||'-')+'</strong><div style="font-size:12px;margin-top:3px;">No. karyawan: '+employeeInputValue(e.id||'-')+'</div><div style="font-size:12px;margin-top:3px;">'+employeeInputValue(e.department||'-')+' · '+employeeInputValue(e.position||'-')+'</div>':'Belum ada karyawan dipilih.';
+ updatePayrollHourlyRateDisplay();
+ if(previousId!==String(e?.id||'')){payrollOvertimeEntries=[];payrollLoadedRecordKey='';['payrollFixedAllowance1Amount','payrollFixedAllowance2Amount','payrollFixedAllowance3Amount','payrollFixedAllowance4Amount','payrollBonus1Amount','payrollBonus2Amount','payrollLeavePay','payrollLoan','payrollOtherDeduction'].forEach(k=>{const el=document.getElementById(k);if(el)el.value='0';});const otherDesc=document.getElementById('payrollOtherDeductionDescription');if(otherDesc)otherDesc.value='';}
+ renderPayrollOvertimeEntries();calculatePayrollPreview();
+ if(e) await loadPayrollPeriodRecord();
+}
+function payrollParseAmount(value){
+ if(typeof value==='number')return Number.isFinite(value)?value:0;
+ let s=String(value??'').trim();if(!s)return 0;
+ s=s.replace(/\s|Rp/gi,'');
+ const hasComma=s.includes(','),hasDot=s.includes('.');
+ if(hasComma&&hasDot){
+  // Format Indonesia: 1.234.567,89; format English: 1,234,567.89
+  if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');
+  else s=s.replace(/,/g,'');
+ }else if(hasComma){
+  // A comma followed by 1-2 digits is a decimal separator; otherwise thousands grouping.
+  const tail=s.split(',').pop();
+  if(/^\d{1,2}$/.test(tail))s=s.replace(/\./g,'').replace(',','.');
+  else s=s.replace(/,/g,'');
+ }else if(hasDot){
+  // Dots followed by exactly 3 digits are thousands separators (including repeated groups).
+  // One or two trailing digits are decimals, e.g. 26.011,56 after mixed-separator handling.
+  const parts=s.split('.');
+  if(parts.length>2 || /^\d{3}$/.test(parts[parts.length-1]))s=s.replace(/\./g,'');
+ }
+ const n=Number(s);return Number.isFinite(n)?n:0;
+}
+function payrollNum(id){return Math.max(0,payrollParseAmount(document.getElementById(id)?.value));}
+function payrollFormatAmountInput(el){if(!el||el.readOnly)return;const n=payrollParseAmount(el.value);el.value=new Intl.NumberFormat('id-ID',{maximumFractionDigits:2}).format(n);}
+function payrollBindAmountInputs(){['payrollFixedAllowance1Amount','payrollFixedAllowance2Amount','payrollFixedAllowance3Amount','payrollFixedAllowance4Amount','payrollBonus1Amount','payrollBonus2Amount','payrollLeavePay','payrollLoan','payrollOtherDeduction'].forEach(id=>{const el=document.getElementById(id);if(!el||el.dataset.amountBound==='1')return;el.dataset.amountBound='1';el.addEventListener('focus',()=>{if(payrollParseAmount(el.value)===0)el.value='';});el.addEventListener('blur',()=>payrollFormatAmountInput(el));});}
+function updatePayrollTaxLabel(){const name=String(document.getElementById('payrollTaxName')?.value||'').trim()||'Pajak penghasilan';const label=document.getElementById('payrollTaxLabel');if(label)label.textContent=name+' (otomatis)';}
+function payrollFormulaValue(id,fallback){const el=document.getElementById(id);return el?Number(el.value)||fallback:fallback;}
+function payrollWeightedHours(hours,type){let raw=Math.max(0,Number(hours)||0);const enabled=document.getElementById('payrollBreakEnabled')?.checked;const after=Math.max(0,payrollFormulaValue('payrollBreakAfter',4));const mins=Math.max(0,payrollFormulaValue('payrollBreakMinutes',30));if(enabled&&after>0&&raw>after)raw=Math.max(0,raw-mins/60);let weighted=0,remaining=raw;for(let n=1;n<=24&&remaining>0;n++){const take=Math.min(1,remaining);const id=(type==='holiday'?'payrollHolidayOvertimeRate':'payrollOvertimeRate')+n;const fallback=type==='holiday'?2: (n===1?1.5:(n<=6?2:3));const rate=Math.max(0,payrollFormulaValue(id,fallback));weighted+=take*rate;remaining-=take;}return {raw:raw,weighted:weighted};}
+function payrollMoney(n){return new Intl.NumberFormat('id-ID',{maximumFractionDigits:2}).format(Number(n)||0);}
+function addPayrollOvertimeEntry(){if(!payrollSelectedEmployee){climexAlert('Pilih karyawan terlebih dahulu.');return;}const date=document.getElementById('payrollOvertimeDate')?.value||'';const type=document.getElementById('payrollOvertimeType')?.value||'regular';const hours=Number(document.getElementById('payrollOvertimeHours')?.value)||0;if(!date){climexAlert('Pilih tanggal lembur.');return;}if(hours<=0||hours>24){climexAlert('Durasi lembur harus lebih dari 0 dan maksimal 24 jam per input.');return;}const hourly=(Number(payrollSelectedEmployee.baseSalary)||0)/Math.max(1,payrollFormulaValue('payrollMonthlyHours',173));const calc=payrollWeightedHours(hours,type);const entry={date:date,type:type,hours:hours,weightedHours:calc.weighted,hourlyRate:hourly,amount:calc.weighted*hourly};payrollOvertimeEntries.push(entry);renderPayrollOvertimeEntries();const hrs=document.getElementById('payrollOvertimeHours');if(hrs)hrs.value='';calculatePayrollPreview();savePayrollDraft();}
+function removePayrollOvertimeEntry(index){payrollOvertimeEntries.splice(index,1);renderPayrollOvertimeEntries();calculatePayrollPreview();savePayrollDraft();}
+function clearPayrollOvertimeEntries(){payrollOvertimeEntries=[];renderPayrollOvertimeEntries();calculatePayrollPreview();savePayrollDraft();}
+function renderPayrollOvertimeEntries(){const body=document.getElementById('payrollOvertimeEntriesBody');if(!body)return;payrollOvertimeEntries.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));if(!payrollOvertimeEntries.length){const lang=localStorage.getItem('climexLanguage')||currentLoginLang||'id';const emptyText=lang==='en'?'No overtime entries for this period yet.':lang==='zh'?'此期间尚无加班记录。':'Belum ada input lembur untuk periode ini.';body.innerHTML='<tr><td colspan="6" class="announcement-history-empty">'+emptyText+'</td></tr>'; }else{body.innerHTML=payrollOvertimeEntries.map((e,i)=>'<tr><td>'+employeeInputValue(formatPayrollDate(e.date))+'</td><td>'+ (e.type==='holiday'?'Tanggal merah / Public Holiday':'Reguler')+'</td><td>'+e.hours+'</td><td>'+Number(e.weightedHours).toFixed(2)+'</td><td>'+payrollMoney(e.amount)+'</td><td><button type="button" class="announcement-btn" onclick="removePayrollOvertimeEntry('+i+')">Hapus</button></td></tr>').join('');}const total=payrollOvertimeEntries.reduce((a,e)=>a+(Number(e.amount)||0),0);const out=document.getElementById('payrollOvertimeTotal');if(out)out.textContent=payrollMoney(total);const pay=document.getElementById('payrollOvertimePay');if(pay)pay.value=total.toFixed(2);}
+const payrollInsuranceComponents=[
+ {id:'salary',label:'Gaji pokok'},
+ {id:'allowance1',label:'Tunjangan tetap 1',nameId:'payrollFixedAllowance1Name'},
+ {id:'allowance2',label:'Tunjangan tetap 2',nameId:'payrollFixedAllowance2Name'},
+ {id:'allowance3',label:'Tunjangan tetap 3',nameId:'payrollFixedAllowance3Name'},
+ {id:'allowance4',label:'Tunjangan tetap 4',nameId:'payrollFixedAllowance4Name'},
+ {id:'bonus1',label:'Bonus / insentif 1',nameId:'payrollBonus1Name'},
+ {id:'bonus2',label:'Bonus / insentif 2',nameId:'payrollBonus2Name'},
+ {id:'leavePay',label:'Pembayaran cuti'},
+ {id:'regularOvertime',label:'Lembur reguler'},
+ {id:'holidayOvertime',label:'Lembur tanggal merah'}
+];
+function payrollComponentLabel(c){if(!c.nameId)return c.label;const el=document.getElementById(c.nameId);const name=String(el?.value||'').trim();if(name)return name;const placeholder=String(el?.placeholder||'').replace(/^Contoh:\s*/i,'').trim();return placeholder||c.label;}
+function updatePayrollComponentLabels(){document.querySelectorAll('[data-payroll-component-label]').forEach(el=>{const c=payrollInsuranceComponents.find(x=>x.id===el.dataset.payrollComponent);if(c)el.textContent=payrollComponentLabel(c);});}
+function renderPayrollInsuranceBasePickers(){document.querySelectorAll('[data-payroll-base]').forEach(container=>{const kind=container.dataset.payrollBase;container.innerHTML=payrollInsuranceComponents.map(c=>'<label><input type="checkbox" id="payrollBase_'+kind+'_'+c.id+'" data-payroll-insurance-kind="'+kind+'" data-payroll-component="'+c.id+'" '+(['salary','allowance1','allowance2','allowance3','allowance4'].includes(c.id)?'checked':'')+'> <span data-payroll-component-label="'+c.id+'">'+employeeInputValue(payrollComponentLabel(c))+'</span></label>').join('');container.querySelectorAll('input').forEach(el=>el.addEventListener('change',()=>{calculatePayrollPreview();savePayrollDraft();}));});}
+function payrollInsuranceComponentAmounts(baseSalary,fixedAllowances,bonus1,bonus2){const a={salary:baseSalary,allowance1:payrollNum('payrollFixedAllowance1Amount'),allowance2:payrollNum('payrollFixedAllowance2Amount'),allowance3:payrollNum('payrollFixedAllowance3Amount'),allowance4:payrollNum('payrollFixedAllowance4Amount'),bonus1:bonus1,bonus2:bonus2,leavePay:payrollNum('payrollLeavePay'),regularOvertime:payrollOvertimeEntries.filter(e=>e.type!=='holiday').reduce((sum,e)=>sum+(Number(e.amount)||0),0),holidayOvertime:payrollOvertimeEntries.filter(e=>e.type==='holiday').reduce((sum,e)=>sum+(Number(e.amount)||0),0)};return a;}
+function payrollInsuranceBase(kind,amounts){let total=0;payrollInsuranceComponents.forEach(c=>{const el=document.getElementById('payrollBase_'+kind+'_'+c.id);if(el&&el.checked)total+=Number(amounts[c.id])||0;});return total;}
+function payrollInsuranceBaseSelection(kind){const out={};payrollInsuranceComponents.forEach(c=>{const el=document.getElementById('payrollBase_'+kind+'_'+c.id);out[c.id]=!!el?.checked;});return out;}
+function applyPayrollInsuranceBaseSelection(kind,selection){if(!selection)return;payrollInsuranceComponents.forEach(c=>{const el=document.getElementById('payrollBase_'+kind+'_'+c.id);if(el&&Object.prototype.hasOwnProperty.call(selection,c.id))el.checked=!!selection[c.id];});}
+function calculatePayrollPreview(){const overtime=payrollOvertimeEntries.reduce((a,e)=>a+(Number(e.amount)||0),0);const baseSalary=payrollSelectedEmployee?Number(payrollSelectedEmployee.baseSalary)||0:0;const fixedAllowances=[1,2,3,4].reduce((sum,n)=>sum+payrollNum('payrollFixedAllowance'+n+'Amount'),0);const bonus1=payrollNum('payrollBonus1Amount');const bonus2=payrollNum('payrollBonus2Amount');const gross=baseSalary+fixedAllowances+bonus1+bonus2+payrollNum('payrollLeavePay')+overtime;const componentAmounts=payrollInsuranceComponentAmounts(baseSalary,fixedAllowances,bonus1,bonus2);const taxRate=Math.max(0,Math.min(100,payrollFormulaValue('payrollTaxRatePercent',0)));const taxBase=payrollInsuranceBase('tax',componentAmounts);const tax=taxBase*taxRate/100;const taxEl=document.getElementById('payrollTax');if(taxEl)taxEl.value=payrollMoney(tax);const healthBase=payrollInsuranceBase('health',componentAmounts);const pensionBase=payrollInsuranceBase('pension',componentAmounts);const accidentBase=payrollInsuranceBase('accident',componentAmounts);const insuranceBase=healthBase;const healthRate=Math.max(0,Math.min(100,payrollFormulaValue('payrollHealthInsuranceRatePercent',0)));const pensionRate=Math.max(0,Math.min(100,payrollFormulaValue('payrollPensionInsuranceRatePercent',0)));const accidentRate=Math.max(0,Math.min(100,payrollFormulaValue('payrollAccidentInsuranceRatePercent',0)));const health=healthBase*healthRate/100;const pension=pensionBase*pensionRate/100;const accident=accidentBase*accidentRate/100;const healthEl=document.getElementById('payrollHealthInsurance');if(healthEl)healthEl.value=payrollMoney(health);const pensionEl=document.getElementById('payrollPensionInsurance');if(pensionEl)pensionEl.value=payrollMoney(pension);const accidentEl=document.getElementById('payrollAccidentInsurance');if(accidentEl)accidentEl.value=payrollMoney(accident);updatePayrollTaxLabel();updatePayrollInsuranceLabels();const deductions=tax+health+pension+accident+payrollNum('payrollLoan')+payrollNum('payrollOtherDeduction');const net=gross-deductions;const out=document.getElementById('payrollNetPreview');if(out)out.textContent=payrollMoney(net);return {gross:gross,deductions:deductions,net:net,overtimePay:overtime,tax:tax,taxBase:taxBase,healthInsurance:health,pensionInsurance:pension,accidentInsurance:accident,insuranceBase:insuranceBase,healthInsuranceBase:healthBase,pensionInsuranceBase:pensionBase,accidentInsuranceBase:accidentBase,fixedAllowances:fixedAllowances,bonus1:bonus1,bonus2:bonus2};}
+function updatePayrollInsuranceLabels(){const accident=String(document.getElementById('payrollAccidentInsuranceName')?.value||'').trim()||'Asuransi kecelakaan kerja';const al=document.getElementById('payrollAccidentInsuranceLabel');if(al)al.textContent=accident;updatePayrollComponentLabels();const health=String(document.getElementById('payrollHealthInsuranceName')?.value||'').trim()||'Asuransi kesehatan';const pension=String(document.getElementById('payrollPensionInsuranceName')?.value||'').trim()||'Asuransi pensiun';const h=document.getElementById('payrollHealthInsuranceLabel');const p=document.getElementById('payrollPensionInsuranceLabel');if(h)h.textContent=health;if(p)p.textContent=pension;}
+function renderPayrollOvertimeRateInputs(){const grid=document.getElementById('payrollOvertimeRatesGrid');if(grid)grid.innerHTML=Array.from({length:24},(_,i)=>{const n=i+1;const defaultRate=n===1?'1.5':(n<=6?'2':'3');return '<div class="announcement-field" style="gap:5px;"><label for="payrollOvertimeRate'+n+'">Jam ke-'+n+'</label><input id="payrollOvertimeRate'+n+'" type="number" min="0" step="0.01" value="'+defaultRate+'" style="width:100%;"></div>';}).join('');const holiday=document.getElementById('payrollHolidayOvertimeRatesGrid');if(holiday)holiday.innerHTML=Array.from({length:24},(_,i)=>{const n=i+1;return '<div class="announcement-field" style="gap:5px;"><label for="payrollHolidayOvertimeRate'+n+'">Jam ke-'+n+'</label><input id="payrollHolidayOvertimeRate'+n+'" type="number" min="0" step="0.01" value="2" style="width:100%;"></div>';}).join('');}
+function savePayrollFormula(){const ids=['payrollMonthlyHours','payrollTaxName','payrollTaxRatePercent','payrollHealthInsuranceName','payrollHealthInsuranceRatePercent','payrollPensionInsuranceName','payrollPensionInsuranceRatePercent','payrollAccidentInsuranceName','payrollAccidentInsuranceRatePercent','payrollBreakEnabled','payrollBreakAfter','payrollBreakMinutes'];for(let n=1;n<=24;n++){ids.push('payrollOvertimeRate'+n);ids.push('payrollHolidayOvertimeRate'+n);}const data={};ids.forEach(id=>{const el=document.getElementById(id);if(el)data[id]=el.type==='checkbox'?el.checked:el.value;});data.payrollTaxBaseSelection=payrollInsuranceBaseSelection('tax');data.payrollHealthBaseSelection=payrollInsuranceBaseSelection('health');data.payrollPensionBaseSelection=payrollInsuranceBaseSelection('pension');data.payrollAccidentBaseSelection=payrollInsuranceBaseSelection('accident');try{localStorage.setItem('climexPayrollFormulaV1',JSON.stringify(data));payrollOvertimeEntries=payrollOvertimeEntries.map(e=>{const c=payrollWeightedHours(e.hours,e.type);const hourly=(Number(payrollSelectedEmployee?.baseSalary)||0)/Math.max(1,payrollFormulaValue('payrollMonthlyHours',173));return {...e,hourlyRate:hourly,weightedHours:c.weighted,amount:c.weighted*hourly};});if(payrollSelectedEmployee)updatePayrollHourlyRateDisplay();renderPayrollOvertimeEntries();calculatePayrollPreview();climexAlert('Pengaturan rumus disimpan pada browser ini.');}catch(e){climexAlert('Pengaturan tidak dapat disimpan pada browser.');}}
+function loadPayrollFormula(){renderPayrollOvertimeRateInputs();renderPayrollInsuranceBasePickers();try{const d=JSON.parse(localStorage.getItem('climexPayrollFormulaV1')||'{}');Object.keys(d).forEach(id=>{const el=document.getElementById(id);if(el){if(el.type==='checkbox')el.checked=!!d[id];else if(typeof d[id]!=='object')el.value=d[id];}});if(d.payrollTaxBaseSelection)applyPayrollInsuranceBaseSelection('tax',d.payrollTaxBaseSelection);if(d.payrollHealthBaseSelection)applyPayrollInsuranceBaseSelection('health',d.payrollHealthBaseSelection);if(d.payrollPensionBaseSelection)applyPayrollInsuranceBaseSelection('pension',d.payrollPensionBaseSelection);if(d.payrollAccidentBaseSelection)applyPayrollInsuranceBaseSelection('accident',d.payrollAccidentBaseSelection);if(!('payrollOvertimeRate1' in d)&&('payrollOvertimeRate2' in d||'payrollOvertimeRate3' in d)){for(let n=1;n<=24;n++){const el=document.getElementById('payrollOvertimeRate'+n);if(el)el.value=n===1?(d.payrollOvertimeRate1||'1.5'):(n<=6?(d.payrollOvertimeRate2||'2'):(d.payrollOvertimeRate3||'3'));}}}catch(e){}updatePayrollInsuranceLabels();updatePayrollTaxLabel();}
+function formatPayrollPeriod(value){const m=String(value||'').match(/^(\d{4})-(\d{2})$/);if(!m)return String(value||'-');const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];const n=Number(m[2]);return (months[n-1]||m[2])+' '+m[1];}
+function formatPayrollDate(value){const s=String(value||'').trim();const m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return s||'-';const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];return Number(m[3])+' '+(months[Number(m[2])-1]||m[2])+' '+m[1];}
+function payrollRecordKey(employeeId,period){return encodeURIComponent(String(employeeId||'')+'__'+String(period||''));}
+function payrollDraftKey(employeeId,period){return 'climexPayrollDraftV1__'+encodeURIComponent(String(employeeId||''))+'__'+encodeURIComponent(String(period||''));}
+function payrollCurrentFormData(){const data={};['payrollFixedAllowance1Name','payrollFixedAllowance1Amount','payrollFixedAllowance2Name','payrollFixedAllowance2Amount','payrollFixedAllowance3Name','payrollFixedAllowance3Amount','payrollFixedAllowance4Name','payrollFixedAllowance4Amount','payrollBonus1Name','payrollBonus1Amount','payrollBonus2Name','payrollBonus2Amount','payrollLeavePay','payrollLoan','payrollOtherDeduction','payrollOtherDeductionDescription'].forEach(id=>{const el=document.getElementById(id);if(el)data[id]=el.value;});return data;}
+function savePayrollDraft(){const e=payrollSelectedEmployee,period=document.getElementById('payrollPeriod')?.value||'';if(!e||!period)return;try{localStorage.setItem(payrollDraftKey(e.id,period),JSON.stringify({employeeId:String(e.id||''),period,fields:payrollCurrentFormData(),overtimeEntries:payrollOvertimeEntries.map(x=>({...x})),savedAt:Date.now()}));}catch(err){console.warn('Payroll draft could not be cached',err);}}
+function updatePayrollHourlyRateDisplay(){const out=document.getElementById('payrollHourlyRateDisplay');if(!out)return;const base=Number(payrollSelectedEmployee?.baseSalary)||0;const hours=Math.max(1,payrollFormulaValue('payrollMonthlyHours',173));const lang=localStorage.getItem('climexLanguage')||currentLoginLang||'id';const note=lang==='en'?' per hour (basic salary ÷ '+hours+' hours); rate calculated automatically.':lang==='zh'?' 每小时（基本工资 ÷ '+hours+' 小时）；费率自动计算。':' per jam (gaji pokok ÷ '+hours+' jam); tarif dihitung otomatis.';out.textContent=payrollMoney(base/hours)+note;}
+async function loadPayrollPeriodRecord(){
+ const e=payrollSelectedEmployee;const period=document.getElementById('payrollPeriod')?.value||'';if(!e||!period)return;
+ const key=String(e.id||'')+'__'+period;if(payrollLoadedRecordKey===key)return;payrollLoadingRecord=true;
+ try{
+  const draftRaw=localStorage.getItem(payrollDraftKey(e.id,period));
+  if(draftRaw){const draft=JSON.parse(draftRaw);if(!payrollSelectedEmployee||String(payrollSelectedEmployee.id||'')!==String(e.id||'')||document.getElementById('payrollPeriod')?.value!==period)return;Object.entries(draft.fields||{}).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.value=value;});if(draft.fields&&!draft.fields.payrollFixedAllowance1Amount){const legacy=document.getElementById('payrollFixedAllowance1Amount');if(legacy)legacy.value=draft.fields.payrollAllowances||'0';const b1=document.getElementById('payrollBonus1Amount');if(b1)b1.value=draft.fields.payrollVariableAllowances||'0';const b2=document.getElementById('payrollBonus2Amount');if(b2)b2.value=draft.fields.payrollBonus||'0';}payrollOvertimeEntries=Array.isArray(draft.overtimeEntries)?draft.overtimeEntries.map(x=>({...x})):[];payrollLoadedRecordKey=key;payrollBindAmountInputs();['payrollFixedAllowance1Amount','payrollFixedAllowance2Amount','payrollFixedAllowance3Amount','payrollFixedAllowance4Amount','payrollBonus1Amount','payrollBonus2Amount','payrollLeavePay','payrollLoan','payrollOtherDeduction'].forEach(id=>payrollFormatAmountInput(document.getElementById(id)));renderPayrollOvertimeEntries();calculatePayrollPreview();return;}
+  if(!climexAuth?.currentUser||!climexDB){payrollOvertimeEntries=[];payrollLoadedRecordKey=key;renderPayrollOvertimeEntries();calculatePayrollPreview();return;}
+  const ref=climexDB.collection('users').doc(climexAuth.currentUser.uid).collection('climex').doc('payroll').collection('history').doc(payrollRecordKey(e.id,period));const snap=await ref.get();if(!payrollSelectedEmployee||String(payrollSelectedEmployee.id||'')!==String(e.id||'')||document.getElementById('payrollPeriod')?.value!==period)return;
+  if(snap.exists){const r=snap.data()||{};const amountFields={payrollFixedAllowance1Amount:r.fixedAllowance1Amount??r.allowances??0,payrollFixedAllowance2Amount:r.fixedAllowance2Amount??0,payrollFixedAllowance3Amount:r.fixedAllowance3Amount??0,payrollFixedAllowance4Amount:r.fixedAllowance4Amount??0,payrollBonus1Amount:r.bonus1Amount??r.variableAllowances??0,payrollBonus2Amount:r.bonus2Amount??r.bonus??0,payrollLeavePay:r.leavePay??0,payrollLoan:r.loan??0,payrollOtherDeduction:r.otherDeduction??0};Object.entries(amountFields).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.value=Number(value)||0;});[1,2,3,4].forEach(n=>{const el=document.getElementById('payrollFixedAllowance'+n+'Name');if(el)el.value=String((r.fixedAllowanceNames||{})[n]||'');});[1,2].forEach(n=>{const el=document.getElementById('payrollBonus'+n+'Name');if(el)el.value=String((r.bonusNames||{})[n]||'');});const otherDesc=document.getElementById('payrollOtherDeductionDescription');if(otherDesc)otherDesc.value=String(r.otherDeductionDescription||'');payrollOvertimeEntries=Array.isArray(r.overtimeEntries)?r.overtimeEntries.map(x=>({...x})):[];}else{payrollOvertimeEntries=[];['payrollFixedAllowance1Amount','payrollFixedAllowance2Amount','payrollFixedAllowance3Amount','payrollFixedAllowance4Amount','payrollBonus1Amount','payrollBonus2Amount','payrollLeavePay','payrollLoan','payrollOtherDeduction'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});const otherDesc=document.getElementById('payrollOtherDeductionDescription');if(otherDesc)otherDesc.value='';}
+  payrollLoadedRecordKey=key;renderPayrollOvertimeEntries();calculatePayrollPreview();
+ }catch(err){console.error('PAYROLL PERIOD LOAD ERROR',err);}finally{payrollLoadingRecord=false;}
+}
+async function savePayrollRecord(){if(!payrollSelectedEmployee){climexAlert('Pilih karyawan terlebih dahulu.');return;}if(!climexAuth?.currentUser||!climexDB){climexAlert('Silakan login untuk menyimpan data gaji.');return;}const period=document.getElementById('payrollPeriod').value;if(!period){climexAlert('Pilih periode gaji terlebih dahulu.');return;}const calc=calculatePayrollPreview();const record={period:period,employeeId:String(payrollSelectedEmployee.id||''),employeeName:String(payrollSelectedEmployee.name||''),baseSalary:Number(payrollSelectedEmployee.baseSalary)||0,leaveBalance:Number(payrollSelectedEmployee.leaveBalance)||0,fixedAllowance1Name:String(document.getElementById('payrollFixedAllowance1Name')?.value||''),fixedAllowance1Amount:payrollNum('payrollFixedAllowance1Amount'),fixedAllowance2Name:String(document.getElementById('payrollFixedAllowance2Name')?.value||''),fixedAllowance2Amount:payrollNum('payrollFixedAllowance2Amount'),fixedAllowance3Name:String(document.getElementById('payrollFixedAllowance3Name')?.value||''),fixedAllowance3Amount:payrollNum('payrollFixedAllowance3Amount'),fixedAllowance4Name:String(document.getElementById('payrollFixedAllowance4Name')?.value||''),fixedAllowance4Amount:payrollNum('payrollFixedAllowance4Amount'),fixedAllowanceNames:{1:String(document.getElementById('payrollFixedAllowance1Name')?.value||''),2:String(document.getElementById('payrollFixedAllowance2Name')?.value||''),3:String(document.getElementById('payrollFixedAllowance3Name')?.value||''),4:String(document.getElementById('payrollFixedAllowance4Name')?.value||'')},bonus1Name:String(document.getElementById('payrollBonus1Name')?.value||''),bonus1Amount:payrollNum('payrollBonus1Amount'),bonus2Name:String(document.getElementById('payrollBonus2Name')?.value||''),bonus2Amount:payrollNum('payrollBonus2Amount'),bonusNames:{1:String(document.getElementById('payrollBonus1Name')?.value||''),2:String(document.getElementById('payrollBonus2Name')?.value||'')},leavePay:payrollNum('payrollLeavePay'),overtimePay:calc.overtimePay,overtimeEntries:payrollOvertimeEntries.map(e=>({...e})),tax:calc.tax,healthInsurance:calc.healthInsurance,pensionInsurance:calc.pensionInsurance,accidentInsurance:calc.accidentInsurance,accidentInsuranceRatePercent:Math.max(0,payrollFormulaValue('payrollAccidentInsuranceRatePercent',0)),healthInsuranceRatePercent:Math.max(0,payrollFormulaValue('payrollHealthInsuranceRatePercent',0)),pensionInsuranceRatePercent:Math.max(0,payrollFormulaValue('payrollPensionInsuranceRatePercent',0)),insuranceBase:calc.insuranceBase,loan:payrollNum('payrollLoan'),otherDeductionDescription:String(document.getElementById('payrollOtherDeductionDescription')?.value||''),otherDeduction:payrollNum('payrollOtherDeduction'),gross:calc.gross,deductions:calc.deductions,net:calc.net,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};try{const ref=climexDB.collection('users').doc(climexAuth.currentUser.uid).collection('climex').doc('payroll').collection('history').doc(payrollRecordKey(record.employeeId,period));const existing=await ref.get();if(!existing.exists)record.createdAt=firebase.firestore.FieldValue.serverTimestamp();await ref.set(record,{merge:true});payrollLoadedRecordKey=record.employeeId+'__'+period;try{localStorage.removeItem(payrollDraftKey(record.employeeId,period));}catch(e){}renderPayrollOvertimeEntries();calculatePayrollPreview();climexAlert('Data gaji berhasil disimpan. Daftar lembur tetap tersimpan di halaman ini.');loadPayrollHistory();}catch(err){console.error('PAYROLL SAVE ERROR',err);climexAlert('Data gaji gagal disimpan. Periksa koneksi dan izin Firestore.');}}
+function printPayrollSlip(){
+ const lang=localStorage.getItem('climexLanguage')||window.currentLoginLang||'id';
+ const L={id:{slip:'SLIP GAJI',name:'Nama',id:'No. karyawan',period:'Periode',dept:'Departemen/Jabatan',earn:'Penghasilan',amount:'Nilai',base:'Gaji pokok',leave:'Pembayaran cuti',overtime:'Lembur',gross:'Total penghasilan',otDetails:'Rincian lembur',date:'Tanggal',type:'Jenis',hours:'Jam',deductions:'Potongan',totalDed:'Total potongan',net:'GAJI BERSIH',printed:'Tanggal cetak',noOt:'Tidak ada lembur',tax:'Pajak penghasilan',health:'Asuransi kesehatan',pension:'Asuransi pensiun',accident:'Asuransi kecelakaan kerja',loan:'Kasbon / pinjaman',other:'Potongan lainnya'},en:{slip:'PAYSLIP',name:'Name',id:'Employee ID',period:'Pay Period',dept:'Department/Position',earn:'Earnings',amount:'Amount',base:'Basic Salary',leave:'Paid Leave',overtime:'Overtime',gross:'Total Earnings',otDetails:'Overtime Details',date:'Date',type:'Type',hours:'Hours',deductions:'Deductions',totalDed:'Total Deductions',net:'TAKE HOME PAY',printed:'Print Date',noOt:'No overtime',tax:'Income Tax',health:'Health Insurance',pension:'Pension Insurance',accident:'Work Accident Insurance',loan:'Salary Advance / Loan',other:'Other Deductions'},zh:{slip:'工资单',name:'姓名',id:'员工编号',period:'薪资期间',dept:'部门／职位',earn:'收入',amount:'金额',base:'基本工资',leave:'休假工资',overtime:'加班',gross:'总收入',otDetails:'加班明细',date:'日期',type:'类型',hours:'小时',deductions:'扣款',totalDed:'扣款总额',net:'实发工资',printed:'打印日期',noOt:'无加班记录',tax:'所得税',health:'医疗保险',pension:'养老保险',accident:'工伤保险',loan:'预支工资／贷款',other:'其他扣款'}}[lang]||null;
+ const tr=L||{slip:'SLIP GAJI',name:'Nama',id:'No. karyawan',period:'Periode',dept:'Departemen/Jabatan',earn:'Penghasilan',amount:'Nilai',base:'Gaji pokok',leave:'Pembayaran cuti',overtime:'Lembur',gross:'Total penghasilan',otDetails:'Rincian lembur',date:'Tanggal',type:'Jenis',hours:'Jam',deductions:'Potongan',totalDed:'Total potongan',net:'GAJI BERSIH',printed:'Tanggal cetak',noOt:'Tidak ada lembur',tax:'Pajak penghasilan',health:'Asuransi kesehatan',pension:'Asuransi pensiun',accident:'Asuransi kecelakaan kerja',loan:'Kasbon / pinjaman',other:'Potongan lainnya'};
+ if(!payrollSelectedEmployee){climexAlert('Pilih karyawan terlebih dahulu.');return;}
+ const period=document.getElementById('payrollPeriod')?.value||'';if(!period){climexAlert('Pilih periode gaji terlebih dahulu.');return;}
+ const c=calculatePayrollPreview();
+ const rows=payrollOvertimeEntries.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).map(e=>'<tr><td>'+employeeInputValue(formatPayrollDate(e.date))+'</td><td>'+(e.type==='holiday'?(lang==='en'?'Public Holiday':lang==='zh'?'公共假日':'Tanggal merah'):(lang==='en'?'Regular':lang==='zh'?'普通加班':'Reguler'))+'</td><td>'+e.hours+'</td><td>'+payrollMoney(e.amount)+'</td></tr>').join('');
+ const companyName=String(document.getElementById('headerCompanyName')?.textContent||window.climexCompanyName||'').trim();
+ const companyAddress=String(document.getElementById('headerCompanyAddress')?.textContent||'').trim();
+ const companyPhone=String(document.getElementById('headerCompanyPhone')?.textContent||'').trim();
+ const companyEmail=String(document.getElementById('headerCompanyEmail')?.textContent||'').trim();
+ const logoEl=document.getElementById('headerCompanyLogo');
+ const logoSrc=(logoEl&&logoEl.style.display!=='none'&&logoEl.src)?logoEl.src:String(window.climexCompanyLogoData||'');
+ const logoHtml=logoSrc?'<img src="'+employeeInputValue(logoSrc)+'" alt="Logo perusahaan" style="width:76px;height:76px;object-fit:cover;object-position:center center;flex:0 0 76px;">':'';
+ const taxName=String(document.getElementById('payrollTaxName')?.value||'Pajak penghasilan').trim()||'Pajak penghasilan';
+ const healthName=String(document.getElementById('payrollHealthInsuranceName')?.value||'Asuransi kesehatan').trim()||'Asuransi kesehatan';
+ const pensionName=String(document.getElementById('payrollPensionInsuranceName')?.value||'Asuransi pensiun').trim()||'Asuransi pensiun';
+ const accidentName=String(document.getElementById('payrollAccidentInsuranceName')?.value||'Asuransi kecelakaan kerja').trim()||'Asuransi kecelakaan kerja';
+ const otherDesc=String(document.getElementById('payrollOtherDeductionDescription')?.value||'').trim()||'Potongan lainnya';
+ const printDate=new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+ const fixedRows=[1,2,3,4].map(n=>{const name=String(document.getElementById('payrollFixedAllowance'+n+'Name')?.value||'').trim();const amount=payrollNum('payrollFixedAllowance'+n+'Amount');return amount||name?'<tr><td>'+employeeInputValue(name||('Tunjangan tetap '+n))+'</td><td>'+payrollMoney(amount)+'</td></tr>':'';}).join('');
+ const bonusRows=[1,2].map(n=>{const name=String(document.getElementById('payrollBonus'+n+'Name')?.value||'').trim();const amount=payrollNum('payrollBonus'+n+'Amount');return amount||name?'<tr><td>'+employeeInputValue(name||('Bonus / insentif '+n))+'</td><td>'+payrollMoney(amount)+'</td></tr>':'';}).join('');
+ const w=window.open('','_blank','width=800,height=900');if(!w){climexAlert('Popup cetak diblokir browser. Izinkan popup lalu coba lagi.');return;}
+ w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Slip Gaji</title><style>body{font:13px Arial,sans-serif;padding:28px;color:#222}h1{font-size:22px;margin:0 0 4px}small{color:#666}.company{display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:2px solid #60412d}.company h2{font-size:18px;margin:0 0 6px}.company-meta{font-size:12px;line-height:1.6}.slip-title{margin-top:18px;text-align:center}.total{text-align:right}.print-date{margin-top:24px;text-align:right;font-size:12px;color:#444}table{width:100%;border-collapse:collapse;margin:14px 0}td,th{border:1px solid #ddd;padding:8px;text-align:left}td:last-child,th:last-child{text-align:right}.total{font-weight:bold;font-size:17px;border-top:2px solid #333;padding-top:12px}.meta{margin:16px 0;line-height:1.7}@media print{button{display:none}}</style></head><body><header class="company">'+logoHtml+'<div><h2>'+employeeInputValue(companyName||'Nama Perusahaan')+'</h2><div class="company-meta">'+(companyAddress?employeeInputValue(companyAddress)+'<br>':'')+(companyPhone?'Tel: '+employeeInputValue(companyPhone)+'<br>':'')+(companyEmail?'Email: '+employeeInputValue(companyEmail):'')+'</div></div></header><h1 class="slip-title">'+tr.slip+'</h1><div class="meta"><b>'+tr.name+':</b> '+employeeInputValue(payrollSelectedEmployee.name||'-')+'<br><b>'+tr.id+':</b> '+employeeInputValue(payrollSelectedEmployee.id||'-')+'<br><b>'+tr.period+':</b> '+employeeInputValue(formatPayrollPeriod(period))+'<br><b>'+tr.dept+':</b> '+employeeInputValue(payrollSelectedEmployee.department||'-')+' / '+employeeInputValue(payrollSelectedEmployee.position||'-')+'</div><table><tr><th>'+tr.earn+'</th><th>'+tr.amount+'</th></tr><tr><td>'+tr.base+'</td><td>'+payrollMoney(payrollSelectedEmployee.baseSalary)+'</td></tr>'+fixedRows+bonusRows+'<tr><td>'+tr.leave+'</td><td>'+payrollMoney(payrollNum('payrollLeavePay'))+'</td></tr><tr><td>'+tr.overtime+'</td><td>'+payrollMoney(c.overtimePay)+'</td></tr><tr><th>'+tr.gross+'</th><th>'+payrollMoney(c.gross)+'</th></tr></table><h3>'+tr.otDetails+'</h3><table><tr><th>'+tr.date+'</th><th>'+tr.type+'</th><th>'+tr.hours+'</th><th>'+tr.amount+'</th></tr>'+(rows||'<tr><td colspan="4">'+tr.noOt+'</td></tr>')+'</table><table><tr><th>'+tr.deductions+'</th><th>'+tr.amount+'</th></tr><tr><td>'+employeeInputValue(taxName)+'</td><td>'+payrollMoney(c.tax)+'</td></tr><tr><td>'+employeeInputValue(healthName)+'</td><td>'+payrollMoney(payrollNum('payrollHealthInsurance'))+'</td></tr><tr><td>'+employeeInputValue(pensionName)+'</td><td>'+payrollMoney(payrollNum('payrollPensionInsurance'))+'</td></tr><tr><td>'+employeeInputValue(accidentName)+'</td><td>'+payrollMoney(payrollNum('payrollAccidentInsurance'))+'</td></tr><tr><td>'+tr.loan+'</td><td>'+payrollMoney(payrollNum('payrollLoan'))+'</td></tr><tr><td>'+employeeInputValue(otherDesc)+'</td><td>'+payrollMoney(payrollNum('payrollOtherDeduction'))+'</td></tr><tr><th>'+tr.totalDed+'</th><th>'+payrollMoney(c.deductions)+'</th></tr></table><p class="total">'+tr.net+': '+payrollMoney(c.net)+'</p><div class="print-date">'+tr.printed+': '+employeeInputValue(printDate)+'</div><script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();
+}
+async function openPayrollHistoryDetail(employeeId,period){
+ if(!employeeId||!period)return;
+ const emp=(Array.isArray(masterEmployees)?masterEmployees:[]).find(e=>String(e.id||'')===String(employeeId)&&!e._blank);
+ if(!emp){climexAlert('Data karyawan tidak ditemukan. Pastikan data karyawan masih tersedia.');return;}
+ showPayrollTab('employees',document.querySelector('[data-payroll-tab="employees"]'));
+ const select=document.getElementById('payrollEmployeeSelect');if(select){select.value=String(employeeId);}
+ const periodInput=document.getElementById('payrollPeriod');if(periodInput)periodInput.value=period;
+ try{localStorage.removeItem(payrollDraftKey(employeeId,period));}catch(e){}
+ payrollLoadedRecordKey='';
+ await loadPayrollEmployeeForm();
+ await loadPayrollPeriodRecord();
+}
+async function loadPayrollHistory(){const body=document.getElementById('payrollHistoryBody');if(!body)return;if(!climexAuth?.currentUser||!climexDB){body.innerHTML='<tr><td colspan="7" class="announcement-history-empty">Silakan login untuk melihat riwayat.</td></tr>';return;}body.innerHTML='<tr><td colspan="7" class="announcement-history-empty">Memuat riwayat...</td></tr>';try{const snap=await climexDB.collection('users').doc(climexAuth.currentUser.uid).collection('climex').doc('payroll').collection('history').orderBy('createdAt','desc').limit(500).get();if(snap.empty){body.innerHTML='<tr><td colspan="7" class="announcement-history-empty">Belum ada riwayat gaji.</td></tr>';return;}const latestByPeriod=new Map();snap.docs.forEach(doc=>{const r=doc.data()||{};const key=String(r.employeeId||'')+'__'+String(r.period||'');const stamp=(r.updatedAt&&r.updatedAt.toDate?r.updatedAt.toDate().getTime():0)||(r.createdAt&&r.createdAt.toDate?r.createdAt.toDate().getTime():0);const prior=latestByPeriod.get(key);if(!prior||stamp>=prior.stamp)latestByPeriod.set(key,{doc,r,stamp});});const rows=[...latestByPeriod.values()].sort((a,b)=>{const ap=String(a.r.period||''),bp=String(b.r.period||'');const pc=ap.localeCompare(bp);if(pc)return pc;return String(a.r.employeeName||'').localeCompare(String(b.r.employeeName||''),'id')||String(a.r.employeeId||'').localeCompare(String(b.r.employeeId||''));});body.innerHTML=rows.map(({r})=>{const period=String(r.period||'');const empId=String(r.employeeId||'');const date=(r.updatedAt&&r.updatedAt.toDate?r.updatedAt.toDate():r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():null);return '<tr class="payroll-history-clickable" tabindex="0" role="button" title="Klik untuk membuka detail gaji" onclick="openPayrollHistoryDetail('+JSON.stringify(empId).replace(/"/g,'&quot;')+','+JSON.stringify(period).replace(/"/g,'&quot;')+')" onkeydown="if(event.key===&quot;Enter&quot;||event.key===&quot; &quot;){event.preventDefault();openPayrollHistoryDetail('+JSON.stringify(empId).replace(/"/g,'&quot;')+','+JSON.stringify(period).replace(/"/g,'&quot;')+')}"><td>'+employeeInputValue(formatPayrollPeriod(period))+'</td><td>'+employeeInputValue(empId||'-')+'</td><td>'+employeeInputValue(r.employeeName||'-')+'</td><td>'+payrollMoney(r.gross)+'</td><td>'+payrollMoney(r.deductions)+'</td><td><strong>'+payrollMoney(r.net)+'</strong></td><td>'+(date?date.toLocaleDateString('id-ID'):'-')+'</td></tr>';}).join('');}catch(err){console.error('PAYROLL HISTORY LOAD ERROR',err);body.innerHTML='<tr><td colspan="7" class="announcement-history-empty">Riwayat gaji belum dapat dimuat.</td></tr>';}}
+['payrollFixedAllowance1Name','payrollFixedAllowance1Amount','payrollFixedAllowance2Name','payrollFixedAllowance2Amount','payrollFixedAllowance3Name','payrollFixedAllowance3Amount','payrollFixedAllowance4Name','payrollFixedAllowance4Amount','payrollBonus1Name','payrollBonus1Amount','payrollBonus2Name','payrollBonus2Amount','payrollLeavePay','payrollLoan','payrollOtherDeduction','payrollOtherDeductionDescription','payrollMonthlyHours','payrollTaxName','payrollTaxRatePercent','payrollHealthInsuranceName','payrollHealthInsuranceRatePercent','payrollPensionInsuranceName','payrollPensionInsuranceRatePercent','payrollAccidentInsuranceName','payrollAccidentInsuranceRatePercent'].forEach(id=>document.addEventListener('input',e=>{if(e.target&&e.target.id===id){if(id==='payrollHealthInsuranceName'||id==='payrollPensionInsuranceName'||id==='payrollAccidentInsuranceName'||id==='payrollFixedAllowance1Name'||id==='payrollFixedAllowance2Name'||id==='payrollFixedAllowance3Name'||id==='payrollFixedAllowance4Name'||id==='payrollBonus1Name'||id==='payrollBonus2Name')updatePayrollInsuranceLabels();if(id==='payrollTaxName')updatePayrollTaxLabel();if(id==='payrollMonthlyHours'){updatePayrollHourlyRateDisplay();payrollOvertimeEntries=payrollOvertimeEntries.map(x=>{const c=payrollWeightedHours(x.hours,x.type);const hourly=(Number(payrollSelectedEmployee?.baseSalary)||0)/Math.max(1,payrollFormulaValue('payrollMonthlyHours',173));return {...x,hourlyRate:hourly,weightedHours:c.weighted,amount:c.weighted*hourly};});renderPayrollOvertimeEntries();}calculatePayrollPreview();savePayrollDraft();}}));
+document.getElementById('payrollPeriod')?.addEventListener('change',()=>{payrollLoadedRecordKey='';if(payrollSelectedEmployee){payrollOvertimeEntries=[];renderPayrollOvertimeEntries();loadPayrollPeriodRecord();calculatePayrollPreview();}});
+payrollBindAmountInputs();updatePayrollTaxLabel();
+(function initPayrollCurrentPeriod(){const el=document.getElementById('payrollPeriod');if(el&&!el.value){const now=new Date();el.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');}})();
+
 function showPage(pageId, button){
 
     if(typeof climexCanOpenWebPage === "function" && !climexCanOpenWebPage(pageId)) return;
@@ -12820,6 +13191,14 @@ if(pageId === "settings"){
 
     if(pageId === "announcements"){
         listenAnnouncementFeed();
+    }
+
+    if(pageId === "payroll"){
+        loadPayrollFormula();
+        (function(){const p=document.getElementById('payrollPeriod');if(p&&!p.value){const d=new Date();p.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}updatePayrollHourlyRateDisplay();})();
+        if(typeof loadMasterEmployees === 'function' && climexAuth?.currentUser){
+            loadMasterEmployees().then(function(){renderPayrollEmployeeOptions();}).catch(function(err){console.error('PAYROLL EMPLOYEE LOAD ERROR',err);renderPayrollEmployeeOptions();});
+        }else{renderPayrollEmployeeOptions();}
     }
 
     if(pageId === "events"){
@@ -13401,7 +13780,7 @@ async function printSelectedClaims(){
                 : formatPeriodDate(firstDate))
             : "-";
 
-        const printDateText = new Date().toLocaleDateString("id-ID",{
+        const printedText = new Date().toLocaleDateString("id-ID",{
             day:"2-digit",
             month:"long",
             year:"numeric"
@@ -13560,7 +13939,7 @@ body{font-size:11px;padding:18mm 14mm;}
         <div class="signature-box">
             <span class="signature-title">Tanda tangan karyawan</span>
             <div class="footer-note">
-                Dicetak ${escapeClaimHtml(printDateText)}
+                Dicetak ${escapeClaimHtml(printedText)}
             </div>
         </div>
     </div>
@@ -14996,6 +15375,8 @@ function renderMasterEmployeeTable(){
                 joinDate:"",
                 contractStart:"",
                 contractEnd:"",
+                baseSalary:"",
+                leaveBalance:"",
                 createdAt:null,
                 updatedAt:null,
                 _blank:true
@@ -15137,6 +15518,13 @@ function renderMasterEmployeeTable(){
                 ${contract.text || ""}
             </td>
 
+            <td>
+                <input class="employee-master-cell" data-index="${realIndex}" data-field="baseSalary" type="number" min="0" step="any" ${employeeMasterEditMode ? "" : "disabled"} value="${employeeInputValue(employee.baseSalary || "")}" placeholder="0" title="Gaji pokok">
+            </td>
+            <td>
+                <input class="employee-master-cell" data-index="${realIndex}" data-field="leaveBalance" type="number" min="0" step="any" ${employeeMasterEditMode ? "" : "disabled"} value="${employeeInputValue(employee.leaveBalance ?? "")}" placeholder="0" title="Saldo cuti">
+            </td>
+
             <td class="employee-status ${status.className}">
                 ${status.text || ""}
             </td>
@@ -15149,7 +15537,7 @@ function renderMasterEmployeeTable(){
         const tr = document.createElement("tr");
 
         tr.innerHTML =
-            '<td colspan="11" class="employee-history-empty">' +
+            '<td colspan="13" class="employee-history-empty">' +
             'Belum ada data karyawan.' +
             '</td>';
 
@@ -16241,6 +16629,8 @@ department:employee.department || "",
                     joinDate:employee.joinDate || "",
                     contractStart:employee.contractStart || "",
                     contractEnd:employee.contractEnd || "",
+                    baseSalary:employee.baseSalary ?? "",
+                    leaveBalance:employee.leaveBalance ?? "",
 
                     updatedAt:
                         firebase.firestore
@@ -16284,6 +16674,8 @@ department:employee.department || "",
                         joinDate:employee.joinDate || "",
                         contractStart:employee.contractStart || "",
                         contractEnd:employee.contractEnd || "",
+                        baseSalary:employee.baseSalary ?? "",
+                        leaveBalance:employee.leaveBalance ?? "",
                         updatedAt:firebase.firestore.FieldValue.serverTimestamp()
                     },
                     {
@@ -16367,6 +16759,8 @@ department:data.department || "",
                 joinDate:data.joinDate || "",
                 contractStart:data.contractStart || "",
                 contractEnd:data.contractEnd || "",
+                baseSalary:data.baseSalary ?? "",
+                leaveBalance:data.leaveBalance ?? "",
                 createdAt:data.createdAt || null,
                 updatedAt:data.updatedAt || null
             });
@@ -16379,6 +16773,7 @@ department:data.department || "",
 
         renderMasterEmployeeTable();
         updateEmployeeMasterButtons();
+        if(typeof renderPayrollEmployeeOptions === "function") renderPayrollEmployeeOptions();
 
         console.log(
             "CLIME-X MASTER EMPLOYEES LOAD OK:",
@@ -17904,7 +18299,10 @@ setAppLanguage = function(lang){
         "Tanggal": {id:"Tanggal", en:"Date", zh:"日期"},
         "Waktu": {id:"Waktu", en:"Time", zh:"时间"},
         "Catatan": {id:"Catatan", en:"Notes", zh:"备注"},
-        "Alasan": {id:"Alasan", en:"Reason", zh:"原因"}
+        "Alasan": {id:"Alasan", en:"Reason", zh:"原因"},
+        "Simpan Rumus": {id:"Simpan Rumus", en:"Save Rules", zh:"保存规则"},
+        "Lembur hari libur dipisahkan dari lembur reguler. Karena setiap jam dapat memiliki nilai yang berbeda": {id:"Lembur hari libur dipisahkan dari lembur reguler. Karena setiap jam dapat memiliki nilai yang berbeda", en:"Public holiday overtime is configured separately from regular overtime because each hour can have a different multiplier.", zh:"节假日加班与普通加班分开设置，因为每个小时的倍数可能不同。"},
+        "Catatan: jam lembur tetap harus diajukan manual. Durasi istirahat dikurangi dari jam lembur mentah sebelum pengali diterapkan.": {id:"Catatan: jam lembur tetap harus diajukan manual. Durasi istirahat dikurangi dari jam lembur mentah sebelum pengali diterapkan.", en:"Note: Overtime must still be submitted manually. Break duration is deducted from raw overtime hours before multipliers are applied.", zh:"注意：加班仍需手动申请。应用倍数前，须从原始加班时长中扣除休息时间。"}
     };
 
     const allMaps=[typeof APP_TRANSLATIONS!=='undefined'?APP_TRANSLATIONS:{},PATCH_TRANSLATIONS];
@@ -17940,6 +18338,14 @@ setAppLanguage = function(lang){
     function translateDynamicText(raw){
         let text=String(raw||'');
         const lang=currentLang();
+        /* Label jam ke-1 s.d. jam ke-24 dibuat oleh JavaScript, jadi diterjemahkan secara dinamis. */
+        let hourMatch = text.trim().match(/^Jam ke-(\d+)$/i) || text.trim().match(/^Hour (\d+)$/i) || text.trim().match(/^第(\d+)小时$/);
+        if(hourMatch){
+            const hourNumber = hourMatch[1];
+            if(lang==='en') return 'Hour ' + hourNumber;
+            if(lang==='zh') return '第' + hourNumber + '小时';
+            return 'Jam ke-' + hourNumber;
+        }
         /* Normalisasi teks dinamis dari bahasa yang sedang tampil kembali ke bentuk Indonesia. */
         if(/^Likes? \d+$/i.test(text)) text=text.replace(/^Likes? (\d+)$/i,'Suka $1');
         if(/^Comments? \d+$/i.test(text)) text=text.replace(/^Comments? (\d+)$/i,'Komentar $1');
