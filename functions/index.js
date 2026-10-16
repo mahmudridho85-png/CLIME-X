@@ -479,3 +479,4 @@ exports.midtransWebhook = onRequest(
     }
   },
 );
+Object.assign(exports, require("./kasircuanMidtrans"));

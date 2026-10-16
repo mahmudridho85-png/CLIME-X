@@ -2548,8 +2548,13 @@ function startClimexSubscriptionListener(user){
         }
         updateClimexSubscriptionBadge();
         if(climexSubscriptionState.status === "expired"){
-            const activePage = document.querySelector(".page:not([style*='display: none'])");
-            if(activePage && !["dashboard","billing"].includes(activePage.id)){
+            const activePage = Array.from(document.querySelectorAll(".page")).find(function(page){
+                return getComputedStyle(page).display !== "none";
+            });
+            // Halaman yang memang boleh dibuka dalam MODE TERBATAS tidak boleh
+            // dipaksa kembali ke Dashboard oleh listener langganan.
+            const allowedPages = ["dashboard", "billing", "announcements", "account", "settings"];
+            if(activePage && !allowedPages.includes(activePage.id)){
                 showPage("dashboard");
             }
         }
@@ -2560,7 +2565,7 @@ function startClimexSubscriptionListener(user){
 function climexCanOpenWebPage(pageId){
     if(climexSubscriptionState.status !== "expired") return true;
 
-   if(["dashboard", "billing", "announcements", "account"].includes(pageId)) {
+   if(["dashboard", "billing", "announcements", "account", "settings"].includes(pageId)) {
     return true;
 }
 
@@ -4482,6 +4487,7 @@ const APP_TRANSLATIONS = {
     "Employee ID": {id:"ID Karyawan", en:"Employee ID", zh:"员工 ID"},
     "DOMAIN :": {id:"DOMAIN :", en:"DOMAIN:", zh:"域名："},
     "UBAH DOMAIN": {id:"UBAH DOMAIN", en:"CHANGE DOMAIN", zh:"修改域名"},
+    "SIMPAN DOMAIN": {id:"SIMPAN DOMAIN", en:"SAVE DOMAIN", zh:"保存域名"},
     "PWD GLOBAL :": {id:"PWD GLOBAL :", en:"GLOBAL PASSWORD:", zh:"全局密码："},
     "TAMBAH ID": {id:"TAMBAH ID", en:"ADD ID", zh:"添加 ID"},
     "HAPUS ID": {id:"HAPUS ID", en:"DELETE ID", zh:"删除 ID"},
@@ -7149,7 +7155,7 @@ async function saveClimexClaim(claim){
                     type="button"
                     onclick="editEmployeeGlobalPassword()"
                 >
-                    SIMPAN
+                    UBAH PWD
                 </button>
 
                 <button
@@ -7889,6 +7895,7 @@ const defaultContractPrintTemplate = {
 
 Nama / Jabatan                              {{nama_karyawan}}`
 };
+
 
 
 function showPrintTemplateTab(tabId, button){
@@ -8706,17 +8713,19 @@ function editEmployeeDomain(){
         return;
     }
 
-    if(!employeeDomainEditing){
-
+    // Klik pertama hanya mengubah mode dan teks tombol.
+    if(input.readOnly){
         employeeDomainEditing = true;
         input.readOnly = false;
         input.style.background = "#fff";
-        button.textContent = "SIMPAN";
+        button.setAttribute("data-climex-lang-key", "SIMPAN DOMAIN");
+        button.textContent = "SIMPAN DOMAIN";
         input.focus();
         input.select();
         return;
     }
 
+    // Klik berikutnya tetap menjalankan fungsi simpan yang sudah ada.
     saveEmployeeDomain();
 
 }
@@ -8734,6 +8743,13 @@ async function saveEmployeeDomain(){
 }
 
 async function saveEmployeeDomainCore(){
+
+    // Simpan halaman/tab yang sedang dibuka agar proses simpan tidak
+    // membuat pengguna kembali ke Dashboard.
+    const visiblePage = Array.from(document.querySelectorAll(".page"))
+        .find(function(page){ return getComputedStyle(page).display !== "none"; });
+    const visibleSettingsPanel = Array.from(document.querySelectorAll(".settings-panel"))
+        .find(function(panel){ return getComputedStyle(panel).display !== "none"; });
 
     const input = document.getElementById("employeeDomain");
     const button = document.getElementById("employeeDomainBtn");
@@ -8788,9 +8804,14 @@ async function saveEmployeeDomainCore(){
         input.readOnly = true;
         input.style.background = "#f8f6f3";
         employeeDomainEditing = false;
-        button.textContent = "EDIT DOMAIN";
+        button.setAttribute("data-climex-lang-key", "UBAH DOMAIN");
+        button.textContent = "UBAH DOMAIN";
 
         renderEmployeeTable();
+
+        // Pertahankan halaman dan tab yang aktif sebelum penyimpanan.
+        // Jangan mengatur ulang navigasi setelah simpan. Listener langganan
+        // juga tidak lagi memaksa halaman Settings kembali ke Dashboard.
 
         showEmployeeRenewToast("Employee Domain berhasil disimpan.");
 
@@ -9389,6 +9410,7 @@ async function loadEmployeeDomain(){
 
         const button = document.getElementById("employeeDomainBtn");
         if(button){
+            button.setAttribute("data-climex-lang-key", "UBAH DOMAIN");
             button.textContent = "UBAH DOMAIN";
         }
 
@@ -9413,7 +9435,7 @@ function editEmployeeGlobalPassword(){
         employeeGlobalPasswordEditing = true;
         input.readOnly = false;
         input.style.background = "#fff";
-        button.textContent = "SIMPAN";
+        button.textContent = "SIMPAN PWD";
         input.focus();
         input.select();
         return;
@@ -9481,7 +9503,7 @@ async function saveEmployeeGlobalPasswordCore(){
         employeeGlobalPasswordEditing = false;
         input.readOnly = true;
         input.style.background = "#f8f6f3";
-        button.textContent = "UBAH";
+        button.textContent = "UBAH PWD";
 
         showEmployeeRenewToast("Password Global berhasil disimpan.");
 
@@ -9524,17 +9546,10 @@ async function loadEmployeeGlobalPassword(){
 
         }
 
-        if(employeeGlobalPassword){
-            employeeGlobalPasswordEditing = false;
-            input.readOnly = true;
-            input.style.background = "#f8f6f3";
-            button.textContent = "UBAH PWD";
-        }else{
-            employeeGlobalPasswordEditing = true;
-            input.readOnly = false;
-            input.style.background = "#fff";
-            button.textContent = "SIMPAN";
-        }
+        employeeGlobalPasswordEditing = false;
+        input.readOnly = true;
+        input.style.background = "#f8f6f3";
+        button.textContent = "UBAH PWD";
 
     }catch(error){
         console.error("CLIME-X EMPLOYEE GLOBAL PASSWORD LOAD ERROR:", error);
@@ -18154,6 +18169,9 @@ setAppLanguage = function(lang){
         }
     });
 })();
+
+
+
 </script>
 
 
