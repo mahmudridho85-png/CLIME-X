@@ -4526,6 +4526,9 @@ const APP_TRANSLATIONS = {
     "Klaim yang telah disetujui dan menunggu pembayaran.": {id:"Klaim yang telah disetujui dan menunggu pembayaran.", en:"Approved claims awaiting payment.", zh:"已批准且等待付款的报销。"},
     "Riwayat seluruh klaim yang telah diproses.": {id:"Riwayat seluruh klaim yang telah diproses.", en:"History of all processed claims.", zh:"所有已处理报销的历史记录。"},
     "Kelola seluruh pengajuan cuti karyawan.": {id:"Kelola seluruh pengajuan cuti karyawan.", en:"Manage all employee leave requests.", zh:"管理员工的所有请假申请。"},
+    "Jatah Cuti Tahunan Global": {id:"Jatah Cuti Tahunan Global", en:"Global Annual Leave Allowance", zh:"全球年度假期额度"},
+    "UBAH JATAH CUTI": {id:"UBAH JATAH CUTI", en:"EDIT LEAVE ALLOWANCE", zh:"修改年假额度"},
+    "SIMPAN JATAH CUTI": {id:"SIMPAN JATAH CUTI", en:"SAVE LEAVE ALLOWANCE", zh:"保存年假额度"},
     "Data pembayaran kartu siap diproses oleh payment gateway.": {id:"Data pembayaran kartu siap diproses oleh payment gateway.", en:"Card payment details are ready to be processed by the payment gateway.", zh:"银行卡付款信息已准备好，可由支付网关处理。"},
     "Memuat data...": {id:"Memuat data...", en:"Loading data...", zh:"正在加载数据..."},
     "Memuat pengumuman...": {id:"Memuat pengumuman...", en:"Loading announcements...", zh:"正在加载公告..."},
@@ -6293,9 +6296,9 @@ async function saveClimexClaim(claim){
                         <p data-climex-lang-key="Kelola seluruh pengajuan cuti karyawan.">Kelola seluruh pengajuan cuti karyawan.</p>
                         <div id="climexGlobalLeaveQuotaBox" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:10px;max-width:680px;">
                             <label for="climexGlobalLeaveQuota" style="font-size:13px;font-weight:700;color:var(--text);">Jatah Cuti Tahunan Global</label>
-                            <input id="climexGlobalLeaveQuota" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Isi jumlah hari" style="width:150px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--text);background:#fff;">
+                            <input id="climexGlobalLeaveQuota" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Isi jumlah hari" readonly style="width:150px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--text);background:#fff;">
                             <span style="font-size:12px;color:var(--muted);">hari per tahun</span>
-                            <button id="climexSaveGlobalLeaveQuota" type="button" onclick="saveClimexGlobalLeaveQuota()" style="height:38px;padding:0 16px;border:0;border-radius:8px;background:var(--brown);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">SIMPAN JATAH CUTI</button>
+                            <button id="climexSaveGlobalLeaveQuota" type="button" data-climex-lang-key="UBAH JATAH CUTI" onclick="toggleClimexGlobalLeaveQuotaEdit()" style="height:38px;padding:0 16px;border:0;border-radius:8px;background:var(--brown);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">UBAH JATAH CUTI</button>
                             <span id="climexGlobalLeaveQuotaMessage" role="status" style="font-size:12px;color:var(--muted);"></span>
                         </div>
                     </div>
@@ -18308,11 +18311,31 @@ async function loadClimexGlobalLeaveQuota(){
         const snap = await climexDB.collection("users").doc(uid).collection("climex").doc("profile").get();
         const data = snap.exists ? (snap.data() || {}) : {};
         input.value = data.globalAnnualLeaveQuota === undefined || data.globalAnnualLeaveQuota === null ? "" : data.globalAnnualLeaveQuota;
+        input.readOnly = true;
+        const button = document.getElementById("climexSaveGlobalLeaveQuota");
+        if(button){ button.dataset.editMode = "0"; button.textContent = climexTranslateRuntimeText("UBAH JATAH CUTI"); }
         message.textContent = input.value === "" ? "Belum diatur." : "Jatah tersimpan.";
     }catch(error){
         console.error("LOAD GLOBAL ANNUAL LEAVE QUOTA ERROR:", error);
         message.textContent = "Gagal memuat jatah cuti.";
     }
+}
+
+function toggleClimexGlobalLeaveQuotaEdit(){
+    const input = document.getElementById("climexGlobalLeaveQuota");
+    const button = document.getElementById("climexSaveGlobalLeaveQuota");
+    const message = document.getElementById("climexGlobalLeaveQuotaMessage");
+    if(!input || !button) return;
+    if(button.dataset.editMode !== "1"){
+        button.dataset.editMode = "1";
+        input.readOnly = false;
+        button.textContent = climexTranslateRuntimeText("SIMPAN JATAH CUTI");
+        if(message) message.textContent = "";
+        input.focus();
+        input.select();
+        return;
+    }
+    saveClimexGlobalLeaveQuota();
 }
 
 async function saveClimexGlobalLeaveQuota(){
@@ -18342,13 +18365,18 @@ async function saveClimexGlobalLeaveQuota(){
             globalAnnualLeaveQuotaUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }, {merge:true});
         input.value = String(quota);
-        message.textContent = "Jatah cuti global berhasil disimpan.";
+        message.textContent = "";
+        input.readOnly = true;
+        button.dataset.editMode = "0";
+        button.textContent = climexTranslateRuntimeText("UBAH JATAH CUTI");
+        if(typeof showEmployeeRenewToast === "function") showEmployeeRenewToast("Jatah cuti disimpan");
     }catch(error){
         console.error("SAVE GLOBAL ANNUAL LEAVE QUOTA ERROR:", error);
         message.textContent = "Gagal menyimpan. Silakan coba lagi.";
     }finally{
         button.disabled = false;
-        button.textContent = originalText;
+        if(button.dataset.editMode === "1") button.textContent = climexTranslateRuntimeText("SIMPAN JATAH CUTI");
+        else button.textContent = climexTranslateRuntimeText("UBAH JATAH CUTI");
     }
 }
 </script>
