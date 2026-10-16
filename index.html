@@ -89,6 +89,16 @@ body{
     min-width:0;
 }
 
+/* LOGO CLIME-X PUTIH DI UJUNG KANAN HEADER */
+.climex-header-logo{
+    width:62px;
+    height:62px;
+    object-fit:contain;
+    flex:0 0 62px;
+    display:block;
+    filter:brightness(0) invert(1);
+}
+
 .company-logo{
     width:70px;
     height:70px;
@@ -997,6 +1007,53 @@ td{
 .event-reader-meta{font-size:10px;color:var(--muted);margin-top:3px;}
 .event-history-empty{padding:30px 15px;text-align:center;color:var(--muted);font-size:12px;}
 @media(max-width:760px){.event-form-grid{grid-template-columns:1fr;}.event-field.full{grid-column:auto;}.event-actions{justify-content:stretch;}.event-actions button{width:100%;}}
+
+/* =========================================================
+   HALAMAN BANTUAN — TAMPILAN SEPERTI KERTAS PUTIH
+   ========================================================= */
+.help-page-paper{
+    background:#fff;
+    color:#171717;
+    border:1px solid #e5e5e5;
+    border-radius:4px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+    max-width:1000px;
+    margin:0 auto;
+    padding:38px 44px;
+    font-family:Arial,Helvetica,sans-serif;
+    line-height:1.7;
+}
+.help-page-paper h1{
+    color:#111;
+    font-size:26px;
+    text-align:center;
+    margin:0 0 30px;
+    padding-bottom:18px;
+    border-bottom:2px solid #222;
+    letter-spacing:.5px;
+}
+.help-page-paper h2{
+    color:#111;
+    font-size:18px;
+    margin:26px 0 8px;
+}
+.help-page-paper p,.help-page-paper li{
+    color:#222;
+    font-size:14px;
+}
+.help-page-paper ol,.help-page-paper ul{padding-left:24px;margin-top:8px;}
+.help-page-paper li{margin:5px 0;}
+.help-page-paper .help-note{
+    background:#f7f7f7;
+    border-left:4px solid #777;
+    padding:12px 15px;
+    margin:18px 0;
+    color:#222;
+}
+@media(max-width:760px){
+    .help-page-paper{padding:24px 18px;}
+    .help-page-paper h1{font-size:21px;}
+}
 
 /* =========================================================
    RESPONSIVE
@@ -2528,11 +2585,17 @@ function updateClimexSubscriptionBadge(){
         headerRight.insertBefore(badge, anchor || null);
     }
     const s = climexSubscriptionState;
-    if(s.status === "checking") badge.textContent = "MEMERIKSA...";
-    else if(s.status === "trial") badge.textContent = "TRIAL " + climexSubscriptionDaysLeft() + " HARI";
+    const lang = localStorage.getItem("climexLanguage") || currentLoginLang || "id";
+    const words = {
+        id: {checking:"MEMERIKSA...", trial:"TRIAL", day:"HARI", pro:"PRO", remaining:"SISA", limited:"LIMITED"},
+        en: {checking:"CHECKING...", trial:"TRIAL", day:"DAYS", pro:"PRO", remaining:"LEFT", limited:"LIMITED"},
+        zh: {checking:"正在检查...", trial:"TRIAL", day:"天", pro:"PRO", remaining:"剩余", limited:"LIMITED"}
+    }[lang] || {checking:"MEMERIKSA...", trial:"TRIAL", day:"HARI", pro:"PRO", remaining:"SISA", limited:"LIMITED"};
+    if(s.status === "checking") badge.textContent = words.checking;
+    else if(s.status === "trial") badge.textContent = words.trial + " " + climexSubscriptionDaysLeft() + " " + words.day;
     else if(s.status === "pro"){
-        badge.textContent = (s.plan === "go365" ? "PRO 365 HARI" : "PRO 30 HARI") + " • SISA " + climexSubscriptionDaysLeft() + " HARI";
-    }else badge.textContent = "MODE TERBATAS";
+        badge.textContent = words.pro + " " + (s.plan === "go365" ? "365" : "30") + " " + words.day + " • " + words.remaining + " " + climexSubscriptionDaysLeft() + " " + words.day;
+    }else badge.textContent = words.limited;
 }
 function startClimexSubscriptionListener(user){
     if(climexSubscriptionUnsubscribe){try{climexSubscriptionUnsubscribe();}catch(e){}}
@@ -3199,7 +3262,7 @@ console.log("CLIME-X FIREBASE:", firebase.app().options.projectId);
                    ">
         </div>
 
-        <div style="text-align:left;margin-bottom:14px;">
+        <div id="registerEmailGroup" style="text-align:left;margin-bottom:14px;">
             <label id="registerEmailLabel" style="
                 display:block;
                 margin-bottom:7px;
@@ -3223,7 +3286,7 @@ console.log("CLIME-X FIREBASE:", firebase.app().options.projectId);
                    ">
         </div>
 
-        <div style="text-align:left;margin-bottom:14px;">
+        <div id="registerPasswordGroup" style="text-align:left;margin-bottom:14px;">
             <label id="registerPasswordLabel" style="
                 display:block;
                 margin-bottom:7px;
@@ -3247,7 +3310,7 @@ console.log("CLIME-X FIREBASE:", firebase.app().options.projectId);
                    ">
         </div>
 
-        <div style="text-align:left;margin-bottom:20px;">
+        <div id="registerConfirmPasswordGroup" style="text-align:left;margin-bottom:20px;">
             <label id="registerConfirmLabel" style="
                 display:block;
                 margin-bottom:7px;
@@ -3336,7 +3399,7 @@ console.log("CLIME-X FIREBASE:", firebase.app().options.projectId);
 
         <button id="registerGoogleButton"
                 type="button"
-                onclick="registerClimexWithGoogle()"
+                onclick="setClimexGoogleRegisterFieldsHidden(true); registerClimexWithGoogle()"
                 style="
                     width:100%;
                     height:48px;
@@ -3664,6 +3727,72 @@ document.addEventListener("click", function(event){
    ========================================================= */
 
 const APP_TRANSLATIONS = {
+    "UBAH PWD": {id:"UBAH PWD", en:"EDIT PASSWORD", zh:"修改密码"},
+    "SIMPAN PWD": {id:"SIMPAN PWD", en:"SAVE PASSWORD", zh:"保存密码"},
+    "Pilih salah satu paket di atas untuk melanjutkan.": {id:"Pilih salah satu paket di atas untuk melanjutkan.", en:"Select one of the plans above to continue.", zh:"请选择上方的一个套餐以继续。"},
+    "Form cetak:": {id:"Form cetak:", en:"Print form:", zh:"打印表单："},
+    "+0 bulan ini": {id:"+0 bulan ini", en:"+0 this month", zh:"本月 +0"},
+    "0% dari total klaim": {id:"0% dari total klaim", en:"0% of total claims", zh:"占报销总数的 0%"},
+    "hari per tahun": {id:"hari per tahun", en:"days per year", zh:"天/年"},
+    "Jatah tersimpan.": {id:"Jatah tersimpan.", en:"Quota saved.", zh:"额度已保存。"},
+    "Belum ada pengajuan cuti.": {id:"Belum ada pengajuan cuti.", en:"No leave requests yet.", zh:"暂无休假申请。"},
+    "0 klaim": {id:"0 klaim", en:"0 claims", zh:"0 笔报销"},
+    "Pilih mata uang": {id:"Pilih mata uang", en:"Select currency", zh:"选择货币"},
+    "Pembayaran diproses dengan aman melalui Midtrans.": {id:"Pembayaran diproses dengan aman melalui Midtrans.", en:"Payments are processed securely through Midtrans.", zh:"付款通过 Midtrans 安全处理。"},
+    "Belum ada klaim.": {id:"Belum ada klaim.", en:"No claims yet.", zh:"暂无报销记录。"},
+    "Transaksi belum dapat dibuat. Silakan coba lagi.": {id:"Transaksi belum dapat dibuat. Silakan coba lagi.", en:"The transaction could not be created. Please try again.", zh:"暂时无法创建交易，请重试。"},
+    "Bantuan & Dukungan": {id:"Bantuan & Dukungan", en:"Help & Support", zh:"帮助与支持"},
+    "PANDUAN PENGGUNAAN": {id:"PANDUAN PENGGUNAAN", en:"USER GUIDE", zh:"使用指南"},
+    "PANDUAN SINGKAT PENGGUNAAN": {id:"PANDUAN SINGKAT PENGGUNAAN", en:"QUICK USER GUIDE", zh:"简明使用指南"},
+    "1. Persiapan DOMAIN dan PASSWORD GLOBAL": {id:"1. Persiapan DOMAIN dan PASSWORD GLOBAL", en:"1. Set up DOMAIN and GLOBAL PASSWORD", zh:"1. 设置域名和全局密码"},
+    "Sebelum menambah data karyawan, buat DOMAIN dan PASSWORD GLOBAL terlebih dahulu. Keduanya wajib digunakan oleh karyawan untuk masuk ke aplikasi CLIME-X Employee di Android.": {id:"Sebelum menambah data karyawan, buat DOMAIN dan PASSWORD GLOBAL terlebih dahulu. Keduanya wajib digunakan oleh karyawan untuk masuk ke aplikasi CLIME-X Employee di Android.", en:"Before adding employees, first create a DOMAIN and GLOBAL PASSWORD. Employees must use both to sign in to CLIME-X Employee on Android.", zh:"添加员工前，请先创建域名和全局密码。员工必须使用这两项信息登录 Android 版 CLIME-X Employee。"},
+    "Buka Pengaturan, pilih tab ID Pengguna Clime-X, lalu di bagian bawah pilih UBAH DOMAIN. Masukkan domain dengan huruf kecil dan minimal 6 karakter. Anda boleh menggunakan nama perusahaan. Contoh: universal. Setelah itu klik SIMPAN.": {id:"Buka Pengaturan, pilih tab ID Pengguna Clime-X, lalu di bagian bawah pilih UBAH DOMAIN. Masukkan domain dengan huruf kecil dan minimal 6 karakter. Anda boleh menggunakan nama perusahaan. Contoh: universal. Setelah itu klik SIMPAN.", en:"Open Settings, select the Clime-X User ID tab, then select EDIT DOMAIN at the bottom. Enter a domain using lowercase letters and at least 6 characters. You may use your company name. Example: universal. Then click SAVE.", zh:"打开设置，选择 Clime-X 用户 ID 标签，然后在页面底部点击修改域名。输入至少 6 个字符的小写域名，也可以使用公司名称。例如：universal。然后点击保存。"},
+    "Pada bagian Password Global, klik UBAH PWD, masukkan password, lalu klik SIMPAN. Contoh: 12345678.": {id:"Pada bagian Password Global, klik UBAH PWD, masukkan password, lalu klik SIMPAN. Contoh: 12345678.", en:"Under Global Password, click EDIT PASSWORD, enter a password, then click SAVE. Example: 12345678.", zh:"在全局密码部分点击修改密码，输入密码后点击保存。例如：12345678。"},
+    "2. Menambahkan KARYAWAN": {id:"2. Menambahkan KARYAWAN", en:"2. Add EMPLOYEES", zh:"2. 添加员工"},
+    "Data karyawan digunakan untuk akun masuk CLIME-X Employee di Android, pemantauan masa kontrak, dan administrasi karyawan lainnya.": {id:"Data karyawan digunakan untuk akun masuk CLIME-X Employee di Android, pemantauan masa kontrak, dan administrasi karyawan lainnya.", en:"Employee records are used for CLIME-X Employee sign-in on Android, contract-expiry tracking, and other employee administration.", zh:"员工资料用于登录 Android 版 CLIME-X Employee、跟踪合同到期时间及其他员工管理。"},
+    "Di halaman Karyawan, klik TAMBAH.": {id:"Di halaman Karyawan, klik TAMBAH.", en:"On the Employees page, click ADD.", zh:"在员工页面点击添加。"},
+    "Klik KATEGORI untuk membuat pilihan Departemen dan Jabatan.": {id:"Klik KATEGORI untuk membuat pilihan Departemen dan Jabatan.", en:"Click CATEGORIES to create Department and Position options.", zh:"点击类别以创建部门和职位选项。"},
+    "Isi kolom tabel sesuai data karyawan, lalu klik SIMPAN.": {id:"Isi kolom tabel sesuai data karyawan, lalu klik SIMPAN.", en:"Fill in the table fields with the employee's details, then click SAVE.", zh:"根据员工资料填写表格，然后点击保存。"},
+    "Contoh akun karyawan jika domain Anda universal:": {id:"Contoh akun karyawan jika domain Anda universal:", en:"Example employee account when your domain is universal:", zh:"域名为 universal 时的员工账户示例："},
+    "ID Karyawan: steven@universal.com": {id:"ID Karyawan: steven@universal.com", en:"Employee ID: steven@universal.com", zh:"员工编号：steven@universal.com"},
+    "Password: 12345678 (password global yang sudah dibuat)": {id:"Password: 12345678 (password global yang sudah dibuat)", en:"Password: 12345678 (the global password you created)", zh:"密码：12345678（您设置的全局密码）"},
+    "Klik SIMPAN setiap selesai mengubah data. Gunakan UBAH untuk mengedit karyawan yang dipilih, serta Perbarui Kontrak atau Cetak Kontrak sesuai kebutuhan.": {id:"Klik SIMPAN setiap selesai mengubah data. Gunakan UBAH untuk mengedit karyawan yang dipilih, serta Perbarui Kontrak atau Cetak Kontrak sesuai kebutuhan.", en:"Click SAVE after changing data. Use EDIT to modify the selected employee, and Update Contract or Print Contract as needed.", zh:"修改资料后请点击保存。使用编辑修改所选员工，并按需更新或打印合同。"},
+    "Atur Jatah Cuti Tahunan Global sesuai kebijakan perusahaan atau negara, lalu simpan.": {id:"Atur Jatah Cuti Tahunan Global sesuai kebijakan perusahaan atau negara, lalu simpan.", en:"Set the Global Annual Leave Allowance according to company or country policy, then save.", zh:"根据公司或国家政策设置全局年度休假额度，然后保存。"},
+    "Klaim: periksa pengajuan dan lakukan review sesuai kewenangan administrator.": {id:"Klaim: periksa pengajuan dan lakukan review sesuai kewenangan administrator.", en:"Claims: review submissions within the administrator's authority.", zh:"报销：在管理员权限范围内审核申请。"},
+    "Beranda dan Pengumuman: lihat informasi yang dibagikan dan buat pengumuman jika diperlukan.": {id:"Beranda dan Pengumuman: lihat informasi yang dibagikan dan buat pengumuman jika diperlukan.", en:"Home and Announcements: view shared information and publish announcements when needed.", zh:"主页和公告：查看共享信息，并在需要时发布公告。"},
+    "Laporan: tinjau informasi yang tersedia pada halaman laporan.": {id:"Laporan: tinjau informasi yang tersedia pada halaman laporan.", en:"Reports: review the information available on the reports page.", zh:"报告：查看报告页面中的信息。"},
+    "Penting: simpan perubahan sebelum berpindah halaman atau menutup browser. Pastikan data tersimpan sebelum memuat ulang halaman.": {id:"Penting: simpan perubahan sebelum berpindah halaman atau menutup browser. Pastikan data tersimpan sebelum memuat ulang halaman.", en:"Important: save changes before switching pages or closing the browser. Make sure data is saved before reloading.", zh:"重要提示：切换页面或关闭浏览器前请先保存更改。刷新页面前请确认数据已保存。"},
+    "5. Bantuan lebih lanjut": {id:"5. Bantuan lebih lanjut", en:"5. Further assistance", zh:"5. 更多帮助"},
+    "Jika data tidak tersimpan atau tombol tidak merespons, periksa isian wajib dan koneksi internet. Jangan memuat ulang halaman sebelum memastikan perubahan sudah tersimpan.": {id:"Jika data tidak tersimpan atau tombol tidak merespons, periksa isian wajib dan koneksi internet. Jangan memuat ulang halaman sebelum memastikan perubahan sudah tersimpan.", en:"If data is not saved or a button does not respond, check required fields and your internet connection. Do not reload until you confirm changes are saved.", zh:"如果数据未保存或按钮无响应，请检查必填项和网络连接。确认更改已保存前，请勿刷新页面。"},
+    "6. Hubungi kami": {id:"6. Hubungi kami", en:"6. Contact us", zh:"6. 联系我们"},
+    "Jika ada pertanyaan atau masalah yang belum dapat diselesaikan, silakan hubungi kami:": {id:"Jika ada pertanyaan atau masalah yang belum dapat diselesaikan, silakan hubungi kami:", en:"If you have questions or an issue you cannot resolve, please contact us:", zh:"如有疑问或无法解决的问题，请联系我们："},
+    "Email": {id:"Email", en:"Email", zh:"电子邮件"},
+    "Panduan ini membantu administrator memahami langkah awal dan penggunaan CLIME-X Web Console.": {id:"Panduan ini membantu administrator memahami langkah awal dan penggunaan CLIME-X Web Console.", en:"This guide helps administrators understand the initial setup and use of the CLIME-X Web Console.", zh:"本指南帮助管理员了解 CLIME-X Web Console 的初始设置和使用方法。"},
+    "1. Persiapan awal": {id:"1. Persiapan awal", en:"1. Initial setup", zh:"1. 初始设置"},
+    "Lengkapi profil perusahaan dan administrator pada saat registrasi.": {id:"Lengkapi profil perusahaan dan administrator pada saat registrasi.", en:"Complete the company and administrator profiles during registration.", zh:"注册时请完善公司和管理员资料。"},
+    "Buka menu Pengaturan untuk melengkapi konfigurasi yang diwajibkan, termasuk domain karyawan dan password global jika fitur tersebut digunakan.": {id:"Buka menu Pengaturan untuk melengkapi konfigurasi yang diwajibkan, termasuk domain karyawan dan password global jika fitur tersebut digunakan.", en:"Open Settings to complete required configuration, including the employee domain and global password if those features are used.", zh:"打开设置以完成必需配置，包括员工域名和全局密码（如使用这些功能）。"},
+    "Simpan perubahan sebelum berpindah ke menu lain.": {id:"Simpan perubahan sebelum berpindah ke menu lain.", en:"Save your changes before switching to another menu.", zh:"切换到其他菜单前请先保存更改。"},
+    "2. Mengatur kategori karyawan": {id:"2. Mengatur kategori karyawan", en:"2. Setting employee categories", zh:"2. 设置员工类别"},
+    "Buka menu Karyawan, lalu pilih tombol KATEGORI untuk membuat pilihan Departemen dan Jabatan yang sesuai dengan perusahaan.": {id:"Buka menu Karyawan, lalu pilih tombol KATEGORI untuk membuat pilihan Departemen dan Jabatan yang sesuai dengan perusahaan.", en:"Open Employees and select CATEGORIES to create the departments and positions used by your company.", zh:"打开员工菜单并选择类别，创建公司使用的部门和职位。"},
+    "Setelah kategori tersedia, pilihan tersebut dapat digunakan pada data karyawan.": {id:"Setelah kategori tersedia, pilihan tersebut dapat digunakan pada data karyawan.", en:"Once created, these categories can be selected in employee records.", zh:"创建类别后，即可在员工资料中选择。"},
+    "3. Menambah dan mengelola karyawan": {id:"3. Menambah dan mengelola karyawan", en:"3. Adding and managing employees", zh:"3. 添加和管理员工"},
+    "Buka menu Karyawan dan isi data pada baris karyawan, termasuk nama, ID karyawan, Departemen, Jabatan, tanggal masuk, dan informasi kontrak yang diperlukan.": {id:"Buka menu Karyawan dan isi data pada baris karyawan, termasuk nama, ID karyawan, Departemen, Jabatan, tanggal masuk, dan informasi kontrak yang diperlukan.", en:"Open Employees and fill in the employee row, including name, employee ID, department, position, start date, and required contract details.", zh:"打开员工菜单并填写员工行，包括姓名、员工编号、部门、职位、入职日期和所需合同信息。"},
+    "Gunakan tombol SIMPAN untuk menyimpan perubahan. Pastikan data tersimpan sebelum meninggalkan halaman.": {id:"Gunakan tombol SIMPAN untuk menyimpan perubahan. Pastikan data tersimpan sebelum meninggalkan halaman.", en:"Use SAVE to store changes. Make sure the data is saved before leaving the page.", zh:"使用保存按钮保存更改。离开页面前请确认数据已保存。"},
+    "Gunakan tombol UBAH untuk mengedit data karyawan yang dipilih, serta tombol perbarui atau cetak kontrak sesuai kebutuhan.": {id:"Gunakan tombol UBAH untuk mengedit data karyawan yang dipilih, serta tombol perbarui atau cetak kontrak sesuai kebutuhan.", en:"Use EDIT to modify the selected employee, and update or print the contract as needed.", zh:"使用编辑按钮修改所选员工，并按需更新或打印合同。"},
+    "4. Cuti": {id:"4. Cuti", en:"4. Leave", zh:"4. 休假"},
+    "Buka menu Cuti untuk melihat pengajuan cuti karyawan.": {id:"Buka menu Cuti untuk melihat pengajuan cuti karyawan.", en:"Open Leave to view employee leave requests.", zh:"打开休假菜单查看员工休假申请。"},
+    "Atur Jatah Cuti Tahunan Global sesuai kebijakan perusahaan atau negara, lalu klik tombol simpan yang tersedia.": {id:"Atur Jatah Cuti Tahunan Global sesuai kebijakan perusahaan atau negara, lalu klik tombol simpan yang tersedia.", en:"Set the Global Annual Leave Allowance according to company or country policy, then click the available save button.", zh:"根据公司或国家政策设置全局年度休假额度，然后点击保存按钮。"},
+    "Periksa pengajuan cuti dan tindak lanjuti statusnya sesuai prosedur perusahaan.": {id:"Periksa pengajuan cuti dan tindak lanjuti statusnya sesuai prosedur perusahaan.", en:"Review leave requests and update their status according to company procedures.", zh:"按照公司流程审核休假申请并更新其状态。"},
+    "3. Cuti": {id:"3. Cuti", en:"3. Leave", zh:"3. 请假"},
+    "4. Klaim, pengumuman, dan laporan": {id:"4. Klaim, pengumuman, dan laporan", en:"4. Claims, announcements, and reports", zh:"4. 报销、公告和报告"},
+    "5. Klaim, pengumuman, dan laporan": {id:"5. Klaim, pengumuman, dan laporan", en:"5. Claims, announcements, and reports", zh:"5. 报销、公告和报告"},
+    "Klaim: periksa pengajuan klaim dan lakukan review sesuai kewenangan administrator.": {id:"Klaim: periksa pengajuan klaim dan lakukan review sesuai kewenangan administrator.", en:"Claims: review claim submissions within the administrator's authority.", zh:"报销：在管理员权限范围内审核报销申请。"},
+    "Beranda dan Pengumuman: lihat informasi yang dibagikan serta buat pengumuman jika diperlukan.": {id:"Beranda dan Pengumuman: lihat informasi yang dibagikan serta buat pengumuman jika diperlukan.", en:"Home and Announcements: view shared information and create announcements when needed.", zh:"主页和公告：查看共享信息，并在需要时发布公告。"},
+    "Laporan: gunakan halaman laporan untuk meninjau informasi yang tersedia.": {id:"Laporan: gunakan halaman laporan untuk meninjau informasi yang tersedia.", en:"Reports: use the reports page to review available information.", zh:"报告：使用报告页面查看可用信息。"},
+    "Penting: jika ada perubahan data, simpan terlebih dahulu sebelum berpindah halaman atau menutup browser.": {id:"Penting: jika ada perubahan data, simpan terlebih dahulu sebelum berpindah halaman atau menutup browser.", en:"Important: save data changes before switching pages or closing the browser.", zh:"重要提示：切换页面或关闭浏览器前，请先保存数据更改。"},
+    "6. Bantuan lebih lanjut": {id:"6. Bantuan lebih lanjut", en:"6. Further assistance", zh:"6. 更多帮助"},
+    "Jika data tidak tersimpan atau tombol tidak merespons, periksa kembali isian wajib dan koneksi internet. Jangan memuat ulang halaman sebelum memastikan perubahan telah disimpan.": {id:"Jika data tidak tersimpan atau tombol tidak merespons, periksa kembali isian wajib dan koneksi internet. Jangan memuat ulang halaman sebelum memastikan perubahan telah disimpan.", en:"If data is not saved or a button does not respond, check required fields and your internet connection. Do not reload until you have confirmed your changes are saved.", zh:"如果数据未保存或按钮无响应，请检查必填项和网络连接。确认更改已保存前，请勿刷新页面。"},
+
     "MENU UTAMA": {
         id:"MENU UTAMA", en:"MAIN MENU", zh:"主菜单"
     },
@@ -4811,6 +4940,8 @@ function setAppLanguage(lang){
         }
     });
 
+    if(typeof updateClimexSubscriptionBadge === "function") updateClimexSubscriptionBadge();
+
     const appNames = {id:"Indonesia", en:"English", zh:"中文"};
     const appFlags = {id:"flag-id", en:"flag-en", zh:"flag-zh"};
 
@@ -5336,7 +5467,16 @@ function applyClimexRegisterLanguage(lang){
     setPlaceholder("registerConfirmPassword", t.confirmPlaceholder);
 }
 
+function setClimexGoogleRegisterFieldsHidden(hidden){
+    ["registerEmailGroup", "registerPasswordGroup", "registerConfirmPasswordGroup"].forEach(function(id){
+        const group = document.getElementById(id);
+        if(group) group.style.display = hidden ? "none" : "block";
+    });
+}
+
 function showClimexRegister(){
+
+    setClimexGoogleRegisterFieldsHidden(false);
 
     const loginGate = document.getElementById("loginGate");
     const registerGate = document.getElementById("registerGate");
@@ -5575,6 +5715,9 @@ async function registerClimexWithGoogle(){
         return;
     }
 
+    // Sembunyikan field khusus email/password segera setelah tombol Google dipilih.
+    setClimexGoogleRegisterFieldsHidden(true);
+
     const button =
         document.getElementById("registerGoogleButton");
 
@@ -5582,6 +5725,8 @@ async function registerClimexWithGoogle(){
         button.disabled = true;
         button.style.opacity = ".65";
     }
+
+    let googleRegistrationSucceeded = false;
 
     try{
 
@@ -5631,6 +5776,7 @@ async function registerClimexWithGoogle(){
             googleName
         );
 
+        googleRegistrationSucceeded = true;
         await finishClimexRegistration();
 
     }catch(error){
@@ -5653,6 +5799,10 @@ async function registerClimexWithGoogle(){
         }
 
     }finally{
+
+        if(!googleRegistrationSucceeded){
+            setClimexGoogleRegisterFieldsHidden(false);
+        }
 
         if(button){
             button.disabled = false;
@@ -5841,6 +5991,13 @@ async function saveClimexClaim(claim){
                 </div>
             </div>
 
+            <!-- Logo CLIME-X putih di ujung kanan header -->
+            <img
+                class="climex-header-logo"
+                src="welcome.png"
+                alt="CLIME-X"
+            >
+
         </div>
 
     </header>
@@ -5912,13 +6069,16 @@ async function saveClimexClaim(claim){
                 Akun
             </button>
 
+            <button onclick="showPage('help', this)" data-climex-lang-key="Bantuan & Dukungan">
+                Bantuan &amp; Dukungan
+            </button>
+
         </nav>
-
+<!-- =====================================================
         <div class="sidebar-footer">
-            Clime-X<br>
-            Company Expense Management
+            Clime-X 2026
         </div>
-
+===================================================== -->
     </aside>
 
 
@@ -6160,7 +6320,7 @@ async function saveClimexClaim(claim){
         ">
 
             <div id="claimPrintSelectionBar" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#faf7f3;">
-                <div style="font-size:12px;color:var(--muted);">Form cetak: <b id="claimPrintSelectionCount">0 klaim</b></div>
+                <div style="font-size:12px;color:var(--muted);"><span data-climex-lang-key="Form cetak:">Form cetak:</span> <b id="claimPrintSelectionCount" data-climex-lang-key="0 klaim">0 klaim</b></div>
                 <div style="display:flex;gap:8px;align-items:center;">
                     <button type="button" class="claim-detail-btn" onclick="clearPrintSelection();updatePrintSelectionBar();">KOSONGKAN</button>
                     <button type="button" id="claimPrintSelectionBtn" class="claim-detail-btn print" onclick="printSelectedClaims()" disabled>CETAK FORM</button>
@@ -7770,7 +7930,7 @@ Nama / Jabatan                              {{nama_karyawan}}</div>
                             <div id="climexPrice365Idr" style="font-size:11px;color:var(--muted);margin-top:5px;" data-climex-lang-key="Harga dasar: Rp1.250.000">Harga dasar: Rp1.250.000</div>
                         </div>
                     </div>
-                    <div id="climexPlanSelectedNote" class="billing-note" style="margin-top:10px;">Pilih salah satu paket di atas untuk melanjutkan.</div>
+                    <div id="climexPlanSelectedNote" class="billing-note" data-climex-lang-key="Pilih salah satu paket di atas untuk melanjutkan." style="margin-top:10px;">Pilih salah satu paket di atas untuk melanjutkan.</div>
                     <div id="climexCurrencyStep" style="display:none;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;">
                         <label for="climexCurrencySelect" style="display:block;font-size:12px;font-weight:800;margin-bottom:6px;" data-climex-lang-key="Pilih mata uang">Pilih mata uang</label>
                         <div id="climexCurrencySelectMount"></div>
@@ -7867,6 +8027,61 @@ Nama / Jabatan                              {{nama_karyawan}}</div>
                 </div>
 
             </section>
+
+            <!-- PANDUAN PENGGUNAAN -->
+            <section id="help" class="page" style="display:none;">
+                <article class="help-page-paper">
+                    <h1 data-climex-lang-key="PANDUAN SINGKAT PENGGUNAAN">PANDUAN SINGKAT PENGGUNAAN</h1>
+                    <p data-climex-lang-key="Panduan ini membantu administrator memahami langkah awal dan penggunaan CLIME-X Web Console.">Panduan ini membantu administrator memahami langkah awal dan penggunaan CLIME-X Web Console.</p>
+
+                    <h2 data-climex-lang-key="1. Persiapan DOMAIN dan PASSWORD GLOBAL">1. Persiapan DOMAIN dan PASSWORD GLOBAL</h2>
+                    <p data-climex-lang-key="Sebelum menambah data karyawan, buat DOMAIN dan PASSWORD GLOBAL terlebih dahulu. Keduanya wajib digunakan oleh karyawan untuk masuk ke aplikasi CLIME-X Employee di Android.">Sebelum menambah data karyawan, buat DOMAIN dan PASSWORD GLOBAL terlebih dahulu. Keduanya wajib digunakan oleh karyawan untuk masuk ke aplikasi CLIME-X Employee di Android.</p>
+                    <ol>
+                        <li data-climex-lang-key="Buka Pengaturan, pilih tab ID Pengguna Clime-X, lalu di bagian bawah pilih UBAH DOMAIN. Masukkan domain dengan huruf kecil dan minimal 6 karakter. Anda boleh menggunakan nama perusahaan. Contoh: universal. Setelah itu klik SIMPAN.">Buka Pengaturan, pilih tab ID Pengguna Clime-X, lalu di bagian bawah pilih UBAH DOMAIN. Masukkan domain dengan huruf kecil dan minimal 6 karakter. Anda boleh menggunakan nama perusahaan. Contoh: universal. Setelah itu klik SIMPAN.</li>
+                        <li data-climex-lang-key="Pada bagian Password Global, klik UBAH PWD, masukkan password, lalu klik SIMPAN. Contoh: 12345678.">Pada bagian Password Global, klik UBAH PWD, masukkan password, lalu klik SIMPAN. Contoh: 12345678.</li>
+                    </ol>
+
+                    <h2 data-climex-lang-key="2. Menambahkan KARYAWAN">2. Menambahkan KARYAWAN</h2>
+                    <p data-climex-lang-key="Data karyawan digunakan untuk akun masuk CLIME-X Employee di Android, pemantauan masa kontrak, dan administrasi karyawan lainnya.">Data karyawan digunakan untuk akun masuk CLIME-X Employee di Android, pemantauan masa kontrak, dan administrasi karyawan lainnya.</p>
+                    <ol>
+                        <li data-climex-lang-key="Di halaman Karyawan, klik TAMBAH.">Di halaman Karyawan, klik TAMBAH.</li>
+                        <li data-climex-lang-key="Klik KATEGORI untuk membuat pilihan Departemen dan Jabatan.">Klik KATEGORI untuk membuat pilihan Departemen dan Jabatan.</li>
+                        <li data-climex-lang-key="Isi kolom tabel sesuai data karyawan, lalu klik SIMPAN.">Isi kolom tabel sesuai data karyawan, lalu klik SIMPAN.</li>
+                    </ol>
+                    <p data-climex-lang-key="Contoh akun karyawan jika domain Anda universal:">Contoh akun karyawan jika domain Anda universal:</p>
+                    <ul>
+                        <li data-climex-lang-key="ID Karyawan: steven@universal.com">ID Karyawan: steven@universal.com</li>
+                        <li data-climex-lang-key="Password: 12345678 (password global yang sudah dibuat)">Password: 12345678 (password global yang sudah dibuat)</li>
+                    </ul>
+                    <p data-climex-lang-key="Klik SIMPAN setiap selesai mengubah data. Gunakan UBAH untuk mengedit karyawan yang dipilih, serta Perbarui Kontrak atau Cetak Kontrak sesuai kebutuhan.">Klik SIMPAN setiap selesai mengubah data. Gunakan UBAH untuk mengedit karyawan yang dipilih, serta Perbarui Kontrak atau Cetak Kontrak sesuai kebutuhan.</p>
+
+                    <h2 data-climex-lang-key="3. Cuti">3. Cuti</h2>
+                    <ul>
+                        <li data-climex-lang-key="Buka menu Cuti untuk melihat pengajuan cuti karyawan.">Buka menu Cuti untuk melihat pengajuan cuti karyawan.</li>
+                        <li data-climex-lang-key="Atur Jatah Cuti Tahunan Global sesuai kebijakan perusahaan atau negara, lalu simpan.">Atur Jatah Cuti Tahunan Global sesuai kebijakan perusahaan atau negara, lalu simpan.</li>
+                        <li data-climex-lang-key="Periksa pengajuan cuti dan tindak lanjuti statusnya sesuai prosedur perusahaan.">Periksa pengajuan cuti dan tindak lanjuti statusnya sesuai prosedur perusahaan.</li>
+                    </ul>
+
+                    <h2 data-climex-lang-key="4. Klaim, pengumuman, dan laporan">4. Klaim, pengumuman, dan laporan</h2>
+                    <ul>
+                        <li data-climex-lang-key="Klaim: periksa pengajuan dan lakukan review sesuai kewenangan administrator.">Klaim: periksa pengajuan dan lakukan review sesuai kewenangan administrator.</li>
+                        <li data-climex-lang-key="Beranda dan Pengumuman: lihat informasi yang dibagikan dan buat pengumuman jika diperlukan.">Beranda dan Pengumuman: lihat informasi yang dibagikan dan buat pengumuman jika diperlukan.</li>
+                        <li data-climex-lang-key="Laporan: tinjau informasi yang tersedia pada halaman laporan.">Laporan: tinjau informasi yang tersedia pada halaman laporan.</li>
+                    </ul>
+                    <div class="help-note" data-climex-lang-key="Penting: simpan perubahan sebelum berpindah halaman atau menutup browser. Pastikan data tersimpan sebelum memuat ulang halaman.">Penting: simpan perubahan sebelum berpindah halaman atau menutup browser. Pastikan data tersimpan sebelum memuat ulang halaman.</div>
+
+                    <h2 data-climex-lang-key="5. Bantuan lebih lanjut">5. Bantuan lebih lanjut</h2>
+                    <p data-climex-lang-key="Jika data tidak tersimpan atau tombol tidak merespons, periksa isian wajib dan koneksi internet. Jangan memuat ulang halaman sebelum memastikan perubahan sudah tersimpan.">Jika data tidak tersimpan atau tombol tidak merespons, periksa isian wajib dan koneksi internet. Jangan memuat ulang halaman sebelum memastikan perubahan sudah tersimpan.</p>
+
+                    <h2 data-climex-lang-key="6. Hubungi kami">6. Hubungi kami</h2>
+                    <p><span data-climex-lang-key="Jika ada pertanyaan atau masalah yang belum dapat diselesaikan, silakan hubungi kami:">Jika ada pertanyaan atau masalah yang belum dapat diselesaikan, silakan hubungi kami:</span></p>
+                    <ul>
+                        <li><span data-climex-lang-key="Email">Email</span>: <a href="mailto:mahmud.ridho@yahoo.co.id">mahmud.ridho@yahoo.co.id</a></li>
+                        <li>WhatsApp: <a href="https://wa.me/628117000445" target="_blank" rel="noopener">+628117000445</a></li>
+                    </ul>
+                </article>
+            </section>
+
 
 
             
@@ -9459,7 +9674,7 @@ function editEmployeeGlobalPassword(){
         employeeGlobalPasswordEditing = true;
         input.readOnly = false;
         input.style.background = "#fff";
-        button.textContent = "SIMPAN PWD";
+        button.textContent = (APP_TRANSLATIONS["SIMPAN PWD"][(localStorage.getItem("climexLanguage") || currentLoginLang || "id")] || "SIMPAN PWD");
         input.focus();
         input.select();
         return;
@@ -9527,7 +9742,7 @@ async function saveEmployeeGlobalPasswordCore(){
         employeeGlobalPasswordEditing = false;
         input.readOnly = true;
         input.style.background = "#f8f6f3";
-        button.textContent = "UBAH PWD";
+        button.textContent = (APP_TRANSLATIONS["UBAH PWD"][(localStorage.getItem("climexLanguage") || currentLoginLang || "id")] || "UBAH PWD");
 
         showEmployeeRenewToast("Password Global berhasil disimpan.");
 
@@ -9573,7 +9788,7 @@ async function loadEmployeeGlobalPassword(){
         employeeGlobalPasswordEditing = false;
         input.readOnly = true;
         input.style.background = "#f8f6f3";
-        button.textContent = "UBAH PWD";
+        button.textContent = (APP_TRANSLATIONS["UBAH PWD"][(localStorage.getItem("climexLanguage") || currentLoginLang || "id")] || "UBAH PWD");
 
     }catch(error){
         console.error("CLIME-X EMPLOYEE GLOBAL PASSWORD LOAD ERROR:", error);
